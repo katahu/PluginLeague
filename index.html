@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="divAlerten">
+      <div class="alerten poke">
+        <div class="divIcon">
+          <span class="intextpoke sp043 nodex"
+            ><img class="pk" src="//img.league17.ru/pub/mnst/norm/minim/043.gif" />
+          </span>
+        </div>
+        <div class="divContainer">
+          <div class="divDat txtgray"></div>
+          <div class="button close justicon"><span class="icon icomoon icon-x"></span></div>
+          <div class="divContent">
+            <div>
+              <div class="wild">
+                <span class="intextpoke sp043" onclick="Exp.Dex_poke('43', 0, 0)">Клуббиш</span> разгромлен.
+              </div>
+              <div class="drop">
+                <span class="icon icomoon icon-plus color-green"></span>
+                <div class="item titled size-mini">
+                  <img src="//img.league17.ru/pub/items/tiny/1.png" />
+                  <div class="infos">
+                    <div class="extra"></div>
+                    <div class="amount">69</div>
+                  </div>
+                  <div class="title">Кредит <b>x69</b></div>
+                </div>
+              </div>
+              <div class="drop">
+                <span class="icon icomoon icon-plus color-green"></span>
+                <div class="item titled size-mini">
+                  <img src="//img.league17.ru/pub/items/tiny/375.png" />
+                  <div class="infos">
+                    <div class="extra"></div>
+                    <div class="amount"></div>
+                  </div>
+                  <div class="title">Снежок</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+<!-- const delayFast = () => Math.floor(Math.random() * 200) + 200;
+
+const divVisioFight = document.querySelector("#divVisioFight");
+function controller() {
+  const displayStyle = window.getComputedStyle(divVisioFight).display;
+  if (displayStyle !== "none") {
+    if (!checkI()) return;
+    if (!checkH()) return;
+
+    attack();
+  }
+  // Создаем экземпляр MutationObserver
+  const observer = new MutationObserver((mutationsList) => {
+    for (let mutation of mutationsList) {
+      if (
+        mutation.type === "attributes" &&
+        mutation.attributeName === "style"
+      ) {
+        if (displayStyle === "none") {
+          console.log("#divVisioFight стал display: none");
+        } else {
+          attack();
+          console.log("#divVisioFight стал display: block");
+        }
+      }
+    }
+  });
+
+  // Настраиваем наблюдение за изменением атрибутов
+  observer.observe(divVisioFight, {
+    attributeFilter: ["style"], // Следим только за изменениями стиля
+  });
+} -->
+<!-- Берем currentLocation и ищем массив подходящий, потом ищем внутри моба mob он должен совпасть с nameH , а потом ищем attack. После того как нашли все совпадения, вызываем определенную функцию. Для массивов craft и attackTwo будет одна функция. -->
