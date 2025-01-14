@@ -164,7 +164,9 @@ async function checkH() {
   return true;
 }
 async function defeat() {
-  const divFightButtons = divVisioFight.querySelector("#divFightData #divFightButtons");
+  // const divFightButtons = divVisioFight.querySelector("#divFightData #divFightButtons");
+  // MOBILE
+  const divFightButtons = divVisioFight.querySelector("#divFightButtons");
   const buttons = divFightButtons.querySelectorAll("div");
   let defeatButton = null;
   let closeButton = null;
