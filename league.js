@@ -15,6 +15,12 @@ function locationSearch() {
       currentLocation = divLocation.textContent;
     }
   };
+  // // С вырезанами цифрами
+  // const updateLocation = () => {
+  //   if (divLocation) {
+  //     currentLocation = divLocation.textContent.replace(/\d+/g, "");
+  //   }
+  // };
 
   // Создаем экземпляр MutationObserver
   const observer = new MutationObserver((mutationsList) => {

@@ -1,12 +1,14 @@
 const attackHandlers = {
   craft: (attack) => handleCraftAndAttackTwo("craft", attack),
   attackTwo: (attack) => handleCraftAndAttackTwo("attackTwo", attack),
-  attackThree: (attack) => handleAttackThree(attack),
+  attackThree: (attack) => switchMob("attackThree", attack),
   upPokemon: (attack) => handleUpPokemon(attack),
   defeat: () => defeat(),
 };
 const delayAttack = () => new Promise((resolve) => setTimeout(resolve, Math.floor(Math.random() * 200) + 200));
 const delayFast = () => new Promise((resolve) => setTimeout(resolve, Math.floor(Math.random() * 1200) + 200));
+
+const nameSwitch = "#212 Сизомант";
 
 const divVisioFight = document.querySelector("#divVisioFight");
 let isActive = false;
@@ -27,7 +29,9 @@ async function controller() {
         // Получаем текущее значение display
         const currentDisplayStyle = window.getComputedStyle(divVisioFight).display;
         if (currentDisplayStyle == "none") {
-          checker();
+          setTimeout(() => {
+            checker();
+          }, 200);
         } else {
           controlleAttack();
         }
@@ -102,7 +106,9 @@ async function handleCraftAndAttackTwo(type, attack) {
         clickAtack = element.parentElement;
       }
     });
-
+    // ОТКЛЮЧИТЬ КОГДА ЗАКОНЧУ КАЧ
+    if (!(await checkI())) return;
+    //
     await delayAttack();
     clickAtack.click();
 
@@ -112,13 +118,59 @@ async function handleCraftAndAttackTwo(type, attack) {
     if (!(await checkH())) return;
   }
 }
+
+async function switchMob(type, attack) {
+  const divFightI = divVisioFight.querySelector("#divFightI");
+  const ball = divFightI.querySelector(".ball.clickable");
+  await delayFast();
+  ball.click();
+
+  const divElements = document.querySelector(".divElements");
+
+  if (!divElements) {
+    console.error("divElements не найден");
+    return;
+  }
+
+  function observerElements() {
+    return new Promise((resolve) => {
+      const observer = new MutationObserver((mutationsList) => {
+        for (const mutation of mutationsList) {
+          if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
+            observer.disconnect(); // Останавливаем наблюдателя
+            resolve(); // Завершаем промис
+          }
+        }
+      });
+
+      observer.observe(divElements, { childList: true }); // Отслеживаем добавление дочерних узлов
+    });
+  }
+
+  await observerElements();
+  const divElementList = divElements.querySelectorAll(".divElement"); // Здесь исправлено
+
+  for (const divElement of divElementList) {
+    const name = divElement.querySelector(".name");
+    const nameText = name.textContent.trim();
+
+    if (nameText === nameSwitch) {
+      await delayFast(); // Делаем задержку
+      divElement.click(); // Кликаем на нужный элемент
+      break; // Выходим из цикла, чтобы не кликать на другие элементы
+    }
+  }
+  await controllerMutationAtack();
+  handleCraftAndAttackTwo(type, attack);
+}
+
 async function checkI() {
   const divFightI = document.querySelector("#divFightI");
   const barHP = divFightI.querySelector(".barHP div");
 
   const styleWidth = barHP.style.width; // Получаем строку вида "99.5781%"
   const widthPercent = parseFloat(styleWidth); // Преобразуем в число 99.5781
-  console.log(widthPercent);
+  // console.log(widthPercent);
   if (widthPercent <= 30) {
     const currentDisplayStyle = window.getComputedStyle(divVisioFight).display;
     if (currentDisplayStyle !== "none") {
@@ -128,7 +180,16 @@ async function checkI() {
     moveHeal();
     return false;
   }
-
+  // ОТКЛЮЧИТЬ КОГДА ЗАКОНЧУ КАЧ
+  const barEXP = divFightI.querySelector(".barEXP div");
+  const styleWidthEXP = barEXP.style.width; // Получаем строку вида "99.5781%"
+  const widthPercentEXP = parseFloat(styleWidthEXP); // Преобразуем в число 99.5781
+  console.log(widthPercentEXP);
+  if (widthPercentEXP >= 95) {
+    playSound();
+    return false;
+  }
+  //
   const allAttack = divFightI.querySelector(".moves");
   const divMoveParamsElements = allAttack.querySelectorAll(".divMoveParams");
 

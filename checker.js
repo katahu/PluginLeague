@@ -1,6 +1,7 @@
 const drops = {};
 
 function checker() {
+  console.log("Сработал");
   const alertElement = document.querySelector("#divAlerten .alerten.poke");
   if (!alertElement || alertElement.dataset.checked === "true") return;
   alertElement.dataset.checked = "true";
