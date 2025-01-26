@@ -14,7 +14,10 @@ async function moveHeal() {
     return;
   }
 
-  const btnSwitchWilds = document.querySelector("#divInputButtons .btnSwitchWilds");
+  const isMobile = window.innerWidth <= 768;
+  const btnSwitchWilds = document.querySelector(
+    isMobile ? "#divDockUpper .btnSwitchWilds" : "#divInputButtons .btnSwitchWilds"
+  );
   btnSwitchWilds.click();
 
   // Находим маршруты для перемещения
