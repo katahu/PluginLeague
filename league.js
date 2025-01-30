@@ -43,8 +43,9 @@ function locationSearch() {
 }
 
 function playSound() {
-  const extensionId = chrome.runtime.id; // Получить ID расширения
-  const soundUrl = `chrome-extension://${extensionId}/sound.wav`;
+  // const extensionId = chrome.runtime.id; // Получить ID расширения
+
+  const soundUrl = chrome.runtime.getURL("sound.wav");
 
   // Создаем объект Audio и запускаем воспроизведение
   const audio = new Audio(soundUrl);

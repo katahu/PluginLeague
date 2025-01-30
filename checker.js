@@ -1,61 +1,72 @@
-const drops = {};
+const drops = new Map(); // Используем Map для хранения данных
 
 function checker() {
-  console.log("Сработал");
   const alertElement = document.querySelector("#divAlerten .alerten.poke");
   if (!alertElement || alertElement.dataset.checked === "true") return;
   alertElement.dataset.checked = "true";
 
   const content = alertElement.querySelector(".divContent");
+  if (!content) return;
 
-  const poke = content.querySelector(".wild .intextpoke").textContent.trim();
+  const pokeElement = content.querySelector(".wild .intextpoke");
+  if (!pokeElement) return;
+
+  const poke = pokeElement.textContent.trim();
   const pokeCount = 1; // Значение по умолчанию
 
-  // Если poke уже есть в объекте drops, увеличиваем счетчик, иначе добавляем новый
-  if (!drops[poke]) {
-    drops[poke] = [pokeCount];
-  } else {
-    drops[poke][0] += pokeCount;
-  }
+  // Обновляем счетчик для poke
+  updateDropCount(poke, pokeCount);
 
   const dropElements = content.querySelectorAll(".drop");
-
   dropElements.forEach((drop) => {
-    const Etitle = drop.querySelector(".title");
-    if (!Etitle) return;
+    const titleElement = drop.querySelector(".title");
+    if (!titleElement) return;
 
     // Извлекаем title без содержимого <b>
-    const title = Etitle.cloneNode(true);
-    const bElement = title.querySelector("b");
-    if (bElement) {
-      bElement.remove();
-    }
-    const cleanTitle = title.textContent.trim();
+    const cleanTitle = getCleanTitle(titleElement);
 
     let itemCount = 1; // Значение по умолчанию
-    const bElementOriginal = drop.querySelector("b");
-
-    if (bElementOriginal) {
-      itemCount = parseInt(bElementOriginal.textContent.trim().replace(/\D/g, "")) || 1; // Парсим количество, убирая все нечисловые символы
+    const countElement = drop.querySelector("b");
+    if (countElement) {
+      itemCount = parseInt(countElement.textContent.trim().replace(/\D/g, "")) || 1;
     }
 
-    // Если cleanTitle уже есть в объекте drops, увеличиваем счетчик, иначе добавляем новый
-    if (!drops[cleanTitle]) {
-      drops[cleanTitle] = [itemCount];
-    } else {
-      drops[cleanTitle][0] += itemCount;
-    }
+    // Обновляем счетчик для cleanTitle
+    updateDropCount(cleanTitle, itemCount);
   });
 
-  // Создаем новый div для каждого массива и добавляем в dropMenu
-  dropMenu.innerHTML = ""; // Очищаем старые элементы, если они были
+  updateDropMenu();
+}
 
-  for (const [key, value] of Object.entries(drops)) {
+function getCleanTitle(titleElement) {
+  const title = titleElement.cloneNode(true);
+  const bElement = title.querySelector("b");
+  if (bElement) {
+    bElement.remove();
+  }
+  return title.textContent.trim();
+}
+
+function updateDropCount(key, count) {
+  if (!drops.has(key)) {
+    drops.set(key, count);
+  } else {
+    drops.set(key, drops.get(key) + count);
+  }
+}
+
+function updateDropMenu() {
+  if (!dropMenu) return;
+
+  const fragment = document.createDocumentFragment();
+
+  for (const [key, value] of drops.entries()) {
     const dropItemDiv = document.createElement("div");
     dropItemDiv.classList.add("drop-item");
-    dropItemDiv.innerHTML = `${key} <strong>x${value[0]}</strong>`;
-
-    // Добавляем новый div в меню
-    dropMenu.append(dropItemDiv);
+    dropItemDiv.textContent = `${key} x${value}`;
+    fragment.append(dropItemDiv);
   }
+
+  dropMenu.innerHTML = ""; // Очищаем старое содержимое
+  dropMenu.append(fragment); // Добавляем новые элементы
 }

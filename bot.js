@@ -8,8 +8,6 @@ const attackHandlers = {
 const delayAttack = () => new Promise((resolve) => setTimeout(resolve, Math.floor(Math.random() * 200) + 200));
 const delayFast = () => new Promise((resolve) => setTimeout(resolve, Math.floor(Math.random() * 1200) + 200));
 
-const nameSwitch = "#212 Сизомант";
-
 const divVisioFight = document.querySelector("#divVisioFight");
 let isActive = false;
 let observerControlller;
@@ -107,7 +105,7 @@ async function handleCraftAndAttackTwo(type, attack) {
       }
     });
     // ОТКЛЮЧИТЬ КОГДА ЗАКОНЧУ КАЧ
-    if (!(await checkI())) return;
+    // if (!(await checkI())) return;
     //
     await delayAttack();
     clickAtack.click();
@@ -181,14 +179,14 @@ async function checkI() {
     return false;
   }
   // ОТКЛЮЧИТЬ КОГДА ЗАКОНЧУ КАЧ
-  const barEXP = divFightI.querySelector(".barEXP div");
-  const styleWidthEXP = barEXP.style.width; // Получаем строку вида "99.5781%"
-  const widthPercentEXP = parseFloat(styleWidthEXP); // Преобразуем в число 99.5781
-  console.log(widthPercentEXP);
-  if (widthPercentEXP >= 95) {
-    playSound();
-    return false;
-  }
+  // const barEXP = divFightI.querySelector(".barEXP div");
+  // const styleWidthEXP = barEXP.style.width; // Получаем строку вида "99.5781%"
+  // const widthPercentEXP = parseFloat(styleWidthEXP); // Преобразуем в число 99.5781
+  // console.log(widthPercentEXP);
+  // if (widthPercentEXP >= 95) {
+  //   playSound();
+  //   return false;
+  // }
   //
   const allAttack = divFightI.querySelector(".moves");
   const divMoveParamsElements = allAttack.querySelectorAll(".divMoveParams");

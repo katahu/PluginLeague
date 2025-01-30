@@ -1,6 +1,9 @@
 const routerAttack = {};
 
 const routes = {};
+
+let nameSwitch = "";
+
 async function fetchAttack() {
   try {
     const response = await fetch("https://dce6373a41a58485.mokky.dev/attack");
@@ -10,7 +13,7 @@ async function fetchAttack() {
     if (Array.isArray(data) && data.length > 0) {
       Object.assign(routerAttack, data[0]);
     }
-
+    nameSwitch = data[0].nameSwitch || "";
     console.log("Локации и мобы успешно загружены:", routerAttack);
   } catch (error) {
     console.error("Ошибка при загрузке маршрутов:", error);
