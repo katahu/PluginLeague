@@ -70,7 +70,9 @@ function controllerMutationAtack() {
 function controlleAttack() {
   const divFightH = divVisioFight.querySelector("#divFightH");
   const ElementNameH = divFightH.querySelector(".name");
+  if (!ElementNameH) return;
   const nameH = ElementNameH.textContent.trim();
+
   if (!ElementNameH || ElementNameH.classList.length > 1 || !ElementNameH.classList.contains("name")) {
     playSound();
     stopBot();
