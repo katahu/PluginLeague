@@ -1,5 +1,10 @@
 const drops = new Map(); // Используем Map для хранения данных
 
+const noneDrop = document.createElement("span");
+noneDrop.classList.add("none-drop");
+noneDrop.textContent = "Дроп отсутствует";
+dropMenu.append(noneDrop);
+
 function checker() {
   const alertElement = document.querySelector("#divAlerten .alerten.poke");
   if (!alertElement || alertElement.dataset.checked === "true") return;
@@ -65,6 +70,9 @@ function updateDropMenu() {
     dropItemDiv.classList.add("drop-item");
     dropItemDiv.textContent = `${key} x${value}`;
     fragment.append(dropItemDiv);
+  }
+  if (noneDrop) {
+    noneDrop.remove();
   }
 
   dropMenu.innerHTML = ""; // Очищаем старое содержимое

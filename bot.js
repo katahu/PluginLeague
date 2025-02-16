@@ -108,7 +108,7 @@ async function handleCraftAndAttackTwo(type, attack) {
     });
     // ОТКЛЮЧИТЬ КОГДА ЗАКОНЧУ КАЧ
     // if (!(await checkI())) return;
-    //
+
     await delayAttack();
     clickAtack.click();
 
@@ -153,8 +153,8 @@ async function switchMob(type, attack) {
   for (const divElement of divElementList) {
     const name = divElement.querySelector(".name");
     const nameText = name.textContent.trim();
-
-    if (nameText === nameSwitch) {
+    const namealfavit = nameText.replace(/[^a-zA-Zа-яА-Я]/g, "");
+    if (namealfavit === nameSwitch) {
       await delayFast(); // Делаем задержку
       divElement.click(); // Кликаем на нужный элемент
       break; // Выходим из цикла, чтобы не кликать на другие элементы
@@ -185,11 +185,11 @@ async function checkI() {
   // const styleWidthEXP = barEXP.style.width; // Получаем строку вида "99.5781%"
   // const widthPercentEXP = parseFloat(styleWidthEXP); // Преобразуем в число 99.5781
   // console.log(widthPercentEXP);
-  // if (widthPercentEXP >= 95) {
+  // if (widthPercentEXP >= 90) {
   //   playSound();
   //   return false;
   // }
-  //
+
   const allAttack = divFightI.querySelector(".moves");
   const divMoveParamsElements = allAttack.querySelectorAll(".divMoveParams");
 

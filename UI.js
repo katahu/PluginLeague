@@ -54,6 +54,12 @@ const menu = [
     },
   },
   {
+    text: "Обновить",
+    onClick: () => {
+      fetchAttack(), fetchHeal();
+    },
+  },
+  {
     text: "Дроп",
     onClick: () => {
       dropMenu.classList.toggle("active");
