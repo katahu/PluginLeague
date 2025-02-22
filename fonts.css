@@ -1,0 +1,44 @@
+:host,
+:root {
+  --fa-style-family-classic: "Font Awesome 6 Pro";
+  --fa-font-light: normal 300 1em/1 "Font Awesome 6 Pro";
+}
+
+@font-face {
+  font-family: "Font Awesome 6 Pro";
+  font-style: normal;
+  font-weight: 300;
+  font-display: block;
+  src: url("chrome-extension://__MSG_@@extension_id__/fa-light-300.woff2") format("woff2");
+}
+.fa-light,
+.fal {
+  font-family: "Font Awesome 6 Pro";
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  display: var(--fa-display, inline-block);
+  font-style: normal;
+  font-variant: normal;
+  line-height: 1;
+  text-rendering: auto;
+}
+.fa-light:before {
+  content: var(--fa);
+}
+
+.icons-fight {
+  --fa: "\f71d";
+}
+.icons-heal {
+  --fa: "\e3b2";
+}
+.icons-stop {
+  --fa: "\f256";
+}
+.icons-update {
+  --fa: "\f2f1";
+}
+.icons-list-drop {
+  --fa: "\e1cf";
+}

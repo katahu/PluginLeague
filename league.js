@@ -15,10 +15,10 @@ function locationSearch() {
       currentLocation = divLocation.textContent;
     }
   };
-  // // С вырезанами цифрами
+  // С вырезанами цифрами
   // const updateLocation = () => {
-  //   if (divLocation) {
-  //     currentLocation = divLocation.textContent.replace(/\d+/g, "");
+  //   if (divLocation && divLocation.textContent.startsWith("Уровень")) {
+  //     currentLocation = divLocation.textContent.replace(/\d+/g, "").trim();
   //   }
   // };
 

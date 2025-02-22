@@ -7,13 +7,13 @@
     {
       "matches": ["https://game.league17.ru/*"],
       "js": ["UI.js", "API.js", "league.js", "heal.js", "bot.js", "checker.js"],
-      "css": ["style.css"],
+      "css": ["fonts.css", "style.css"],
       "type": "module"
     }
   ],
   "web_accessible_resources": [
     {
-      "resources": ["sound.wav"],
+      "resources": ["sound.wav", "fa-light-300.woff2"],
       "matches": ["https://game.league17.ru/*"]
     }
   ]

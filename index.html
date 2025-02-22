@@ -5,23 +5,70 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
   </head>
-  <body>
-    <div class="divDialog" style="z-index: 117; width: 380px; left: 697px; top: 345px">
-      <div class="button close justicon"><span class="icon icomoon icon-x"></span></div>
-      <div class="divDialogTitle dragable">Фонд</div>
-      <div class="hr"></div>
-      <div class="divDialogContent">
-        <span class="inpt">Количество:</span><input type="number" pattern="[0-9]*" class="error" /><br /><span
-          class="inpt"
-          >Цель:</span
-        ><input /><br /><span class="inpt"></span>
-        <div class="button gray color-green withtext"><span class="icon icomoon icon-plus"></span>Добавить</div>
-        <div class="button gray color-red withtext"><span class="icon icomoon icon-minus"></span>Изъять</div>
-      </div>
-      <div class="divDialogToolbar" style="display: none">
-        <div class="hr"></div>
-        <div class="divDialogToolbarInner"></div>
-      </div>
-    </div>
-  </body>
+
+  <script>
+    // Находим все строки <tr> с атрибутом data-bind
+    const trList = document.querySelectorAll(
+      'tr[data-bind="foreach: $parent.columns, css: rowClass, click: $root.rowClick "]'
+    );
+    const wrap = document.createElement("div");
+    wrap.classList.add("wrap");
+    wrap.style.position = "absolute";
+    wrap.style.top = "6rem";
+    wrap.style.right = "0";
+    wrap.style.zIndex = "100000";
+    wrap.style.display = "inline-flex";
+    wrap.style.flexDirection = "column";
+    document.body.append(wrap);
+
+    // Перебираем все найденные строки
+    trList.forEach((tr, index) => {
+      // Находим первый <td> (для numberPokemon)
+      const firstTd = tr.querySelector("td:nth-child(1)");
+      // Находим пятый <td> (для namePokemon)
+      const fifthTd = tr.querySelector("td:nth-child(5)");
+
+      // Извлекаем numberPokemon из первого <td>
+      const numberPokemon = firstTd?.querySelector('span[data-bind="text: pokemonID"]')?.textContent.trim();
+
+      // Извлекаем namePokemon из пятого <td>
+      const namePokemon = fifthTd
+        ?.querySelector("span[data-bind=\"html: typeof rowText == 'function' ? rowText($parent) : $parent[rowText]\"]")
+        ?.textContent.trim();
+
+      // Выводим результат в консоль
+      if (numberPokemon && namePokemon) {
+        let item = document.createElement("div");
+        item.classList.add("item");
+        item.textContent = numberPokemon + " " + namePokemon; // Используем textContent для добавления текста
+        wrap.append(item);
+      } else {
+        console.error(`Row ${index + 1}: Data not found`);
+      }
+    });
+
+    const button = document.createElement("div");
+    button.classList.add("btn-copy");
+    button.textContent = "Копировать";
+    button.style.cursor = "pointer";
+    button.style.color = "red";
+    button.addEventListener("click", () => {
+      const items = document.querySelectorAll(".item");
+      let text = "";
+      items.forEach((item) => {
+        text += item.textContent + "\n";
+      });
+      navigator.clipboard.writeText(text);
+    });
+    wrap.append(button);
+  </script>
+  <body></body>
+  <!-- .wrap {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 6rem;
+    right: 0;
+    z-index: 100000;
+  } -->
 </html>

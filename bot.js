@@ -225,13 +225,15 @@ async function checkH() {
   return true;
 }
 async function defeat() {
+  // ТОЛЬКО В ПОДЗЕМКЕ
+  // playSound();
+  // return;
   // const divFightButtons = divVisioFight.querySelector("#divFightData #divFightButtons");
   // MOBILE
   const divFightButtons = divVisioFight.querySelector("#divFightButtons");
   const buttons = divFightButtons.querySelectorAll("div");
   let defeatButton = null;
   let closeButton = null;
-
   // Находим кнопки "Сдаться" и "Закрыть"
   buttons.forEach((button) => {
     const buttonText = button.textContent.trim();
