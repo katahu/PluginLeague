@@ -5,7 +5,6 @@ function locationSearch() {
   const divLocation = document.querySelector("#divLocTitleText");
 
   if (!divLocation) {
-    console.error("Элемент #divLocTitleText не найден.");
     return;
   }
 

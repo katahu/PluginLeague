@@ -6,7 +6,7 @@
     <title>Document</title>
   </head>
 
-  <script>
+  <!-- <script>
     // Находим все строки <tr> с атрибутом data-bind
     const trList = document.querySelectorAll(
       'tr[data-bind="foreach: $parent.columns, css: rowClass, click: $root.rowClick "]'
@@ -61,14 +61,23 @@
       navigator.clipboard.writeText(text);
     });
     wrap.append(button);
+  </script> -->
+  <script>
+    const trList = document.querySelectorAll(
+      'tr[data-bind="foreach: $parent.columns, css: rowClass, click: $root.rowClick "]'
+    );
+
+    trList.forEach((tr) => {
+      const tdList = tr.querySelectorAll("td");
+      const pokemonID = tdList[0].textContent.trim();
+
+      const buttonCopy = document.createElement("div");
+      buttonCopy.textContent = "Копировать ID";
+      buttonCopy.addEventListener("click", () => {
+        navigator.clipboard.writeText(pokemonID);
+      });
+      tdList[0].append(buttonCopy);
+    });
   </script>
   <body></body>
-  <!-- .wrap {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    top: 6rem;
-    right: 0;
-    z-index: 100000;
-  } -->
 </html>

@@ -53,7 +53,7 @@ async function moveHeal() {
       return;
     }
   }
-  await delayFast();
+  await delayHeal();
   btnSwitchWilds.click();
   isHeal = false;
 }

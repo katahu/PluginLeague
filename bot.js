@@ -2,7 +2,7 @@ const attackHandlers = {
   craft: (attack) => handleCraftAndAttackTwo("craft", attack),
   attackTwo: (attack) => handleCraftAndAttackTwo("attackTwo", attack),
   attackThree: (attack) => switchMob("attackThree", attack),
-  upPokemon: (attack) => handleUpPokemon(attack),
+  upPokemon: () => handleUpPokemon(),
   defeat: () => defeat(),
 };
 const delayAttack = () => new Promise((resolve) => setTimeout(resolve, Math.floor(Math.random() * 200) + 200));
@@ -120,32 +120,11 @@ async function handleCraftAndAttackTwo(type, attack) {
 }
 
 async function switchMob(type, attack) {
+  const divElements = document.querySelector(".divElements");
   const divFightI = divVisioFight.querySelector("#divFightI");
   const ball = divFightI.querySelector(".ball.clickable");
   await delayFast();
   ball.click();
-
-  const divElements = document.querySelector(".divElements");
-
-  if (!divElements) {
-    console.error("divElements не найден");
-    return;
-  }
-
-  function observerElements() {
-    return new Promise((resolve) => {
-      const observer = new MutationObserver((mutationsList) => {
-        for (const mutation of mutationsList) {
-          if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
-            observer.disconnect(); // Останавливаем наблюдателя
-            resolve(); // Завершаем промис
-          }
-        }
-      });
-
-      observer.observe(divElements, { childList: true }); // Отслеживаем добавление дочерних узлов
-    });
-  }
 
   await observerElements();
   const divElementList = divElements.querySelectorAll(".divElement"); // Здесь исправлено
@@ -164,13 +143,74 @@ async function switchMob(type, attack) {
   handleCraftAndAttackTwo(type, attack);
 }
 
+async function handleUpPokemon() {
+  const divElements = document.querySelector(".divElements");
+  const divFightI = divVisioFight.querySelector("#divFightI");
+  const allAttackClickable = Array.from(divFightI.querySelectorAll("#divFightI .moves .divMoveTitle"));
+  let clickAtack = null;
+
+  allAttackClickable.forEach((element) => {
+    if (element.textContent.trim() === attackUp) {
+      clickAtack = element.parentElement;
+    }
+  });
+  if (!(await checkI())) return;
+  await delayFast();
+  clickAtack.click();
+  await observerElements();
+
+  const divElementList = divElements.querySelectorAll(".divElement");
+  for (const divElement of divElementList) {
+    const name = divElement.querySelector(".name");
+    const nameText = name.textContent.trim();
+    const namealfavit = nameText.replace(/[^a-zA-Zа-яА-Я]/g, "");
+    if (namealfavit === upPockemon) {
+      await delayFast();
+      const barHP = divElement.querySelector(".barHP div");
+      const styleWidth = barHP.style.width;
+      const widthPercent = parseFloat(styleWidth);
+      if (widthPercent <= 30) {
+        const currentDisplayStyle = window.getComputedStyle(divVisioFight).display;
+        if (currentDisplayStyle !== "none") {
+          await defeat();
+        }
+        await delayFast();
+        moveHeal();
+        return;
+      }
+
+      divElement.click();
+      break;
+    }
+  }
+}
+
+async function observerElements() {
+  const divElements = document.querySelector(".divElements");
+
+  if (!divElements) {
+    console.error("divElements не найден");
+    return;
+  }
+  return new Promise((resolve) => {
+    const observer = new MutationObserver((mutationsList) => {
+      for (const mutation of mutationsList) {
+        if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
+          observer.disconnect(); // Останавливаем наблюдателя
+          resolve(); // Завершаем промис
+        }
+      }
+    });
+    observer.observe(divElements, { childList: true }); // Отслеживаем добавление дочерних узлов
+  });
+}
+
 async function checkI() {
   const divFightI = document.querySelector("#divFightI");
   const barHP = divFightI.querySelector(".barHP div");
 
   const styleWidth = barHP.style.width; // Получаем строку вида "99.5781%"
   const widthPercent = parseFloat(styleWidth); // Преобразуем в число 99.5781
-  // console.log(widthPercent);
   if (widthPercent <= 30) {
     const currentDisplayStyle = window.getComputedStyle(divVisioFight).display;
     if (currentDisplayStyle !== "none") {

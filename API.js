@@ -3,7 +3,8 @@ const routerAttack = {};
 const routes = {};
 
 let nameSwitch = "";
-
+let upPockemon = "";
+let = attackUp = "";
 async function fetchAttack() {
   try {
     const response = await fetch("https://dce6373a41a58485.mokky.dev/attack");
@@ -14,6 +15,8 @@ async function fetchAttack() {
       Object.assign(routerAttack, data[0]);
     }
     nameSwitch = data[0].nameSwitch || "";
+    upPockemon = data[0].upPockemon || "";
+    attackUp = data[0].attackUp || "";
     console.log("Локации и мобы успешно загружены:", routerAttack);
   } catch (error) {
     console.error("Ошибка при загрузке маршрутов:", error);
