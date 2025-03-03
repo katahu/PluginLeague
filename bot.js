@@ -144,15 +144,16 @@ async function switchMob(type, attack) {
 }
 
 async function handleUpPokemon() {
-  const arrWeather = ["w3", "w4"];
-  const weather = divVisioFight.querySelector(".iconweather");
-  const weatherClasses = weather.className.split(" ");
-  const hasWeatherClass = weatherClasses.some((cls) => arrWeather.includes(cls));
-  if (hasWeatherClass) {
-    playSound();
-    return;
+  if (weather) {
+    const arrWeather = ["w3", "w4"];
+    const weather = divVisioFight.querySelector(".iconweather");
+    const weatherClasses = weather.className.split(" ");
+    const hasWeatherClass = weatherClasses.some((cls) => arrWeather.includes(cls));
+    if (hasWeatherClass) {
+      playSound();
+      return;
+    }
   }
-
   const divElements = document.querySelector(".divElements");
   const divFightI = divVisioFight.querySelector("#divFightI");
   const allAttackClickable = Array.from(divFightI.querySelectorAll("#divFightI .moves .divMoveTitle"));

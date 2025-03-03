@@ -40,8 +40,7 @@ async function moveHeal() {
   await delayFast();
   await healNPC();
   await delayFast();
-  // Движение по второму маршруту
-  console.log(`Начинаем обратный путь.`);
+
   for (let buttonId of pathBack) {
     const button = document.querySelector(`#${buttonId}`);
     if (button) {
