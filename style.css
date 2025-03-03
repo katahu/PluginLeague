@@ -59,8 +59,13 @@
   background-color: transparent;
   border-radius: 0.25rem;
   padding: 0.25rem 0;
+  transform: scale(1);
+  transition: transform 150 ease-in-out;
   &:hover {
     background-color: #bdd7e9;
+  }
+  &:active {
+    transform: scale(0.98);
   }
 }
 .btn-bot i {

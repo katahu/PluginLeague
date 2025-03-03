@@ -126,7 +126,7 @@ async function switchMob(type, attack) {
   await delayFast();
   ball.click();
 
-  await observerElements();
+  await observerElements(divElements);
   const divElementList = divElements.querySelectorAll(".divElement"); // Здесь исправлено
 
   for (const divElement of divElementList) {
@@ -144,6 +144,15 @@ async function switchMob(type, attack) {
 }
 
 async function handleUpPokemon() {
+  const arrWeather = ["w3", "w4"];
+  const weather = divVisioFight.querySelector(".iconweather");
+  const weatherClasses = weather.className.split(" ");
+  const hasWeatherClass = weatherClasses.some((cls) => arrWeather.includes(cls));
+  if (hasWeatherClass) {
+    playSound();
+    return;
+  }
+
   const divElements = document.querySelector(".divElements");
   const divFightI = divVisioFight.querySelector("#divFightI");
   const allAttackClickable = Array.from(divFightI.querySelectorAll("#divFightI .moves .divMoveTitle"));
@@ -157,7 +166,7 @@ async function handleUpPokemon() {
   if (!(await checkI())) return;
   await delayFast();
   clickAtack.click();
-  await observerElements();
+  await observerElements(divElements);
 
   const divElementList = divElements.querySelectorAll(".divElement");
   for (const divElement of divElementList) {
@@ -185,13 +194,7 @@ async function handleUpPokemon() {
   }
 }
 
-async function observerElements() {
-  const divElements = document.querySelector(".divElements");
-
-  if (!divElements) {
-    console.error("divElements не найден");
-    return;
-  }
+async function observerElements(divElements) {
   return new Promise((resolve) => {
     const observer = new MutationObserver((mutationsList) => {
       for (const mutation of mutationsList) {
@@ -201,7 +204,7 @@ async function observerElements() {
         }
       }
     });
-    observer.observe(divElements, { childList: true }); // Отслеживаем добавление дочерних узлов
+    observer.observe(divElements, { childList: true });
   });
 }
 

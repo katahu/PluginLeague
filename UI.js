@@ -44,7 +44,6 @@ const menu = [
     text: "Атака",
     onClick: () => {
       controller();
-      playSound();
     },
   },
   {
@@ -77,7 +76,6 @@ const menu = [
   },
 ];
 
-// Добавление кнопок в btnMenu
 menu.forEach((item) => {
   const button = Button(item);
   btnMenu.appendChild(button);

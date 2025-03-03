@@ -1,7 +1,6 @@
 let currentLocation = null;
 
 function locationSearch() {
-  // Получаем элемент с id "divLocTitleContainer"
   const divLocation = document.querySelector("#divLocTitleText");
 
   if (!divLocation) {
@@ -33,7 +32,7 @@ function locationSearch() {
   // Настроим наблюдатель, чтобы отслеживать изменения дочерних узлов и текстовых узлов
   observer.observe(divLocation, {
     childList: true, // Наблюдать за добавлением или удалением дочерних узлов
-    subtree: true, // Наблюдать за всеми потомками (не только за непосредственными дочерними элементами)
+    // subtree: true, // Наблюдать за всеми потомками (не только за непосредственными дочерними элементами)
     characterData: true, // Наблюдать за изменениями текстового содержимого
   });
 
