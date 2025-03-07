@@ -4,6 +4,7 @@ const attackHandlers = {
   attackThree: (attack) => switchMob("attackThree", attack),
   upPokemon: () => handleUpPokemon(),
   defeat: () => defeat(),
+  semant: () => semant(),
 };
 const delayAttack = () => new Promise((resolve) => setTimeout(resolve, Math.floor(Math.random() * 200) + 200));
 const delayFast = () => new Promise((resolve) => setTimeout(resolve, Math.floor(Math.random() * 1200) + 200));
@@ -195,6 +196,24 @@ async function handleUpPokemon() {
   }
 }
 
+async function semant() {
+  const divVisioFight = document.querySelector("#divVisioFight");
+  const divHImage = divVisioFight.querySelector("#divFightH .image img");
+  console.log(divHImage);
+
+  const src = divHImage.getAttribute("src");
+  console.log("SRC изображения:", src);
+
+  // Проверяем, содержится ли хотя бы одна строка из imgSemant в src
+  if (imgSemant.some((img) => src.includes(img))) {
+    console.log("Нашли совпадение:", imgSemant);
+    playSound();
+    return;
+  } else {
+    console.log("Не нашли совпадение:", imgSemant);
+    defeat();
+  }
+}
 async function observerElements(divElements) {
   return new Promise((resolve) => {
     const observer = new MutationObserver((mutationsList) => {
