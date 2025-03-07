@@ -204,13 +204,12 @@ async function semant() {
   const src = divHImage.getAttribute("src");
   console.log("SRC изображения:", src);
 
-  // Проверяем, содержится ли хотя бы одна строка из imgSemant в src
-  if (imgSemant.some((img) => src.includes(img))) {
-    console.log("Нашли совпадение:", imgSemant);
+  // Проверяем точное совпадение
+  if (imgSemant.some((img) => src.includes(`/${img}.`))) {
+    console.log("Нашли точное совпадение:", imgSemant);
     playSound();
-    return;
   } else {
-    console.log("Не нашли совпадение:", imgSemant);
+    console.log("Не нашли точное совпадение.");
     defeat();
   }
 }
