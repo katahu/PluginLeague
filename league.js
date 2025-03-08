@@ -1,5 +1,7 @@
 let currentLocation = null;
-
+function toggleConfirmInterceptor(enabled) {
+  window.dispatchEvent(new CustomEvent("toggleConfirmInterceptor", { detail: { enabled } }));
+}
 function locationSearch() {
   const divLocation = document.querySelector("#divLocTitleText");
 
@@ -7,7 +9,6 @@ function locationSearch() {
     return;
   }
 
-  // Функция для обработки изменений
   const updateLocation = () => {
     if (divLocation) {
       currentLocation = divLocation.textContent;
@@ -20,7 +21,6 @@ function locationSearch() {
   //   }
   // };
 
-  // Создаем экземпляр MutationObserver
   const observer = new MutationObserver((mutationsList) => {
     for (const mutation of mutationsList) {
       if (mutation.type === "childList" || mutation.type === "characterData") {
@@ -29,14 +29,11 @@ function locationSearch() {
     }
   });
 
-  // Настроим наблюдатель, чтобы отслеживать изменения дочерних узлов и текстовых узлов
   observer.observe(divLocation, {
-    childList: true, // Наблюдать за добавлением или удалением дочерних узлов
-    // subtree: true, // Наблюдать за всеми потомками (не только за непосредственными дочерними элементами)
-    characterData: true, // Наблюдать за изменениями текстового содержимого
+    childList: true,
+    characterData: true,
   });
 
-  // Начальное обновление
   updateLocation();
 }
 
@@ -45,7 +42,6 @@ function playSound() {
 
   const soundUrl = chrome.runtime.getURL("sound.wav");
 
-  // Создаем объект Audio и запускаем воспроизведение
   const audio = new Audio(soundUrl);
   audio.play().catch((error) => {
     console.error("Ошибка при воспроизведении звука:", error);

@@ -13,6 +13,7 @@ document.body.appendChild(btnMenu);
 btnToggle.addEventListener("click", () => {
   btnMenu.classList.toggle("active");
 });
+
 function getLocalStorageValue(key, defaultValue) {
   const stored = localStorage.getItem(key);
   return stored !== null ? JSON.parse(stored) : defaultValue;
@@ -52,7 +53,6 @@ function Button(option) {
     });
   }
   if (onClick) {
-    // исправлено с "onclick" на "onClick"
     el.addEventListener("click", (e) => {
       e.stopPropagation();
       const checkbox = el.querySelector('input[type="checkbox"]');
@@ -65,12 +65,14 @@ function Button(option) {
 
   return el;
 }
+
 const menu = [
   {
     icon: "fa-light icons-fight",
     text: "Атака",
     onClick: () => {
       controller();
+      toggleConfirmInterceptor(true);
     },
   },
   {
@@ -85,6 +87,7 @@ const menu = [
     text: "Стоп",
     onClick: () => {
       stopBot();
+      toggleConfirmInterceptor(false);
     },
   },
   {
