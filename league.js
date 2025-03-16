@@ -14,12 +14,6 @@ function locationSearch() {
       currentLocation = divLocation.textContent;
     }
   };
-  // С вырезанами цифрами
-  // const updateLocation = () => {
-  //   if (divLocation && divLocation.textContent.startsWith("Уровень")) {
-  //     currentLocation = divLocation.textContent.replace(/\d+/g, "").trim();
-  //   }
-  // };
 
   const observer = new MutationObserver((mutationsList) => {
     for (const mutation of mutationsList) {
@@ -38,12 +32,11 @@ function locationSearch() {
 }
 
 function playSound() {
-  // const extensionId = chrome.runtime.id; // Получить ID расширения
-
-  const soundUrl = chrome.runtime.getURL("sound.wav");
+  const soundUrl = chrome.runtime.getURL("sound.mp3");
 
   const audio = new Audio(soundUrl);
   audio.play().catch((error) => {
+    console.log("Sound URL:", soundUrl);
     console.error("Ошибка при воспроизведении звука:", error);
   });
 }

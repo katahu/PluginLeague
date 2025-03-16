@@ -3,7 +3,7 @@ const divLocGo = divLoc.querySelector("#divLocGo");
 const divLocNpc = divLoc.querySelector("#divLocNpc");
 const delayHeal = () => new Promise((resolve) => setTimeout(resolve, Math.floor(Math.random() * 500) + 200));
 let isHeal = false;
-// Функция для перемещения по маршруту
+
 async function moveHeal() {
   if (isHeal) return;
   isHeal = true;
@@ -20,7 +20,6 @@ async function moveHeal() {
   );
   btnSwitchWilds.click();
 
-  // Находим маршруты для перемещения
   const pathToTarget = route[0];
   const pathBack = route[1];
 
@@ -62,7 +61,6 @@ async function healNPC() {
   const btnLocHeal = divLocNpc.querySelector(".btnLocHeal").click();
 
   await controllerMutatioNPC(divElements);
-
   const btnHeal = divElements.querySelector(".menuHealAll").click();
 
   function controllerMutatioNPC(targetNode) {
@@ -84,17 +82,14 @@ async function healNPC() {
 // Контроллер для перемещения
 function controllerMutationMove() {
   return new Promise((resolve) => {
-    // Как только добавился узел, то передаем промис и отключаем наблюдение
     const observer = new MutationObserver((mutationsList) => {
       for (let mutation of mutationsList) {
         if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
-          observer.disconnect(); // Отключаем наблюдение
-          resolve(); // Разрешаем промис
+          observer.disconnect();
+          resolve();
         }
       }
     });
-
-    // Наблюдаем за изменениями дочерних элементов
     observer.observe(divLocGo, { childList: true });
   });
 }

@@ -6,12 +6,14 @@ const attackHandlers = {
   defeat: () => defeat(),
   semant: () => semant(),
 };
+const arrWeather = ["w3", "w4"];
 const delayAttack = () => new Promise((resolve) => setTimeout(resolve, Math.floor(Math.random() * 200) + 200));
 const delayFast = () => new Promise((resolve) => setTimeout(resolve, Math.floor(Math.random() * 1200) + 200));
 
 const divVisioFight = document.querySelector("#divVisioFight");
 let isActive = false;
-let observerControlller;
+let observerControlller = null;
+
 async function controller() {
   if (isActive) return;
   isActive = true;
@@ -21,11 +23,10 @@ async function controller() {
     if (!(await checkH())) return;
     controlleAttack();
   }
-  // Создаем экземпляр MutationObserver
+
   observerControlller = new MutationObserver((mutationsList) => {
     for (let mutation of mutationsList) {
       if (mutation.type === "attributes" && mutation.attributeName === "style") {
-        // Получаем текущее значение display
         const currentDisplayStyle = window.getComputedStyle(divVisioFight).display;
         if (currentDisplayStyle == "none") {
           setTimeout(() => {
@@ -38,13 +39,13 @@ async function controller() {
     }
   });
 
-  // Настраиваем наблюдение за изменением атрибутов
   observerControlller.observe(divVisioFight, {
-    attributes: true, // Следим за изменениями атрибутов
-    attributeFilter: ["style"], // Следим только за изменениями стиля
+    attributes: true,
+    attributeFilter: ["style"],
   });
 }
 function stopBot() {
+  if (observerControlller === null) return;
   observerControlller.disconnect();
   observerControlller = null;
   isActive = false;
@@ -53,35 +54,39 @@ function controllerMutationAtack() {
   return new Promise((resolve) => {
     const divFightI = divVisioFight.querySelector("#divFightI");
 
-    // Как только добавился узел, то передаем промис и отключаем наблюдение
     const observer = new MutationObserver((mutationsList) => {
       for (let mutation of mutationsList) {
         if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
-          observer.disconnect(); // Отключаем наблюдение
-          resolve(); // Разрешаем промис
+          observer.disconnect();
+          resolve();
         }
       }
     });
-
-    // Наблюдаем за изменениями дочерних элементов
     observer.observe(divFightI, { childList: true });
   });
 }
 
 function controlleAttack() {
-  const divFightH = divVisioFight.querySelector("#divFightH");
-  const ElementNameH = divFightH.querySelector(".name");
-  if (!ElementNameH) return;
-  const nameH = ElementNameH.textContent.trim();
+  const mnsH = divVisioFight.querySelector("#divFightH .name");
+  const nameH = mnsH.textContent.trim();
 
-  if (!ElementNameH || ElementNameH.classList.length > 1 || !ElementNameH.classList.contains("name")) {
+  if (!mnsH || mnsH.classList.length > 1) {
     playSound();
     stopBot();
     return;
   }
+  if (weather) {
+    const weather = divVisioFight.querySelector(".iconweather");
+    const weatherClasses = weather.className.split(" ");
+    const hasWeatherClass = weatherClasses.some((cls) => arrWeather.includes(cls));
+    if (hasWeatherClass) {
+      playSound();
+      return;
+    }
+  }
   const locationData = routerAttack[currentLocation];
   const { mob, attack } = locationData;
-  // Универсальная проверка
+
   for (const [type, names] of Object.entries(mob)) {
     if (names.includes(nameH)) {
       const handler = attackHandlers[type];
@@ -96,12 +101,9 @@ function controlleAttack() {
 }
 async function handleCraftAndAttackTwo(type, attack) {
   while (true) {
-    // Зацикливаем клик
-    // Получаем все элементы с селектором ".moves .divMoveTitle" внутри элемента с ID "divFightI"
     const allAttackClickable = Array.from(divVisioFight.querySelectorAll("#divFightI .moves .divMoveTitle"));
     let clickAtack = null;
 
-    // Проходим по каждому элементу и проверяем его текст
     allAttackClickable.forEach((element) => {
       if (element.textContent.trim() === attack) {
         clickAtack = element.parentElement;
@@ -128,16 +130,16 @@ async function switchMob(type, attack) {
   ball.click();
 
   await observerElements(divElements);
-  const divElementList = divElements.querySelectorAll(".divElement"); // Здесь исправлено
+  const divElementList = divElements.querySelectorAll(".divElement");
 
   for (const divElement of divElementList) {
     const name = divElement.querySelector(".name");
     const nameText = name.textContent.trim();
     const namealfavit = nameText.replace(/[^a-zA-Zа-яА-Я]/g, "");
     if (namealfavit === nameSwitch) {
-      await delayFast(); // Делаем задержку
-      divElement.click(); // Кликаем на нужный элемент
-      break; // Выходим из цикла, чтобы не кликать на другие элементы
+      await delayFast();
+      divElement.click();
+      break;
     }
   }
   await controllerMutationAtack();
@@ -145,16 +147,6 @@ async function switchMob(type, attack) {
 }
 
 async function handleUpPokemon() {
-  if (weather) {
-    const arrWeather = ["w3", "w4"];
-    const weather = divVisioFight.querySelector(".iconweather");
-    const weatherClasses = weather.className.split(" ");
-    const hasWeatherClass = weatherClasses.some((cls) => arrWeather.includes(cls));
-    if (hasWeatherClass) {
-      playSound();
-      return;
-    }
-  }
   const divElements = document.querySelector(".divElements");
   const divFightI = divVisioFight.querySelector("#divFightI");
   const allAttackClickable = Array.from(divFightI.querySelectorAll("#divFightI .moves .divMoveTitle"));
@@ -218,8 +210,8 @@ async function observerElements(divElements) {
     const observer = new MutationObserver((mutationsList) => {
       for (const mutation of mutationsList) {
         if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
-          observer.disconnect(); // Останавливаем наблюдателя
-          resolve(); // Завершаем промис
+          observer.disconnect();
+          resolve();
         }
       }
     });
@@ -231,8 +223,8 @@ async function checkI() {
   const divFightI = document.querySelector("#divFightI");
   const barHP = divFightI.querySelector(".barHP div");
 
-  const styleWidth = barHP.style.width; // Получаем строку вида "99.5781%"
-  const widthPercent = parseFloat(styleWidth); // Преобразуем в число 99.5781
+  const styleWidth = barHP.style.width;
+  const widthPercent = parseFloat(styleWidth);
   if (widthPercent <= 30) {
     const currentDisplayStyle = window.getComputedStyle(divVisioFight).display;
     if (currentDisplayStyle !== "none") {
@@ -255,10 +247,9 @@ async function checkI() {
   const allAttack = divFightI.querySelector(".moves");
   const divMoveParamsElements = allAttack.querySelectorAll(".divMoveParams");
 
-  // Перебор всех найденных элементов
   for (const element of divMoveParamsElements) {
     const text = element.textContent.trim();
-    // Разделяем текст по символу `/`
+
     const [current, total] = text.split("/").map(Number);
 
     if (current <= 1) {
@@ -278,9 +269,9 @@ async function checkH() {
   const divFightH = divVisioFight.querySelector("#divFightH");
   const barHP = divFightH.querySelector(".barHP div");
   if (!barHP) return false;
-  // Извлечение значения ширины из атрибута style
-  const styleWidth = barHP.style.width; // Получаем строку вида "99.5781%"
-  const widthPercent = parseFloat(styleWidth); // Преобразуем в число 99.5781
+
+  const styleWidth = barHP.style.width;
+  const widthPercent = parseFloat(styleWidth);
   if (widthPercent <= 0) {
     return false;
   }
@@ -296,7 +287,6 @@ async function defeat() {
   const buttons = divFightButtons.querySelectorAll("div");
   let defeatButton = null;
   let closeButton = null;
-  // Находим кнопки "Сдаться" и "Закрыть"
   buttons.forEach((button) => {
     const buttonText = button.textContent.trim();
     if (buttonText === "Сдаться") {

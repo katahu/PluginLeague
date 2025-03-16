@@ -1,46 +1,59 @@
 const dropMenu = document.createElement("div");
 dropMenu.classList.add("drop-menu");
-document.body.append(dropMenu);
+document, body.appendChild(dropMenu);
 
 const btnToggle = document.createElement("div");
 btnToggle.classList.add("btn-toggle");
 document.body.appendChild(btnToggle);
 
-const btnMenu = document.createElement("div");
-btnMenu.classList.add("btn-menu");
-document.body.appendChild(btnMenu);
+const menuContainer = document.createElement("div");
+menuContainer.classList.add("menuContainer");
+document.body.append(menuContainer);
+
+const mainMenu = document.createElement("div");
+mainMenu.classList.add("main-menu");
+menuContainer.append(mainMenu);
+
+const backdrop = document.createElement("div");
+backdrop.classList.add("backdrop");
+menuContainer.append(backdrop);
 
 btnToggle.addEventListener("click", () => {
-  btnMenu.classList.toggle("active");
+  const isActive = mainMenu.classList.toggle("active");
+  backdrop.classList.toggle("active", isActive);
+});
+
+backdrop.addEventListener("click", () => {
+  mainMenu.classList.remove("active");
+  backdrop.classList.remove("active");
 });
 
 function getLocalStorageValue(key, defaultValue) {
   const stored = localStorage.getItem(key);
   return stored !== null ? JSON.parse(stored) : defaultValue;
 }
+
 let weather = getLocalStorageValue("weather", false);
 
 function Button(option) {
   const { icon, text, checkbox, localStorageKey, onClick } = option;
 
   const el = document.createElement("div");
+  el.classList.add("menuItem");
+  if (text) el.textContent = text;
 
-  el.classList.add("btn-bot");
-  if (text) {
-    el.textContent = text;
-  }
   if (icon) {
     const i = document.createElement("i");
     i.classList.add(...icon.split(" "));
     el.prepend(i);
   }
+
   if (checkbox) {
     const label = document.createElement("label");
     label.classList.add("toggle");
     const input = document.createElement("input");
     input.type = "checkbox";
-
-    input.checked = getLocalStorageValue(option.localStorageKey, option.defaultValue ?? false);
+    input.checked = getLocalStorageValue(localStorageKey, option.defaultValue ?? false);
 
     const slider = document.createElement("span");
     slider.classList.add("slider");
@@ -48,10 +61,11 @@ function Button(option) {
     el.append(label);
 
     input.addEventListener("change", (e) => {
-      localStorage.setItem(option.localStorageKey, JSON.stringify(e.target.checked));
+      localStorage.setItem(localStorageKey, JSON.stringify(e.target.checked));
       if (option.onClick) option.onClick(e);
     });
   }
+
   if (onClick) {
     el.addEventListener("click", (e) => {
       e.stopPropagation();
@@ -78,9 +92,7 @@ const menu = [
   {
     icon: "fa-light icons-heal",
     text: "Хил",
-    onClick: () => {
-      moveHeal();
-    },
+    onClick: () => moveHeal(),
   },
   {
     icon: "fa-light icons-stop",
@@ -93,9 +105,7 @@ const menu = [
   {
     icon: "fa-light icons-update",
     text: "Обновить",
-    onClick: () => {
-      fetchAttack(), fetchHeal();
-    },
+    onClick: () => fetchData(),
   },
   {
     icon: "fa-light icons-cloud",
@@ -119,5 +129,5 @@ const menu = [
 
 menu.forEach((item) => {
   const button = Button(item);
-  btnMenu.appendChild(button);
+  mainMenu.appendChild(button);
 });

@@ -1,51 +1,35 @@
-const routerAttack = {};
-
-const routes = {};
-
+let routerAttack = {};
+let routes = {};
 let nameSwitch = "";
 let upPockemon = "";
-let = attackUp = "";
+let attackUp = "";
 let imgSemant = [];
-async function fetchAttack() {
-  try {
-    const response = await fetch("https://dce6373a41a58485.mokky.dev/attack");
-    const data = await response.json();
 
-    if (Array.isArray(data) && data.length > 0) {
-      Object.assign(routerAttack, data[0]);
+async function fetchData() {
+  try {
+    const attackResponse = await fetch("https://dce6373a41a58485.mokky.dev/attack");
+    if (!attackResponse.ok) {
+      throw new Error(`Ошибка при загрузке данных для атаки: ${attackResponse.status}`);
     }
-    nameSwitch = data[0].nameSwitch || "";
-    upPockemon = data[0].upPockemon || "";
-    attackUp = data[0].attackUp || "";
-    imgSemant = data[0].imgSemant || [];
+    const attackData = await attackResponse.json();
+
+    const { nameSwitch, upPockemon, attackUp, imgSemant } = attackData[0];
+    Object.assign(routerAttack, attackData[0]);
+
     console.log("Локации и мобы успешно загружены:", routerAttack);
+
+    const healResponse = await fetch("https://dce6373a41a58485.mokky.dev/routers");
+    if (!healResponse.ok) {
+      throw new Error(`Ошибка при загрузке данных для лечения: ${healResponse.status}`);
+    }
+    const healData = await healResponse.json();
+
+    Object.assign(routes, healData[0]);
+    routes = healData[0];
+
+    console.log("Маршрут для лечения успешно загружены", routes);
   } catch (error) {
-    console.error("Ошибка при загрузке маршрутов:", error);
+    console.error("Ошибка в загрузке:", error);
   }
 }
-
-async function initializeAttack() {
-  await fetchAttack();
-}
-
-initializeAttack();
-
-async function fetchHeal() {
-  try {
-    const response = await fetch("https://dce6373a41a58485.mokky.dev/routers");
-    const data = await response.json();
-
-    const routesData = data[0];
-
-    Object.assign(routes, routesData);
-
-    console.log("Маршруты успешно загружены:", routes);
-  } catch (error) {
-    console.error("Ошибка при загрузке маршрутов:", error);
-  }
-}
-
-async function initializeHeal() {
-  await fetchHeal();
-}
-initializeHeal();
+fetchData();
