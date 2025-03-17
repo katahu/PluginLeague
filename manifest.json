@@ -6,7 +6,7 @@
   "content_scripts": [
     {
       "matches": ["https://game.league17.ru/*"],
-      "js": ["script.js", "UI.js", "API.js", "league.js", "heal.js", "bot.js", "checker.js", "new.js"],
+      "js": ["script.js", "API.js", "UI.js", "league.js", "heal.js", "bot.js", "checker.js", "development.js"],
       "css": ["fonts.css", "style.css"],
       "type": "module"
     }

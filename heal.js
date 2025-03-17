@@ -7,10 +7,11 @@ let isHeal = false;
 async function moveHeal() {
   if (isHeal) return;
   isHeal = true;
-  const route = routes[currentLocation];
 
+  const route = userHeal[currentLocation] || routeHeal[currentLocation];
   if (!route) {
     console.error(`Маршрут для локации ${currentLocation} не найден.`);
+    isHeal = false;
     return;
   }
 
@@ -20,37 +21,74 @@ async function moveHeal() {
   );
   btnSwitchWilds.click();
 
-  const pathToTarget = route[0];
-  const pathBack = route[1];
+  if (currentLocation === "Горный водопад") {
+    const [pathToTarget, pathBack] = route;
 
-  // Движение по первому маршруту
-  for (let buttonId of pathToTarget) {
-    const button = document.querySelector(`#${buttonId}`);
-    if (button) {
-      button.click();
-      await controllerMutationMove();
-      await delayHeal();
-    } else {
-      console.error(`Кнопка ${buttonId} не найдена.`);
-      return;
+    for (const buttonId of pathToTarget) {
+      const button = document.querySelector(`#${buttonId}`);
+      if (button) {
+        button.click();
+        await controllerMutationMove();
+        await delayHeal();
+      } else {
+        console.error(`Кнопка ${buttonId} не найдена.`);
+        isHeal = false;
+        return;
+      }
+    }
+
+    await delayFast();
+    await healNPC();
+    await delayFast();
+
+    for (const buttonId of pathBack) {
+      const button = document.querySelector(`#${buttonId}`);
+      if (button) {
+        button.click();
+        await controllerMutationMove();
+        await delayHeal();
+      } else {
+        console.error(`Кнопка ${buttonId} не найдена.`);
+        isHeal = false;
+        return;
+      }
+    }
+  } else if (route[0]) {
+    const path = route[0];
+
+    for (let i = 1; i < path.length; i++) {
+      const buttonId = path[i];
+      const button = document.querySelector(`#${buttonId}`);
+      if (button) {
+        button.click();
+        await controllerMutationMove();
+        await delayHeal();
+      } else {
+        console.error(`Кнопка ${buttonId} не найдена.`);
+        isHeal = false;
+        return;
+      }
+    }
+
+    await delayFast();
+    await healNPC();
+    await delayFast();
+
+    for (let i = path.length - 2; i >= 0; i--) {
+      const buttonId = path[i];
+      const button = document.querySelector(`#${buttonId}`);
+      if (button) {
+        button.click();
+        await controllerMutationMove();
+        await delayHeal();
+      } else {
+        console.error(`Кнопка ${buttonId} не найдена.`);
+        isHeal = false;
+        return;
+      }
     }
   }
 
-  await delayFast();
-  await healNPC();
-  await delayFast();
-
-  for (let buttonId of pathBack) {
-    const button = document.querySelector(`#${buttonId}`);
-    if (button) {
-      button.click();
-      await controllerMutationMove();
-      await delayHeal();
-    } else {
-      console.error(`Кнопка ${buttonId} не найдена.`);
-      return;
-    }
-  }
   await delayHeal();
   btnSwitchWilds.click();
   isHeal = false;

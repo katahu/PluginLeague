@@ -1,9 +1,9 @@
 const drops = new Map(); // Используем Map для хранения данных
 
-const noneDrop = document.createElement("span");
-noneDrop.classList.add("none-drop");
-noneDrop.textContent = "Дроп отсутствует";
-dropMenu.append(noneDrop);
+// const noneDrop = document.createElement("span");
+// noneDrop.classList.add("none-drop");
+// noneDrop.textContent = "Дроп отсутствует";
+// dropMenu.append(noneDrop);
 
 function checker() {
   const alertElement = document.querySelector("#divAlerten .alerten.poke");

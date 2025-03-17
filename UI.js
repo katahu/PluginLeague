@@ -1,6 +1,6 @@
 const dropMenu = document.createElement("div");
 dropMenu.classList.add("drop-menu");
-document, body.appendChild(dropMenu);
+document.body.appendChild(dropMenu);
 
 const btnToggle = document.createElement("div");
 btnToggle.classList.add("btn-toggle");
@@ -28,19 +28,19 @@ backdrop.addEventListener("click", () => {
   backdrop.classList.remove("active");
 });
 
-function getLocalStorageValue(key, defaultValue) {
-  const stored = localStorage.getItem(key);
-  return stored !== null ? JSON.parse(stored) : defaultValue;
-}
-
-let weather = getLocalStorageValue("weather", false);
-
 function Button(option) {
-  const { icon, text, checkbox, localStorageKey, onClick } = option;
+  const { icon, text, regularText, checkbox, localStorageKey, onClick } = option;
 
   const el = document.createElement("div");
   el.classList.add("menuItem");
-  if (text) el.textContent = text;
+  if (text || regularText) {
+    if (text) {
+      el.textContent = text;
+    }
+    if (regularText) {
+      el.innerHTML = regularText;
+    }
+  }
 
   if (icon) {
     const i = document.createElement("i");
@@ -116,6 +116,13 @@ const menu = [
     onClick: () => {
       weather = !weather;
       localStorage.setItem("weather", JSON.stringify(weather));
+    },
+  },
+  {
+    icon: "fa-light icons-lvlUP",
+    text: "Прокачка",
+    onClick: () => {
+      settingMenu.classList.toggle("active");
     },
   },
   {

@@ -84,7 +84,7 @@ function controlleAttack() {
       return;
     }
   }
-  const locationData = routerAttack[currentLocation];
+  const locationData = routeAttack[currentLocation];
   const { mob, attack } = locationData;
 
   for (const [type, names] of Object.entries(mob)) {

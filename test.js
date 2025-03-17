@@ -5,7 +5,7 @@
 //     need_treated: true,
 //     treatment_path: [
 //       ["Безлюдная дорога", "Олстон", "Монстроцентр"],
-//       ["#btnGo42", "#btnGo33", "#btnGo35"],
+//       ["btnGo42", "btnGo33", "btnGo35"],
 //     ],
 //     numbers_attacks: 2,
 //     Волек: [0, 101, "nobody"],
@@ -18,7 +18,7 @@
 //     need_treated: true,
 //     treatment_path: [
 //       ["Заросшая тропа", "Олстон", "Монстроцентр"],
-//       ["#btnGo41", "#btnGo33", "#btnGo35"],
+//       ["btnGo41", "btnGo33", "btnGo35"],
 //     ],
 //     numbers_attacks: 2,
 //     Пискун: [0, 101, "nobody"],
@@ -31,7 +31,7 @@
 //     need_treated: true,
 //     treatment_path: [
 //       ["Горный перевал", "Олстон", "Монстроцентр"],
-//       ["#btnGo32", "#btnGo33", "#btnGo35"],
+//       ["btnGo32", "btnGo33", "btnGo35"],
 //     ],
 //     numbers_attacks: 2,
 //     Скалоб: [0, 101, "nobody"],
@@ -43,7 +43,7 @@
 //     need_treated: true,
 //     treatment_path: [
 //       ["Дорога №2", "Мост", "Оливин", "Монстроцентр"],
-//       ["#btnGo18", "#btnGo22", "#btnGo23", "#btnGo25"],
+//       ["btnGo18", "btnGo22", "btnGo23", "btnGo25"],
 //     ],
 //     numbers_attacks: 2,
 //     Дроздор: [0, 101, "nobody"],
@@ -57,7 +57,7 @@
 //     need_treated: true,
 //     treatment_path: [
 //       ["Причал", "Пляж", "Оливин", "Монстроцентр"],
-//       ["#btnGo156", "#btnGo31", "#btnGo23", "#btnGo25"],
+//       ["btnGo156", "btnGo31", "btnGo23", "btnGo25"],
 //     ],
 //     numbers_attacks: 2,
 //     Дибарак: [0, 101, "nobody"],
@@ -68,7 +68,7 @@
 //     need_treated: true,
 //     treatment_path: [
 //       ["Лиственный подлесок", "Лес вокруг воздушного стадиона", "Старый район", "Площадь Голденрода", "Монстроцентр"],
-//       ["#btnGo450", "#btnGo7", "#btnGo9", "#btnGo1", "#btnGo3"],
+//       ["btnGo450", "btnGo7", "btnGo9", "btnGo1", "btnGo3"],
 //     ],
 //     numbers_attacks: 2,
 //     Мотль: [0, 101, "nobody"],
@@ -81,7 +81,7 @@
 //     need_treated: true,
 //     treatment_path: [
 //       ["Лес вокруг воздушного стадиона", "Старый район", "Площадь Голденрода", "Монстроцентр"],
-//       ["#btnGo7", "#btnGo9", "#btnGo1", "#btnGo3"],
+//       ["btnGo7", "btnGo9", "btnGo1", "btnGo3"],
 //     ],
 //     numbers_attacks: 2,
 //     Мотль: [0, 101, "nobody"],
@@ -100,7 +100,7 @@
 //     need_treated: true,
 //     treatment_path: [
 //       ["Пасека", "Ферма", "Дорога №8", "Флауренция", "Дорога №3", "Новый район", "Площадь Голденрода", "Монстроцентр"],
-//       ["#btnGo779", "#btnGo776", "#btnGo59", "#btnGo47", "#btnGo17", "#btnGo10", "#btnGo1", "#btnGo3"],
+//       ["btnGo779", "btnGo776", "btnGo59", "btnGo47", "btnGo17", "btnGo10", "btnGo1", "btnGo3"],
 //     ],
 //     numbers_attacks: 2,
 //     Москилл: [0, 90, "nobody"],
@@ -118,7 +118,7 @@
 //     need_treated: true,
 //     treatment_path: [
 //       ["Маршрут 12", "Лавандия", "Монстроцентр"],
-//       ["#btnGo165", "#btnGo164", "#btnGo209"],
+//       ["btnGo165", "btnGo164", "btnGo209"],
 //     ],
 //     numbers_attacks: 2,
 //     Шримпер: [0, 101, "nobody"],
@@ -133,7 +133,7 @@
 //     need_treated: true,
 //     treatment_path: [
 //       ["Маршрут 16", "Целадон", "Монстроцентр"],
-//       ["#btnGo176", "#btnGo177", "#btnGo206"],
+//       ["btnGo176", "btnGo177", "btnGo206"],
 //     ],
 //     numbers_attacks: 2,
 //     Фоснейл: [0, 101, "nobody"],
@@ -146,7 +146,7 @@
 //     need_treated: true,
 //     treatment_path: [
 //       ["Горный тоннель", "Маршрут 10", "Лавандия", "Монстроцентр"],
-//       ["#btnGo183", "#btnGo184", "#btnGo164", "#btnGo209"],
+//       ["btnGo183", "btnGo184", "btnGo164", "btnGo209"],
 //     ],
 //     numbers_attacks: 2,
 //     Крыскун: [0, 101, "nobody"],
@@ -162,7 +162,7 @@
 //     need_treated: true,
 //     treatment_path: [
 //       ["Электростанция", "Маршрут 9", "Монстроцентр"],
-//       ["#btnGo182", "#btnGo181", "#btnGo199"],
+//       ["btnGo182", "btnGo181", "btnGo199"],
 //     ],
 //     number_attacks: 2,
 //     Дуоселл: [0, 101, "nobody"],
@@ -175,7 +175,7 @@
 //     need_treated: true,
 //     treatment_path: [
 //       ["Подсобка", "Магазин «Сладкая выпечка»", "Лакричная аллея", "Мармеладная площадь"],
-//       ["#btnGo1118", "#btnGo1113", "#btnGo1109", "#btnGo1108"],
+//       ["btnGo1118", "btnGo1113", "btnGo1109", "btnGo1108"],
 //     ],
 //     number_attacks: 2,
 //     Сласедь: [0, 101, "nobody"],
@@ -188,7 +188,7 @@
 //     need_treated: true,
 //     treatment_path: [
 //       ["Маршрут 16", "Маршрут 14", "Эстайр Сити", "Монстроцентр"],
-//       ["#btnGo500", "#btnGo482", "#btnGo481", "#btnGo485"],
+//       ["btnGo500", "btnGo482", "btnGo481", "btnGo485"],
 //     ],
 //     numbers_attacks: 2,
 //     Орли: [0, 101, "nobody"],
@@ -201,7 +201,7 @@
 //     need_treated: true,
 //     treatment_path: [
 //       ["Маршрут 18", "Снежный путь", "Заброшенная дорога", "Северный причал Селена", "Монстроцентр"],
-//       ["#btnGo507", "#btnGo506", "#btnGo414", "#btnGo412", "#btnGo473"],
+//       ["btnGo507", "btnGo506", "btnGo414", "btnGo412", "btnGo473"],
 //     ],
 //     numbers_attacks: 2,
 //     Ленси: [0, 101, "nobody"],
@@ -213,7 +213,7 @@
 //     need_treated: false,
 //     treatment_path: [
 //       ["Пещера", "Пещера", "Пещера", "Пещера", "Провал", "Маршрут 4", "Остарон", "Монстроцентр"],
-//       ["#btnGo427", "#btnGo426", "#btnGo424", "#btnGo423", "#btnGo422", "#btnGo418", "#btnGo419", "#btnGo457"],
+//       ["btnGo427", "btnGo426", "btnGo424", "btnGo423", "btnGo422", "btnGo418", "btnGo419", "btnGo457"],
 //     ],
 //     numbers_attacks: 2,
 //     Потат: [0, 101, "nobody"],
@@ -224,7 +224,7 @@
 //     need_treated: true,
 //     treatment_path: [
 //       ["Лес Селена", "Северный причал Селена", "Монстроцентр"],
-//       ["#btnGo415", "#btnGo412", "#btnGo473"],
+//       ["btnGo415", "btnGo412", "btnGo473"],
 //     ],
 //     numbers_attacks: 2,
 //     Орли: [0, 101, "nobody"],
@@ -239,7 +239,7 @@
 //     need_treated: true,
 //     treatment_path: [
 //       ["Крутой подъём", "Горная деревушка", "Стадион Призраков"],
-//       ["#btnGo448", "#btnGo447", "#btnGo653"],
+//       ["btnGo448", "btnGo447", "btnGo653"],
 //     ],
 //     numbers_attacks: 2,
 //     Бонозавр: [0, 101, "nobody"],
@@ -250,7 +250,7 @@
 //     need_treated: true,
 //     treatment_path: [
 //       ["Старая дорога", "Маршрут 16", "Маршрут 14", "Эстайр сити", "Монстроцентр"],
-//       ["#btnGo499", "#btnGo500", "#btnGo482", "#btnGo481", "#btnGo485"],
+//       ["btnGo499", "btnGo500", "btnGo482", "btnGo481", "btnGo485"],
 //     ],
 //     numbers_attacks: 2,
 //     Редлик: [0, 101, "nobody"],
@@ -262,7 +262,7 @@
 //     need_treated: true,
 //     treatment_path: [
 //       ["Пастбище", "Маршрут 8", "Остарон", "Монстроцентр"],
-//       ["#btnGo465", "#btnGo468", "#btnGo419", "#btnGo457"],
+//       ["btnGo465", "btnGo468", "btnGo419", "btnGo457"],
 //     ],
 //     numbers_attacks: 2,
 //     Дроздор: [0, 101, "nobody"],
@@ -277,7 +277,7 @@
 //     need_treated: true,
 //     treatment_path: [
 //       ["Лазурная заводь", "Маршрут 15", "Эстайр сити", "Монстроцентр"],
-//       ["#btnGo489", "#btnGo483", "#btnGo481", "#btnGo485"],
+//       ["btnGo489", "btnGo483", "btnGo481", "btnGo485"],
 //     ],
 //     numbers_attacks: 2,
 //     Ополоз: [0, 101, "nobody"], //nobody - никого не ловить, all - ловить всех
@@ -289,7 +289,7 @@
 //     need_treated: true,
 //     treatment_path: [
 //       ["Грот", "Маршрут 5", "Остратон", "Монстроцентр"],
-//       ["#btnGo421", "#btnGo420", "#btnGo419", "btnGo457"],
+//       ["btnGo421", "btnGo420", "btnGo419", "btnGo457"],
 //     ],
 //     numbers_attacks: 2,
 //     Потат: [0, 101, "nobody"], //nobody - никого не ловить, all - ловить всех
@@ -310,7 +310,7 @@
 //         "Северный причал Селена",
 //         "Монстроцентр",
 //       ],
-//       ["#btnGo508", "#btnGo507", "#btnGo506", "#btnGo414", "#btnGo412", "#btnGo473"],
+//       ["btnGo508", "btnGo507", "btnGo506", "btnGo414", "btnGo412", "btnGo473"],
 //     ],
 //     numbers_attacks: 2,
 //     Демот: [0, 101, "nobody"], //nobody - никого не ловить, all - ловить всех
@@ -349,7 +349,7 @@
 //     Шумышь: [0, 101, "nobody"],
 //     treatment_path: [
 //       ["Каменная площадка", "Ручей", "Возвышенность", "Саммер", "Монстроцентр"],
-//       ["#btnGo721", "#btnGo720", "#btnGo574", "#btnGo566", "#btnGo567"],
+//       ["btnGo721", "btnGo720", "btnGo574", "btnGo566", "btnGo567"],
 //     ],
 //     numbers_attacks: 2,
 //   },
@@ -357,7 +357,7 @@
 //     need_treated: true,
 //     treatment_path: [
 //       ["Вулканическое плато", "Маршрут №3  ", "Маршрут №2  ", "Маршрут №1", "Возвышенность", "Саммер", "Монстроцентр"],
-//       ["#btnGo581", "#btnGo577", "#btnGo576", "#btnGo575", "#btnGo574", "#btnGo566", "#btnGo567"],
+//       ["btnGo581", "btnGo577", "btnGo576", "btnGo575", "btnGo574", "btnGo566", "btnGo567"],
 //     ],
 //     numbers_attacks: 2,
 //     Смоггер: [0, 101, "nobody"],
@@ -379,7 +379,7 @@
 //         "Саммер",
 //         "Монстроцентр",
 //       ],
-//       ["#btnGo582", "#btnGo581", "#btnGo577", "#btnGo576", "#btnGo575", "#btnGo574", "#btnGo566", "#btnGo567"],
+//       ["btnGo582", "btnGo581", "btnGo577", "btnGo576", "btnGo575", "btnGo574", "btnGo566", "btnGo567"],
 //     ],
 //     numbers_attacks: 2,
 //     Шумышь: [0, 101, "nobody"],
@@ -394,7 +394,7 @@
 //     need_treated: true,
 //     treatment_path: [
 //       ["Коралловая роща", "Мелководье", "Коралловая лагуна", "Песчаная тропа", "Гавань", "Монстроцентр"],
-//       ["#btnGo892", "#btnGo332", "#btnGo889", "#btnGo888", "#btnGo527", "#btnGo335"],
+//       ["btnGo892", "btnGo332", "btnGo889", "btnGo888", "btnGo527", "btnGo335"],
 //     ],
 //     numbers_attacks: 2,
 //     Каллея: [0, 101, "nobody"],
@@ -409,7 +409,7 @@
 //     need_treated: true,
 //     treatment_path: [
 //       ["Старый парк", "Старый квартал", "Гавань", "Монстроцентр"],
-//       ["#btnGo341", "#btnGo529", "#btnGo527", "#btnGo335"],
+//       ["btnGo341", "btnGo529", "btnGo527", "btnGo335"],
 //     ],
 //     numbers_attacks: 2,
 //     Клуббиш: [0, 101, "nobody"],
@@ -427,7 +427,7 @@
 // let event_region = {
 //   "Аттракцион «Амфитеатр»": {
 //     need_treated: true,
-//     treatment_path: [["Аттракцион «Амфитеатр»"], ["#btnGo1307"]],
+//     treatment_path: [["Аттракцион «Амфитеатр»"], ["btnGo1307"]],
 //     numbers_attacks: 2,
 //     Люксеолит: [0, 101, "nobody"],
 //     Кикип: [0, 101, "nobody"],
@@ -636,7 +636,7 @@
 
 // function create_working_location() {
 //   //
-//   variables.location_name = $("#divLocTitleText").text();
+//   variables.location_name = $("divLocTitleText").text();
 //   switch ($(".locpath").text().split(" >", 1).toString()) {
 //     case "Восточный Джото": {
 //       variables.region = east_joto;
@@ -680,31 +680,31 @@
 
 // function variables_input() {
 //   //ввод данных
-//   variables.visio_fight = $("#divVisioFight").attr("style") == "display: none;" ? false : true;
-//   variables.close_fight_button = $("#divFightButtons div:last").attr("style") == "display: none;" ? false : true;
+//   variables.visio_fight = $("divVisioFight").attr("style") == "display: none;" ? false : true;
+//   variables.close_fight_button = $("divFightButtons div:last").attr("style") == "display: none;" ? false : true;
 //   if (variables.visio_fight) {
 //     variables.fatigue =
-//       $("#body").text().indexOf("Вы слишком ослаблены и не можете перемещаться.") == -1 ? false : true;
-//     variables.enemy_monster_color = $("#divFightH .minicard div:first span").text() != "" ? true : false;
-//     variables.enemy_monster_name = $("#divFightH div").is($(".name")) ? $("#divFightH div.name").text() : "";
-//     variables.enemy_monster_lvl = $("#divFightH div").is($(".lvl")) ? $("#divFightH div.lvl").text() : "";
-//     variables.enemy_monster_gender = $("#divFightH div").is($(".gender.sex1"))
+//       $("body").text().indexOf("Вы слишком ослаблены и не можете перемещаться.") == -1 ? false : true;
+//     variables.enemy_monster_color = $("divFightH .minicard div:first span").text() != "" ? true : false;
+//     variables.enemy_monster_name = $("divFightH div").is($(".name")) ? $("divFightH div.name").text() : "";
+//     variables.enemy_monster_lvl = $("divFightH div").is($(".lvl")) ? $("divFightH div.lvl").text() : "";
+//     variables.enemy_monster_gender = $("divFightH div").is($(".gender.sex1"))
 //       ? "male"
-//       : $("#divFightH div").is($(".gender.sex2"))
+//       : $("divFightH div").is($(".gender.sex2"))
 //       ? "female"
-//       : $("#divFightH div").is($(".gender.sex3"))
+//       : $("divFightH div").is($(".gender.sex3"))
 //       ? "asexual"
 //       : "";
-//     variables.enemy_monster_catching = $("#divFightOptions div").is($(".nocatch")) ? false : true;
-//     variables.weather = $("#divFightData div").is($(".iconweather.w0"))
+//     variables.enemy_monster_catching = $("divFightOptions div").is($(".nocatch")) ? false : true;
+//     variables.weather = $("divFightData div").is($(".iconweather.w0"))
 //       ? "normal"
-//       : $("#divFightData div").is($(".iconweather.w1"))
+//       : $("divFightData div").is($(".iconweather.w1"))
 //       ? "rain"
-//       : $("#divFightData div").is($(".iconweather.w2"))
+//       : $("divFightData div").is($(".iconweather.w2"))
 //       ? "sunny"
-//       : $("#divFightData div").is($(".iconweather.w3"))
+//       : $("divFightData div").is($(".iconweather.w3"))
 //       ? "hail"
-//       : $("#divFightData div").is($(".iconweather.w4"))
+//       : $("divFightData div").is($(".iconweather.w4"))
 //       ? "storm"
 //       : "";
 //     variables.attack_first_name = $(".divMoveInfo.clickable:eq(0) .divMoveTitle.category2").text();
@@ -712,11 +712,11 @@
 //     variables.attack_second_pp = +$(".divMoveInfo.clickable:eq(1) .divMoveParams:first").text().split("/")[0];
 //     variables.attack_third_pp = +$(".divMoveInfo.clickable:eq(2) .divMoveParams:first").text().split("/")[0];
 //     variables.attack_fourth_pp = +$(".divMoveInfo.clickable:eq(3) .divMoveParams:first").text().split("/")[0];
-//     variables.enemy_type = $("#divFightH span.title").text();
+//     variables.enemy_type = $("divFightH span.title").text();
 //     {
-//       if ($("#divFightI div").is($(".progressbar.barHP.max"))) {
+//       if ($("divFightI div").is($(".progressbar.barHP.max"))) {
 //         variables.my_monster_hp =
-//           $("#divVisioFight").attr("style") == ""
+//           $("divVisioFight").attr("style") == ""
 //             ? +$(".progressbar.barHP.max div")
 //                 .attr("style")
 //                 .substring(
@@ -725,9 +725,9 @@
 //                 )
 //             : variables.my_monster_hp;
 //       }
-//       if ($("#divFightI div").is($(".progressbar.barHP.mid"))) {
+//       if ($("divFightI div").is($(".progressbar.barHP.mid"))) {
 //         variables.my_monster_hp =
-//           $("#divVisioFight").attr("style") == ""
+//           $("divVisioFight").attr("style") == ""
 //             ? +$(".progressbar.barHP.mid div")
 //                 .attr("style")
 //                 .substring(
@@ -736,9 +736,9 @@
 //                 )
 //             : variables.my_monster_hp;
 //       }
-//       if ($("#divFightI div").is($(".progressbar.barHP.min"))) {
+//       if ($("divFightI div").is($(".progressbar.barHP.min"))) {
 //         variables.my_monster_hp =
-//           $("#divVisioFight").attr("style") == ""
+//           $("divVisioFight").attr("style") == ""
 //             ? +$(".progressbar.barHP.min div")
 //                 .attr("style")
 //                 .substring(
@@ -757,7 +757,7 @@
 //       console.log("heal");
 //     }
 //   }
-//   if ($("#body").text().indexOf("Лечение не требуется.") != -1) {
+//   if ($("body").text().indexOf("Лечение не требуется.") != -1) {
 //     variables.need_heal = false;
 //   }
 //   variables.button_wild_monsters = $("div").is($(".button.btnSwitchWilds.withtext.pressed"));
@@ -1079,7 +1079,7 @@
 //     //17
 //     "В первом раунде Семпатия 100 уровня со статом спец атаки 500 использовала атаку Предсказание против Дибарака 100 уровня": 2,
 //     "Назовите вариант ответа, в котором все атаки получат усиление от способности Грубая": 1,
-//     "Что случится с #292 Приманусом, если он использует атаку Приманка?": 4,
+//     "Что случится с 292 Приманусом, если он использует атаку Приманка?": 4,
 //     "В каком случае монстр умрет от надетой на него Сферы ярости": 2,
 //     "№4 - Поджечь и вызвать песчаную бурю одновременно": 4, //приманус
 //     "Википедия описывает ЭТО как временное состояние, характеризующееся резкой фокусировкой внимания. Это состояние вызывается воздействием другого человека или целенаправленным самовнушением": 2,
@@ -1140,3 +1140,98 @@
 
 //     }
 // }
+
+
+
+
+
+
+
+vd : [
+    "Безлюдная дорога": [
+        [
+            "btnGo42",
+            "btnGo33",
+            "btnGo35"
+        ]
+    ],
+    "Лес вокруг воздушного стадиона": [
+        [
+            "btnGo7",
+            "btnGo9",
+            "btnGo1",
+            "btnGo3"
+        ]
+]
+]
+selen : [
+    "Лес Селена": [
+        [
+            "btnGo415",
+            "btnGo412",
+            "btnGo473"
+        ]
+    ],
+    "Крутой подъём": [
+        [
+            "btnGo448",
+            "btnGo447",
+            "btnGo653"
+        ]
+    ],
+    "Маршрут 16": [
+        [
+            "btnGo500",
+            "btnGo482",
+            "btnGo481",
+            "btnGo485"
+        ]
+    ],
+    "Старая дорога": [
+        [
+            "btnGo499",
+            "btnGo500",
+            "btnGo482",
+            "btnGo481",
+            "btnGo485"
+        ]
+    ],
+    "Пастбище": [
+        [
+            "btnGo465",
+            "btnGo468",
+            "btnGo419",
+            "btnGo457"
+        ]
+    ],
+    "Место падения метеорита": [
+    ["btnGo508", "btnGo507", "btnGo506", "btnGo414", "btnGo412", "btnGo473"]
+],
+"Лазурная заводь": [
+"btnGo489", "btnGo483", "btnGo481", "btnGo485"
+],
+"Грот": [
+["btnGo421", "btnGo420", "btnGo419", "btnGo457"]
+],
+"Маршрут 18": [
+["btnGo507", "btnGo506", "btnGo414", "btnGo412", "btnGo473"]
+],
+"Снежный путь": [
+["btnGo506", "btnGo414", "btnGo412", "btnGo473"]
+],
+"Горный водопад": [
+["btnGo429","btnGo427","btnGo431","btnGo434","btnGo436","btnGo419","btnGo457"],
+["btnGo419","btnGo418","btnGo436","btnGo431","btnGo427","btnGo429","btnGo433"]
+]
+
+
+]
+
+
+
+"": [
+
+]
+
+
+

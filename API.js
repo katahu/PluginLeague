@@ -1,8 +1,9 @@
-let routerAttack = {};
-let routes = {};
+let routeAttack = {};
+let routeHeal = {};
+let userHeal = {};
 let nameSwitch = "";
-let upPockemon = "";
-let attackUp = "";
+let upPockemon = getLocalStorageValue("upPockemon", "");
+let weather = getLocalStorageValue("weather", false);
 let imgSemant = [];
 
 async function fetchData() {
@@ -13,23 +14,41 @@ async function fetchData() {
     }
     const attackData = await attackResponse.json();
 
-    const { nameSwitch, upPockemon, attackUp, imgSemant } = attackData[0];
-    Object.assign(routerAttack, attackData[0]);
+    const { nameSwitch, imgSemant } = attackData[0];
+    Object.assign(routeAttack, attackData[0]);
 
-    console.log("Локации и мобы успешно загружены:", routerAttack);
+    console.log("Локации и мобы успешно загружены:", routeAttack);
 
-    const healResponse = await fetch("https://dce6373a41a58485.mokky.dev/routers");
+    const healResponse = await fetch("https://dce6373a41a58485.mokky.dev/heal");
     if (!healResponse.ok) {
       throw new Error(`Ошибка при загрузке данных для лечения: ${healResponse.status}`);
     }
     const healData = await healResponse.json();
 
-    Object.assign(routes, healData[0]);
-    routes = healData[0];
+    Object.assign(routeHeal, healData[0]);
+    routeHeal = healData[0];
 
-    console.log("Маршрут для лечения успешно загружены", routes);
+    const userHealResponse = await fetch("https://dce6373a41a58485.mokky.dev/vip");
+    if (!userHealResponse.ok) {
+      throw new Error(`Ошибка при загрузке данных для лечения: ${userHealResponse.status}`);
+    }
+    const userHealData = await userHealResponse.json();
+
+    Object.assign(userHeal, userHealData[0]);
+    userHeal = userHealData[0];
+    console.log("Пользовательский маршрут загружен", userHeal);
+    console.log("Маршрут для лечения успешно загружены", routeHeal);
   } catch (error) {
     console.error("Ошибка в загрузке:", error);
   }
 }
 fetchData();
+
+function getLocalStorageValue(key, defaultValue) {
+  const stored = localStorage.getItem(key);
+  return stored !== null ? JSON.parse(stored) : defaultValue;
+}
+
+function setLocalStorageValue(key, value) {
+  localStorage.setItem(key, JSON.stringify(value));
+}

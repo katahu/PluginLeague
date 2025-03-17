@@ -1,10 +1,15 @@
+:root {
+  --hover: #bdd7e9;
+  --background: #e0e7ee;
+}
+
 .drop-menu {
   position: absolute;
   width: max-content;
   text-align: center;
   border-radius: 0.5rem;
   padding: 0.25rem;
-  background-color: #e0e7ee;
+  background-color: var(--background);
   opacity: 0;
   visibility: hidden;
   transform-origin: right top;
@@ -63,7 +68,7 @@
   width: max-content;
   border-radius: 0.5rem;
   padding: 0.25rem;
-  background-color: #e0e7ee;
+  background-color: var(--background);
   opacity: 0;
   visibility: hidden;
   transform-origin: right top;
@@ -88,7 +93,7 @@
   transform: scale(1);
   transition: transform 150 ease-in-out;
   &:hover {
-    background-color: #bdd7e9;
+    background-color: var(--hover);
   }
   &:active {
     transform: scale(0.98);
@@ -152,5 +157,81 @@ input:checked + .slider {
 @media screen and (max-width: 600px) {
   .btn-menu {
     inset-block: 15% auto;
+  }
+}
+
+.setting-menu {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  padding: 0.5rem 0.25rem;
+  border-radius: 0.5rem;
+  background-color: var(--background);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 150ms cubic-bezier(0.2, 0, 0.2, 1), visibility 150ms cubic-bezier(0.2, 0, 0.2, 1);
+}
+.setting-menu.active {
+  opacity: 1;
+  visibility: visible;
+}
+.Radio {
+  display: flex;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  line-height: 2;
+  padding-inline: 1.5rem;
+  border-radius: 0.25rem;
+  &:hover {
+    background-color: var(--hover);
+  }
+}
+
+.Radio > input {
+  position: absolute;
+  opacity: 0;
+}
+
+.Radio-main {
+  position: relative;
+}
+
+.Radio-main::before {
+  width: 0.8rem;
+  height: 0.8rem;
+  left: -1.25rem;
+  border: 2px solid rgb(112, 117, 121);
+  opacity: 1;
+  transition: border-color 0.1s ease, opacity 0.1s ease;
+}
+
+.Radio-main::after {
+  width: 0.4rem;
+  height: 0.4rem;
+  left: -0.925rem;
+  border-radius: 50%;
+  background: rgb(51, 144, 236);
+  opacity: 0;
+  transition: opacity 0.1s ease;
+}
+
+.Radio > input:checked ~ .Radio-main::after {
+  opacity: 1;
+}
+
+.Radio > input:checked ~ .Radio-main::before {
+  border-color: rgb(51, 144, 236);
+}
+
+.Radio-main {
+  &::before,
+  &::after {
+    content: "";
+    display: block;
+    position: absolute;
+    border-radius: 50%;
+    top: 50%;
+    transform: translateY(-50%);
   }
 }
