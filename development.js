@@ -62,7 +62,7 @@ const modal = [
 const inputUP = document.createElement("input");
 inputUP.type = "text";
 inputUP.value = upPockemon;
-inputUP.placeholder = "Введите имя";
+inputUP.placeholder = "Введите имя монстра";
 inputUP.addEventListener("input", (event) => {
   upPockemon = event.target.value;
   setLocalStorageValue("upPockemon", upPockemon);

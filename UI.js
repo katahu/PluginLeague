@@ -1,10 +1,15 @@
 const dropMenu = document.createElement("div");
 dropMenu.classList.add("drop-menu");
-document.body.appendChild(dropMenu);
+document.body.append(dropMenu);
+
+const noneDrop = document.createElement("span");
+noneDrop.classList.add("none-drop");
+noneDrop.textContent = "Дроп отсутствует";
+dropMenu.append(noneDrop);
 
 const btnToggle = document.createElement("div");
 btnToggle.classList.add("btn-toggle");
-document.body.appendChild(btnToggle);
+document.body.append(btnToggle);
 
 const menuContainer = document.createElement("div");
 menuContainer.classList.add("menuContainer");
@@ -26,6 +31,7 @@ btnToggle.addEventListener("click", () => {
 backdrop.addEventListener("click", () => {
   mainMenu.classList.remove("active");
   backdrop.classList.remove("active");
+  settingMenu.classList.remove("active");
 });
 
 function Button(option) {
@@ -136,5 +142,5 @@ const menu = [
 
 menu.forEach((item) => {
   const button = Button(item);
-  mainMenu.appendChild(button);
+  mainMenu.append(button);
 });

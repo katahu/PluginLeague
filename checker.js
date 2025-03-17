@@ -1,9 +1,4 @@
-const drops = new Map(); // Используем Map для хранения данных
-
-// const noneDrop = document.createElement("span");
-// noneDrop.classList.add("none-drop");
-// noneDrop.textContent = "Дроп отсутствует";
-// dropMenu.append(noneDrop);
+const drops = new Map();
 
 function checker() {
   const alertElement = document.querySelector("#divAlerten .alerten.poke");
@@ -17,9 +12,8 @@ function checker() {
   if (!pokeElement) return;
 
   const poke = pokeElement.textContent.trim();
-  const pokeCount = 1; // Значение по умолчанию
+  const pokeCount = 1;
 
-  // Обновляем счетчик для poke
   updateDropCount(poke, pokeCount);
 
   const dropElements = content.querySelectorAll(".drop");
@@ -27,16 +21,14 @@ function checker() {
     const titleElement = drop.querySelector(".title");
     if (!titleElement) return;
 
-    // Извлекаем title без содержимого <b>
     const cleanTitle = getCleanTitle(titleElement);
 
-    let itemCount = 1; // Значение по умолчанию
+    let itemCount = 1;
     const countElement = drop.querySelector("b");
     if (countElement) {
       itemCount = parseInt(countElement.textContent.trim().replace(/\D/g, "")) || 1;
     }
 
-    // Обновляем счетчик для cleanTitle
     updateDropCount(cleanTitle, itemCount);
   });
 
@@ -75,6 +67,6 @@ function updateDropMenu() {
     noneDrop.remove();
   }
 
-  dropMenu.innerHTML = ""; // Очищаем старое содержимое
-  dropMenu.append(fragment); // Добавляем новые элементы
+  dropMenu.innerHTML = "";
+  dropMenu.append(fragment);
 }
