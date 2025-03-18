@@ -1,28 +1,39 @@
-const dropMenu = document.createElement("div");
-dropMenu.classList.add("drop-menu");
-document.body.append(dropMenu);
-
-const noneDrop = document.createElement("span");
-noneDrop.classList.add("none-drop");
-noneDrop.textContent = "Дроп отсутствует";
-dropMenu.append(noneDrop);
-
 const btnToggle = document.createElement("div");
 btnToggle.classList.add("btn-toggle");
-document.body.append(btnToggle);
 
 const menuContainer = document.createElement("div");
 menuContainer.classList.add("menuContainer");
-document.body.append(menuContainer);
 
 const mainMenu = document.createElement("div");
-mainMenu.classList.add("main-menu");
+mainMenu.classList.add("mainMenu");
 menuContainer.append(mainMenu);
+
+const dropMenu = document.createElement("div");
+dropMenu.classList.add("dropMenu");
+
+const noneDrop = document.createElement("span");
+noneDrop.textContent = "Дроп отсутствует";
+dropMenu.append(noneDrop);
+
+const settingMenu = document.createElement("div");
+settingMenu.classList.add("menuBot");
+
+const catchMenu = document.createElement("div");
+catchMenu.classList.add("menuBot");
 
 const backdrop = document.createElement("div");
 backdrop.classList.add("backdrop");
-menuContainer.append(backdrop);
 
+document.body.append(btnToggle, menuContainer, dropMenu, settingMenu, catchMenu, backdrop);
+
+const inputUP = document.createElement("input");
+inputUP.type = "text";
+inputUP.value = upPockemon;
+inputUP.placeholder = "Введите имя монстра";
+inputUP.addEventListener("input", (event) => {
+  upPockemon = event.target.value;
+  setLocalStorageValue("upPockemon", upPockemon);
+});
 btnToggle.addEventListener("click", () => {
   const isActive = mainMenu.classList.toggle("active");
   backdrop.classList.toggle("active", isActive);
@@ -32,8 +43,10 @@ backdrop.addEventListener("click", () => {
   mainMenu.classList.remove("active");
   backdrop.classList.remove("active");
   settingMenu.classList.remove("active");
+  catchMenu.classList.remove("active");
 });
 
+//
 function Button(option) {
   const { icon, text, regularText, checkbox, localStorageKey, onClick } = option;
 
@@ -85,8 +98,42 @@ function Button(option) {
 
   return el;
 }
+function Modal(option) {
+  const { text, value, name, storageKey, onClick } = option;
 
-const menu = [
+  const el = document.createElement("label");
+  el.classList.add("Radio");
+
+  const input = document.createElement("input");
+  input.type = "radio";
+  input.value = value;
+  input.name = name;
+
+  const storedValue = getLocalStorageValue(storageKey, "");
+  if (storedValue === value) {
+    input.checked = true;
+  }
+
+  input.addEventListener("click", () => {
+    setLocalStorageValue(storageKey, value);
+    if (onClick) onClick();
+  });
+
+  const radio = document.createElement("div");
+  radio.classList.add("Radio-main");
+
+  if (text) {
+    const span = document.createElement("span");
+    span.classList.add("label");
+    span.textContent = text;
+    radio.appendChild(span);
+  }
+
+  el.append(input, radio);
+
+  return el;
+}
+const mainMenuItems = [
   {
     icon: "fa-light icons-fight",
     text: "Атака",
@@ -132,15 +179,86 @@ const menu = [
     },
   },
   {
+    icon: "fa-light icons-spider",
+    text: "Поимка",
+    onClick: () => {
+      catchMenu.classList.toggle("active");
+    },
+  },
+  {
     icon: "fa-light icons-list-drop",
     text: "Дроп",
     onClick: () => {
       dropMenu.classList.toggle("active");
     },
   },
+  {
+    text: "Тест",
+    onClick: () => {
+      catchMonster();
+    },
+  },
+];
+const menuModalUP = [
+  {
+    text: "Замедленная бомба",
+    name: "time",
+    value: "Замедленная бомба",
+    storageKey: "attackUp",
+    onClick: () => {
+      attackUp = "Замедленная бомба";
+    },
+  },
+  {
+    text: "Крик банши",
+    name: "time",
+    value: "Крик банши",
+    storageKey: "attackUp",
+    onClick: () => {
+      attackUp = "Крик банши";
+    },
+  },
 ];
 
-menu.forEach((item) => {
+const menuModalCatch = [
+  {
+    text: "Мальчик",
+    name: "catch",
+    value: "male",
+    storageKey: "varibleCatch",
+    onClick: () => {
+      varibleCatch = "male";
+    },
+  },
+  {
+    text: "Девочка",
+    name: "catch",
+    value: "female",
+    storageKey: "varibleCatch",
+    onClick: () => {
+      varibleCatch = "female";
+    },
+  },
+  {
+    text: "Все",
+    name: "catch",
+    value: "all",
+    storageKey: "varibleCatch",
+    onClick: () => {
+      varibleCatch = "all";
+    },
+  },
+];
+
+mainMenuItems.forEach((item) => {
   const button = Button(item);
   mainMenu.append(button);
+});
+menuModalUP.forEach((item) => {
+  const button = Modal(item);
+  settingMenu.append(button, inputUP);
+});
+menuModalCatch.forEach((item) => {
+  const button = Modal(item);
+  catchMenu.append(button);
 });

@@ -3,7 +3,9 @@ let routeHeal = {};
 let userHeal = {};
 let nameSwitch = "";
 let upPockemon = getLocalStorageValue("upPockemon", "");
+let varibleCatch = getLocalStorageValue("varibleCatch", "");
 let weather = getLocalStorageValue("weather", false);
+console.log(weather);
 let imgSemant = [];
 
 async function fetchData() {

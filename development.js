@@ -1,74 +1,142 @@
-const settingMenu = document.createElement("div");
-settingMenu.classList.add("setting-menu");
-document.body.appendChild(settingMenu);
+async function catchMonster() {
+  try {
+    // Определение пола противника
+    const gender = divVisioFight.querySelector("#divFightH .gender");
+    if (!gender) {
+      console.log("Пол неизвестен, выход.");
+      return;
+    }
 
-function Modal(option) {
-  const { text, value, name, storageKey, onClick } = option;
+    const genderClasses = gender.classList;
 
-  const el = document.createElement("label");
-  el.classList.add("Radio");
+    const isMale = genderClasses.contains("icon-sex-1");
+    const isFemale = genderClasses.contains("icon-sex-2");
+    const isNeutral = genderClasses.contains("icon-sex-3");
 
-  const input = document.createElement("input");
-  input.type = "radio";
-  input.value = value;
-  input.name = name;
+    console.log("Определен пол:", isMale ? "Мужчина" : isFemale ? "Женщина" : "Бесполый");
 
-  const storedValue = getLocalStorageValue(storageKey, "");
-  if (storedValue === value) {
-    input.checked = true;
+    // Фильтр по catchType
+    if (
+      (varibleCatch === "male" && !isMale) ||
+      (varibleCatch === "female" && !isFemale) ||
+      (varibleCatch === "all" && !(isMale || isFemale || isNeutral))
+    ) {
+      console.log("Этот противник не подходит по условиям. Пропускаем.");
+      return;
+    }
+
+    // Цикл боя: Атака "Сломанный меч", затем "Колыбельная"
+    while (true) {
+      const allAttackClickable = Array.from(divVisioFight.querySelectorAll("#divFightI .moves .divMoveTitle"));
+
+      let clickAtack = allAttackClickable.find((el) => el.textContent.trim() === "Сломанный меч")?.parentElement;
+
+      if (!clickAtack) break;
+
+      await delayAttack();
+      clickAtack.click();
+
+      if (!(await checkI())) return;
+      if (!(await checkHcatch())) break;
+    }
+
+    while (true) {
+      const allAttackClickable = Array.from(divVisioFight.querySelectorAll("#divFightI .moves .divMoveTitle"));
+
+      let clickAtack = allAttackClickable.find((el) => el.textContent.trim() === "Колыбельная")?.parentElement;
+
+      if (!clickAtack) break;
+
+      await delayAttack();
+      clickAtack.click();
+
+      if (!(await checkI())) return;
+
+      const status = divVisioFight.querySelector("#divFightH .statusimg");
+      if (status) {
+        const bgPosition = window.getComputedStyle(status).backgroundPosition;
+        if (bgPosition.includes("-225px")) break;
+      }
+    }
+
+    // Использование предмета
+    const ball = divVisioFight.querySelector("#divFightI .ball.clickable");
+    if (ball) ball.click();
+
+    const divElements = document.querySelector(".divElements");
+    await observerElements(divElements);
+
+    const targetElement = Array.from(divElements.querySelectorAll(".divElement")).find(
+      (divElement) => divElement.querySelector(".text")?.textContent.trim() === "Использовать предмет..."
+    );
+
+    if (targetElement) targetElement.querySelector(".text").click();
+
+    // Выбор предмета из hint
+    const hint = document.querySelector(".hint-global");
+    const hintItems = await observerHint(hint);
+
+    const targetHint = Array.from(hintItems).find((item) =>
+      item.querySelector("img")?.getAttribute("src").includes(`/2.`)
+    );
+
+    if (targetHint) targetHint.click();
+
+    // Проверяем сколько в команде
+
+    // const divDockIn = document.querySelectorAll(".divDockIn img");
+    // console.log(divDockIn);
+
+    // if (divDockIn.length > 0) {
+    //   const targetTeam = Array.from(divDockIn).find((el) => {
+    //     const src = el.getAttribute("src");
+    //     return src && src.includes("team"); // Проверяем, содержит ли src "team"
+    //   });
+
+    //   if (targetTeam) {
+    //     targetTeam.click(); // Клик по элементу
+    //     targetTeam.click(); // Клик по элементу
+    //     console.log("Клик по элементу:", targetTeam);
+    //   } else {
+    //     console.error("Элемент с 'src', содержащим 'team', не найден.");
+    //   }
+    // } else {
+    //   console.error("Элементы .divDockIn img не найдены на странице.");
+    // }
+
+    // const divPokeTeam = document.querySelector(".divDockPanels .divPokeTeam");
+    // const monstAll = divPokeTeam.querySelectorAll(".pokemonBoxCard");
+    // console.log("Количество покемонов в команде:", monstAll);
+  } catch (error) {
+    console.error("Ошибка в catchMonster:", error);
   }
-
-  input.addEventListener("click", () => {
-    setLocalStorageValue(storageKey, value);
-    if (onClick) onClick();
-  });
-
-  const radio = document.createElement("div");
-  radio.classList.add("Radio-main");
-
-  if (text) {
-    const span = document.createElement("span");
-    span.classList.add("label");
-    span.textContent = text;
-    radio.appendChild(span);
-  }
-
-  el.append(input, radio);
-
-  return el;
 }
 
-const modal = [
-  {
-    text: "Замедленная бомба",
-    name: "time",
-    value: "Замедленная бомба",
-    storageKey: "attackUp",
-    onClick: () => {
-      attackUp = "Замедленная бомба";
-    },
-  },
-  {
-    text: "Крик банши",
-    name: "time",
-    value: "Крик банши",
-    storageKey: "attackUp",
-    onClick: () => {
-      attackUp = "Крик банши";
-    },
-  },
-];
+async function observerHint(hint) {
+  return new Promise((resolve) => {
+    const observer = new MutationObserver((mutationsList) => {
+      for (const mutation of mutationsList) {
+        if (mutation.type === "childList") {
+          const items = hint.querySelectorAll(".divItemFightlist .item.clickable");
+          if (items.length > 0) {
+            observer.disconnect();
+            resolve(items);
+          }
+        }
+      }
+    });
 
-const inputUP = document.createElement("input");
-inputUP.type = "text";
-inputUP.value = upPockemon;
-inputUP.placeholder = "Введите имя монстра";
-inputUP.addEventListener("input", (event) => {
-  upPockemon = event.target.value;
-  setLocalStorageValue("upPockemon", upPockemon);
-});
+    observer.observe(hint, { childList: true, subtree: true });
+  });
+}
 
-modal.forEach((item) => {
-  const button = Modal(item);
-  settingMenu.append(button, inputUP);
-});
+async function checkHcatch() {
+  const divFightH = divVisioFight.querySelector("#divFightH");
+  const barHP = divFightH.querySelector(".barHP div");
+  const styleWidth = barHP.style.width;
+  const widthPercent = parseFloat(styleWidth);
+  if (widthPercent <= 5) {
+    return false;
+  }
+  return true;
+}

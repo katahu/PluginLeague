@@ -4,7 +4,7 @@
   --z-backdrop: 100001;
 }
 
-.drop-menu {
+.dropMenu {
   position: absolute;
   width: max-content;
   text-align: center;
@@ -20,7 +20,7 @@
   transition: opacity 150ms cubic-bezier(0.2, 0, 0.2, 1), transform 150ms cubic-bezier(0.2, 0, 0.2, 1),
     visibility 150ms cubic-bezier(0.2, 0, 0.2, 1);
 }
-.drop-menu.active {
+.dropMenu.active {
   opacity: 1;
   visibility: visible;
   transform: scale(1);
@@ -64,7 +64,7 @@
   inset-inline: auto 0;
   visibility: hidden;
 }
-.main-menu {
+.mainMenu {
   position: relative;
   width: max-content;
   border-radius: 0.5rem;
@@ -77,7 +77,7 @@
   transition: opacity 150ms cubic-bezier(0.2, 0, 0.2, 1), transform 150ms cubic-bezier(0.2, 0, 0.2, 1),
     visibility 150ms cubic-bezier(0.2, 0, 0.2, 1);
 }
-.main-menu.active {
+.mainMenu.active {
   opacity: 1;
   visibility: visible;
   transform: scale(1);
@@ -161,7 +161,7 @@ input:checked + .slider {
   }
 }
 
-.setting-menu {
+.menuBot {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -172,7 +172,7 @@ input:checked + .slider {
   visibility: hidden;
   transition: opacity 150ms cubic-bezier(0.2, 0, 0.2, 1), visibility 150ms cubic-bezier(0.2, 0, 0.2, 1);
 }
-.setting-menu.active {
+.menuBot.active {
   opacity: 1;
   visibility: visible;
   z-index: var(--z-backdrop);
@@ -235,5 +235,11 @@ input:checked + .slider {
     border-radius: 50%;
     top: 50%;
     transform: translateY(-50%);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .menuBot {
+    inset-inline: 0 auto;
   }
 }
