@@ -3,8 +3,9 @@ const attackHandlers = {
   attackTwo: (attack) => handleCraftAndAttackTwo("attackTwo", attack),
   attackThree: (attack) => switchMob("attackThree", attack),
   upPokemon: () => handleUpPokemon(),
-  defeat: () => defeat(),
+  defeat: () => surrender(),
   semant: () => semant(),
+  capture: () => captureMonstr(),
 };
 const arrWeather = ["w3", "w4"];
 const delayAttack = () => new Promise((resolve) => setTimeout(resolve, Math.floor(Math.random() * 200) + 200));
@@ -175,7 +176,7 @@ async function handleUpPokemon() {
       if (widthPercent <= 30) {
         const currentDisplayStyle = window.getComputedStyle(divVisioFight).display;
         if (currentDisplayStyle !== "none") {
-          await defeat();
+          await surrender();
         }
         await delayFast();
         moveHeal();
@@ -202,7 +203,7 @@ async function semant() {
     playSound();
   } else {
     console.log("Не нашли точное совпадение.");
-    defeat();
+    surrender();
   }
 }
 async function observerElements(divElements) {
@@ -228,7 +229,7 @@ async function checkI() {
   if (widthPercent <= 30) {
     const currentDisplayStyle = window.getComputedStyle(divVisioFight).display;
     if (currentDisplayStyle !== "none") {
-      await defeat();
+      await surrender();
     }
     await delayFast();
     moveHeal();
@@ -255,7 +256,7 @@ async function checkI() {
     if (current <= 1) {
       const currentDisplayStyle = window.getComputedStyle(divVisioFight).display;
       if (currentDisplayStyle !== "none") {
-        await defeat();
+        await surrender();
       }
       await delayFast();
       moveHeal();
@@ -277,7 +278,7 @@ async function checkH() {
   }
   return true;
 }
-async function defeat() {
+async function surrender() {
   // ТОЛЬКО В ПОДЗЕМКЕ
   // playSound();
   // return;

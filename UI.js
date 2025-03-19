@@ -15,16 +15,36 @@ const noneDrop = document.createElement("span");
 noneDrop.textContent = "Дроп отсутствует";
 dropMenu.append(noneDrop);
 
-const settingMenu = document.createElement("div");
-settingMenu.classList.add("menuBot");
+const upMenu = document.createElement("div");
+upMenu.classList.add("menuBot", "menuSP");
 
 const catchMenu = document.createElement("div");
-catchMenu.classList.add("menuBot");
+catchMenu.classList.add("menuBot", "menuSP");
+
+const varBall = document.createElement("div");
+varBall.classList.add("menuBot", "bottom-right");
+
+const varibleBallBTN = document.createElement("div");
+varibleBallBTN.textContent = "Выбор монстроболла";
+varibleBallBTN.classList.add("radioSpecial");
+varibleBallBTN.addEventListener("click", () => {
+  varBall.classList.toggle("active");
+});
+varibleBallBTN.append(varBall);
 
 const backdrop = document.createElement("div");
 backdrop.classList.add("backdrop");
 
-document.body.append(btnToggle, menuContainer, dropMenu, settingMenu, catchMenu, backdrop);
+document.body.append(btnToggle, menuContainer, backdrop);
+
+const whoCapture = document.createElement("input");
+whoCapture.type = "text";
+whoCapture.value = whoToCapture;
+whoCapture.placeholder = "Имя кем ловить";
+whoCapture.addEventListener("input", (event) => {
+  whoToCapture = event.target.value;
+  setLocalStorageValue("whoToCapture", whoToCapture);
+});
 
 const inputUP = document.createElement("input");
 inputUP.type = "text";
@@ -34,6 +54,7 @@ inputUP.addEventListener("input", (event) => {
   upPockemon = event.target.value;
   setLocalStorageValue("upPockemon", upPockemon);
 });
+
 btnToggle.addEventListener("click", () => {
   const isActive = mainMenu.classList.toggle("active");
   backdrop.classList.toggle("active", isActive);
@@ -42,7 +63,7 @@ btnToggle.addEventListener("click", () => {
 backdrop.addEventListener("click", () => {
   mainMenu.classList.remove("active");
   backdrop.classList.remove("active");
-  settingMenu.classList.remove("active");
+  upMenu.classList.remove("active");
   catchMenu.classList.remove("active");
 });
 
@@ -128,7 +149,6 @@ function Modal(option) {
     span.textContent = text;
     radio.appendChild(span);
   }
-
   el.append(input, radio);
 
   return el;
@@ -175,7 +195,7 @@ const mainMenuItems = [
     icon: "fa-light icons-lvlUP",
     text: "Прокачка",
     onClick: () => {
-      settingMenu.classList.toggle("active");
+      upMenu.classList.toggle("active");
     },
   },
   {
@@ -195,7 +215,7 @@ const mainMenuItems = [
   {
     text: "Тест",
     onClick: () => {
-      catchMonster();
+      captureMonstr();
     },
   },
 ];
@@ -227,7 +247,7 @@ const menuModalCatch = [
     value: "male",
     storageKey: "varibleCatch",
     onClick: () => {
-      varibleCatch = "male";
+      variableCatch = "male";
     },
   },
   {
@@ -236,7 +256,7 @@ const menuModalCatch = [
     value: "female",
     storageKey: "varibleCatch",
     onClick: () => {
-      varibleCatch = "female";
+      variableCatch = "female";
     },
   },
   {
@@ -245,20 +265,72 @@ const menuModalCatch = [
     value: "all",
     storageKey: "varibleCatch",
     onClick: () => {
-      varibleCatch = "all";
+      variableCatch = "all";
     },
   },
 ];
 
+const menuModalVaribleBall = [
+  {
+    text: "Монстробол",
+    name: "ball",
+    value: "1",
+    storageKey: "varibleBall",
+    onClick: () => {
+      varibleBall = "1";
+    },
+  },
+  {
+    text: "Гритбол",
+    name: "ball",
+    value: "2",
+    storageKey: "varibleBall",
+    onClick: () => {
+      varibleBall = "2";
+    },
+  },
+  {
+    text: "Мастербол ",
+    name: "ball",
+    value: "3",
+    storageKey: "varibleBall",
+    onClick: () => {
+      varibleBall = "3";
+    },
+  },
+  {
+    text: "Ультрабол",
+    name: "ball",
+    value: "4",
+    storageKey: "varibleBall",
+    onClick: () => {
+      varibleBall = "4";
+    },
+  },
+  {
+    text: "Даркбол ",
+    name: "ball",
+    value: "13",
+    storageKey: "varibleBall",
+    onClick: () => {
+      varibleBall = "13";
+    },
+  },
+];
 mainMenuItems.forEach((item) => {
   const button = Button(item);
-  mainMenu.append(button);
+  mainMenu.append(button, dropMenu, upMenu, catchMenu);
 });
 menuModalUP.forEach((item) => {
   const button = Modal(item);
-  settingMenu.append(button, inputUP);
+  upMenu.append(button, inputUP);
 });
 menuModalCatch.forEach((item) => {
   const button = Modal(item);
-  catchMenu.append(button);
+  catchMenu.append(button, whoCapture, varibleBallBTN);
+});
+
+menuModalVaribleBall.forEach((item) => {
+  const button = Modal(item);
+  varBall.append(button);
 });

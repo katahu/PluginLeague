@@ -71,6 +71,7 @@ async function moveHeal() {
     }
 
     await delayFast();
+    if (goSendMonst) await sendMonstr();
     await healNPC();
     await delayFast();
 

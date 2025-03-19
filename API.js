@@ -3,11 +3,11 @@ let routeHeal = {};
 let userHeal = {};
 let nameSwitch = "";
 let upPockemon = getLocalStorageValue("upPockemon", "");
-let varibleCatch = getLocalStorageValue("varibleCatch", "");
+let variableCatch = getLocalStorageValue("varibleCatch", "");
+let varibleBall = getLocalStorageValue("varibleBall", "");
+let whoToCapture = getLocalStorageValue("whoToCapture", "");
 let weather = getLocalStorageValue("weather", false);
-console.log(weather);
 let imgSemant = [];
-
 async function fetchData() {
   try {
     const attackResponse = await fetch("https://dce6373a41a58485.mokky.dev/attack");
@@ -47,8 +47,14 @@ async function fetchData() {
 fetchData();
 
 function getLocalStorageValue(key, defaultValue) {
-  const stored = localStorage.getItem(key);
-  return stored !== null ? JSON.parse(stored) : defaultValue;
+  const value = localStorage.getItem(key);
+  if (value === null) return defaultValue;
+  try {
+    return JSON.parse(value);
+  } catch (error) {
+    console.warn(`Ошибка парсинга JSON для ключа "${key}":`, error);
+    return defaultValue;
+  }
 }
 
 function setLocalStorageValue(key, value) {

@@ -14,8 +14,9 @@
   opacity: 0;
   visibility: hidden;
   transform-origin: right top;
-  inset-block: 30% auto;
+  inset-block: 100% auto;
   inset-inline: auto 0;
+  margin-top: 10px;
   transform: scale(0.85);
   transition: opacity 150ms cubic-bezier(0.2, 0, 0.2, 1), transform 150ms cubic-bezier(0.2, 0, 0.2, 1),
     visibility 150ms cubic-bezier(0.2, 0, 0.2, 1);
@@ -27,7 +28,6 @@
   pointer-events: auto;
   z-index: var(--z-backdrop);
 }
-
 .drop-item {
   margin: 0.25rem 0;
 }
@@ -57,6 +57,7 @@
   border-radius: 0.25rem;
   background-color: transparent;
   padding: 0.75rem;
+  z-index: var(--z-backdrop);
 }
 .menuContainer {
   position: absolute;
@@ -163,6 +164,7 @@ input:checked + .slider {
 
 .menuBot {
   position: absolute;
+  width: max-content;
   top: 50%;
   left: 50%;
   padding: 0.5rem 0.25rem;
@@ -181,6 +183,15 @@ input:checked + .slider {
   display: flex;
   align-items: center;
   position: relative;
+  cursor: pointer;
+  line-height: 2;
+  padding-inline: 1.5rem;
+  border-radius: 0.25rem;
+  &:hover {
+    background-color: var(--hover);
+  }
+}
+.radioSpecial {
   cursor: pointer;
   line-height: 2;
   padding-inline: 1.5rem;
@@ -242,4 +253,21 @@ input:checked + .slider {
   .menuBot {
     inset-inline: 0 auto;
   }
+  .btn-toggle {
+    padding: 1.25rem;
+    inset-inline: 65% auto;
+    right: inherit;
+  }
+}
+.bottom-right {
+  inset-block: 100% auto;
+  inset-inline: auto;
+  margin-top: 5px;
+}
+.menuSP {
+  top: inherit;
+  left: inherit;
+  inset-block: 55% auto;
+  inset-inline: auto 100%;
+  margin-right: 5px;
 }

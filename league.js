@@ -1,4 +1,5 @@
 let currentLocation = null;
+
 function toggleConfirmInterceptor(enabled) {
   window.dispatchEvent(new CustomEvent("toggleConfirmInterceptor", { detail: { enabled } }));
 }
