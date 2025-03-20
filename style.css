@@ -259,10 +259,27 @@ input:checked + .slider {
     right: inherit;
   }
 }
-.bottom-right {
+
+.modal-header {
+  font-size: 0.9rem;
+  text-align: center;
+  margin-bottom: 5px;
+}
+.menuBall {
+  height: 150px;
+  overflow: auto;
+}
+.menuStatus,
+.menuBall {
   inset-block: 100% auto;
   inset-inline: auto;
   margin-top: 5px;
+}
+
+.menuBall::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  background: transparent;
 }
 .menuSP {
   top: inherit;

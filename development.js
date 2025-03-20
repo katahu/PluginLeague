@@ -2,12 +2,18 @@ const delaySendPokemon = () => new Promise((resolve) => setTimeout(resolve, Math
 let goSendMonst = false;
 let monsterTeam = null;
 
+const status = {
+  Насмешка: "-840px 0px",
+  Колыбельная: "-225px 0px",
+  Споры: "-225px 0px",
+};
+
 async function captureMonstr() {
   try {
     // Определение пола противника
     const gender = divVisioFight.querySelector("#divFightH .gender");
     if (!gender) {
-      console.log("Пол неизвестен, выход.");
+      playSound();
       return;
     }
 
@@ -17,7 +23,6 @@ async function captureMonstr() {
     const isFemale = genderClasses.contains("icon-sex-2");
     const isNeutral = genderClasses.contains("icon-sex-3");
 
-    // Фильтр по catchType
     if (
       (variableCatch === "male" && !isMale) ||
       (variableCatch === "female" && !isFemale) ||
@@ -28,7 +33,6 @@ async function captureMonstr() {
       return;
     }
 
-    // Цикл боя: Атака "Сломанный меч", затем "Колыбельная"
     while (true) {
       const allAttackClickable = Array.from(divVisioFight.querySelectorAll("#divFightI .moves .divMoveTitle"));
 
@@ -43,22 +47,39 @@ async function captureMonstr() {
       if (!(await checkHcatch())) break;
     }
 
-    while (true) {
+    let statusApplied = false;
+
+    while (!statusApplied) {
       const allAttackClickable = Array.from(divVisioFight.querySelectorAll("#divFightI .moves .divMoveTitle"));
+      let clickAttack = allAttackClickable.find((el) => el.textContent.trim() === statusAttack)?.parentElement;
 
-      let clickAttack = allAttackClickable.find((el) => el.textContent.trim() === "Колыбельная")?.parentElement;
-
-      if (!clickAttack) break;
+      if (!clickAttack) {
+        break;
+      }
 
       await delayAttack();
       clickAttack.click();
 
-      if (!(await checkI())) return;
+      if (!(await checkI())) {
+        break;
+      }
+      const statusElements = divVisioFight.querySelectorAll("#divFightH .statusimg");
 
-      const status = divVisioFight.querySelector("#divFightH .statusimg");
-      if (status) {
-        const bgPosition = window.getComputedStyle(status).backgroundPosition;
-        if (bgPosition.includes("-225px")) break;
+      if (statusElements.length > 0) {
+        const cleanedStatusAttack = statusAttack.replace(/\s+/g, " ").trim();
+        const expectedPosition = status[cleanedStatusAttack];
+        if (!expectedPosition) {
+          break;
+        }
+
+        for (const statusElement of statusElements) {
+          const bgPosition = window.getComputedStyle(statusElement).backgroundPosition;
+
+          if (bgPosition.includes(expectedPosition)) {
+            statusApplied = true;
+            break;
+          }
+        }
       }
     }
 
@@ -75,7 +96,6 @@ async function captureMonstr() {
 
     if (targetElement) targetElement.querySelector(".text").click();
 
-    // Выбор предмета из hint
     const hint = document.querySelector(".hint-global");
     const hintItems = await observerHint(hint);
 
@@ -132,8 +152,8 @@ async function checkMonsterTeam() {
 async function sendMonstr() {
   await checkMonsterTeam();
   for (const el of Array.from(monsterTeam)) {
-    const title = el.querySelector(".title").textContent.trim();
-    if (title !== whoToCapture) {
+    const whoToCapture = el.querySelector(".icon-star-fill.starter").style.display;
+    if (whoToCapture === "none") {
       const send = el.querySelector(".icon-pc-deactivate");
       await delaySendPokemon();
       send.click();

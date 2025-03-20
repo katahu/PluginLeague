@@ -3,14 +3,15 @@ let routeHeal = {};
 let userHeal = {};
 let nameSwitch = "";
 let upPockemon = getLocalStorageValue("upPockemon", "");
+let attackUp = getLocalStorageValue("attackUp", "");
 let variableCatch = getLocalStorageValue("varibleCatch", "");
 let varibleBall = getLocalStorageValue("varibleBall", "");
-let whoToCapture = getLocalStorageValue("whoToCapture", "");
+let statusAttack = getLocalStorageValue("statusAttack", "");
 let weather = getLocalStorageValue("weather", false);
 let imgSemant = [];
 async function fetchData() {
   try {
-    const attackResponse = await fetch("https://dce6373a41a58485.mokky.dev/attack");
+    const attackResponse = await fetch("https://65f9a7ef3909a9a65b190bd2.mockapi.io/attack");
     if (!attackResponse.ok) {
       throw new Error(`Ошибка при загрузке данных для атаки: ${attackResponse.status}`);
     }

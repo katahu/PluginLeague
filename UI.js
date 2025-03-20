@@ -15,36 +15,10 @@ const noneDrop = document.createElement("span");
 noneDrop.textContent = "Дроп отсутствует";
 dropMenu.append(noneDrop);
 
-const upMenu = document.createElement("div");
-upMenu.classList.add("menuBot", "menuSP");
-
-const catchMenu = document.createElement("div");
-catchMenu.classList.add("menuBot", "menuSP");
-
-const varBall = document.createElement("div");
-varBall.classList.add("menuBot", "bottom-right");
-
-const varibleBallBTN = document.createElement("div");
-varibleBallBTN.textContent = "Выбор монстроболла";
-varibleBallBTN.classList.add("radioSpecial");
-varibleBallBTN.addEventListener("click", () => {
-  varBall.classList.toggle("active");
-});
-varibleBallBTN.append(varBall);
-
 const backdrop = document.createElement("div");
 backdrop.classList.add("backdrop");
 
 document.body.append(btnToggle, menuContainer, backdrop);
-
-const whoCapture = document.createElement("input");
-whoCapture.type = "text";
-whoCapture.value = whoToCapture;
-whoCapture.placeholder = "Имя кем ловить";
-whoCapture.addEventListener("input", (event) => {
-  whoToCapture = event.target.value;
-  setLocalStorageValue("whoToCapture", whoToCapture);
-});
 
 const inputUP = document.createElement("input");
 inputUP.type = "text";
@@ -54,20 +28,45 @@ inputUP.addEventListener("input", (event) => {
   upPockemon = event.target.value;
   setLocalStorageValue("upPockemon", upPockemon);
 });
-
+const varibleBallBTN = document.createElement("div");
+varibleBallBTN.textContent = "Выбор монстроболла";
+varibleBallBTN.classList.add("radioSpecial");
+varibleBallBTN.addEventListener("click", (event) => {
+  event.stopPropagation();
+  varBall.classList.toggle("active");
+});
+const variblуStatusAttack = document.createElement("div");
+variblуStatusAttack.textContent = "Статусная атака";
+variblуStatusAttack.classList.add("radioSpecial");
+variblуStatusAttack.addEventListener("click", (event) => {
+  event.stopPropagation();
+  varStatusAttack.classList.toggle("active");
+});
 btnToggle.addEventListener("click", () => {
   const isActive = mainMenu.classList.toggle("active");
   backdrop.classList.toggle("active", isActive);
 });
 
-backdrop.addEventListener("click", () => {
-  mainMenu.classList.remove("active");
-  backdrop.classList.remove("active");
-  upMenu.classList.remove("active");
-  catchMenu.classList.remove("active");
-});
-
 //
+function ButtonMenu(option) {
+  const { header, classList, buttonArray } = option;
+
+  const el = document.createElement("div");
+  el.classList.add(...classList.split(" "));
+  if (header) {
+    const headerEl = document.createElement("div");
+    headerEl.classList.add("modal-header");
+    headerEl.textContent = header;
+    el.append(headerEl);
+  }
+
+  buttonArray.forEach((item) => {
+    const button = Modal(item);
+    el.append(button);
+  });
+
+  return el;
+}
 function Button(option) {
   const { icon, text, regularText, checkbox, localStorageKey, onClick } = option;
 
@@ -215,7 +214,7 @@ const mainMenuItems = [
   {
     text: "Тест",
     onClick: () => {
-      captureMonstr();
+      sendMonstr();
     },
   },
 ];
@@ -239,7 +238,35 @@ const menuModalUP = [
     },
   },
 ];
-
+const modalStatusAttack = [
+  {
+    text: "Колыбельная",
+    name: "statusAttack",
+    value: "Колыбельная",
+    storageKey: "statusAttack",
+    onClick: () => {
+      variableCatch = "Колыбельная";
+    },
+  },
+  {
+    text: "Споры",
+    name: "statusAttack",
+    value: "Споры",
+    storageKey: "statusAttack",
+    onClick: () => {
+      variableCatch = "Споры";
+    },
+  },
+  {
+    text: "Насмешка",
+    name: "statusAttack",
+    value: "Насмешка",
+    storageKey: "statusAttack",
+    onClick: () => {
+      variableCatch = "Насмешка";
+    },
+  },
+];
 const menuModalCatch = [
   {
     text: "Мальчик",
@@ -290,7 +317,7 @@ const menuModalVaribleBall = [
     },
   },
   {
-    text: "Мастербол ",
+    text: "Мастербол",
     name: "ball",
     value: "3",
     storageKey: "varibleBall",
@@ -308,7 +335,7 @@ const menuModalVaribleBall = [
     },
   },
   {
-    text: "Даркбол ",
+    text: "Даркбол",
     name: "ball",
     value: "13",
     storageKey: "varibleBall",
@@ -316,21 +343,292 @@ const menuModalVaribleBall = [
       varibleBall = "13";
     },
   },
+  {
+    text: "Супердаркбол",
+    name: "ball",
+    value: "18",
+    storageKey: "varibleBall",
+    onClick: () => {
+      varibleBall = "18";
+    },
+  },
+  {
+    text: "Браконьера",
+    name: "ball",
+    value: "30",
+    storageKey: "varibleBall",
+    onClick: () => {
+      varibleBall = "30";
+    },
+  },
+  {
+    text: "Люксбол",
+    name: "ball",
+    value: "5",
+    storageKey: "varibleBall",
+    onClick: () => {
+      varibleBall = "5";
+    },
+  },
+  {
+    text: "Френдбол",
+    name: "ball",
+    value: "7",
+    storageKey: "varibleBall",
+    onClick: () => {
+      varibleBall = "7";
+    },
+  },
+  {
+    text: "Лавбол",
+    name: "ball",
+    value: "9",
+    storageKey: "varibleBall",
+    onClick: () => {
+      varibleBall = "9";
+    },
+  },
+  {
+    text: "Фастбол",
+    name: "ball",
+    value: "6",
+    storageKey: "varibleBall",
+    onClick: () => {
+      varibleBall = "6";
+    },
+  },
+  {
+    text: "Трансбол",
+    name: "ball",
+    value: "16",
+    storageKey: "varibleBall",
+    onClick: () => {
+      varibleBall = "16";
+    },
+  },
+  {
+    text: "Нестбол",
+    name: "ball",
+    value: "12",
+    storageKey: "varibleBall",
+    onClick: () => {
+      varibleBall = "12";
+    },
+  },
+  {
+    text: "Багбол",
+    name: "ball",
+    value: "101",
+    storageKey: "varibleBall",
+    onClick: () => {
+      varibleBall = "101";
+    },
+  },
+  {
+    text: "Блэкбол",
+    name: "ball",
+    value: "102",
+    storageKey: "varibleBall",
+    onClick: () => {
+      varibleBall = "102";
+    },
+  },
+  {
+    text: "Электробол",
+    name: "ball",
+    value: "104",
+    storageKey: "varibleBall",
+    onClick: () => {
+      varibleBall = "104";
+    },
+  },
+  {
+    text: "Файтбол",
+    name: "ball",
+    value: "105",
+    storageKey: "varibleBall",
+    onClick: () => {
+      varibleBall = "105";
+    },
+  },
+  {
+    text: "Фаербол",
+    name: "ball",
+    value: "106",
+    storageKey: "varibleBall",
+    onClick: () => {
+      varibleBall = "106";
+    },
+  },
+  {
+    text: "Флайбол",
+    name: "ball",
+    value: "107",
+    storageKey: "varibleBall",
+    onClick: () => {
+      varibleBall = "107";
+    },
+  },
+  {
+    text: "Гостбол",
+    name: "ball",
+    value: "108",
+    storageKey: "varibleBall",
+    onClick: () => {
+      varibleBall = "108";
+    },
+  },
+  {
+    text: "Грасбол",
+    name: "ball",
+    value: "109",
+    storageKey: "varibleBall",
+    onClick: () => {
+      varibleBall = "109";
+    },
+  },
+  {
+    text: "Граундбол",
+    name: "ball",
+    value: "110",
+    storageKey: "varibleBall",
+    onClick: () => {
+      varibleBall = "110";
+    },
+  },
+  {
+    text: "Айсбол",
+    name: "ball",
+    value: "111",
+    storageKey: "varibleBall",
+    onClick: () => {
+      varibleBall = "111";
+    },
+  },
+  {
+    text: "Нормобол",
+    name: "ball",
+    value: "112",
+    storageKey: "varibleBall",
+    onClick: () => {
+      varibleBall = "112";
+    },
+  },
+  {
+    text: "Токсикбол",
+    name: "ball",
+    value: "113",
+    storageKey: "varibleBall",
+    onClick: () => {
+      varibleBall = "113";
+    },
+  },
+  {
+    text: "Псибол",
+    name: "ball",
+    value: "114",
+    storageKey: "varibleBall",
+    onClick: () => {
+      varibleBall = "114";
+    },
+  },
+  {
+    text: "Стоунбол",
+    name: "ball",
+    value: "115",
+    storageKey: "varibleBall",
+    onClick: () => {
+      varibleBall = "115";
+    },
+  },
+  {
+    text: "Стилбол",
+    name: "ball",
+    value: "116",
+    storageKey: "varibleBall",
+    onClick: () => {
+      varibleBall = "116";
+    },
+  },
+  {
+    text: "Дайвбол",
+    name: "ball",
+    value: "117",
+    storageKey: "varibleBall",
+    onClick: () => {
+      varibleBall = "117";
+    },
+  },
+  {
+    text: "Фейбол",
+    name: "ball",
+    value: "118",
+    storageKey: "varibleBall",
+    onClick: () => {
+      varibleBall = "118";
+    },
+  },
 ];
+
+const catchMenu = ButtonMenu({
+  header: "Настройка поимки",
+  classList: "menuBot menuSP",
+  buttonArray: menuModalCatch,
+});
+
+const upMenu = ButtonMenu({
+  header: "Настройка прокачки",
+  classList: "menuBot menuSP",
+  buttonArray: menuModalUP,
+});
+
+const varBall = ButtonMenu({
+  header: "Монстоболлы",
+  classList: "menuBot menuBall",
+  buttonArray: menuModalVaribleBall,
+});
+
+const varStatusAttack = ButtonMenu({
+  header: "Статусы",
+  classList: "menuBot menuStatus",
+  buttonArray: modalStatusAttack,
+});
+
+upMenu.append(inputUP);
+catchMenu.append(variblуStatusAttack, varibleBallBTN, varBall, varStatusAttack);
+
 mainMenuItems.forEach((item) => {
   const button = Button(item);
   mainMenu.append(button, dropMenu, upMenu, catchMenu);
 });
-menuModalUP.forEach((item) => {
-  const button = Modal(item);
-  upMenu.append(button, inputUP);
-});
-menuModalCatch.forEach((item) => {
-  const button = Modal(item);
-  catchMenu.append(button, whoCapture, varibleBallBTN);
-});
 
-menuModalVaribleBall.forEach((item) => {
-  const button = Modal(item);
-  varBall.append(button);
+backdrop.addEventListener("click", () => {
+  mainMenu.classList.remove("active");
+  backdrop.classList.remove("active");
+  upMenu.classList.remove("active");
+  varStatusAttack.classList.remove("active");
+  varBall.classList.remove("active");
+  catchMenu.classList.remove("active");
 });
+// menuModalUP.forEach((item) => {
+//   const button = Modal(item);
+//   upMenu.append(button, inputUP);
+// });
+// modalStatusAttack.forEach((item) => {
+//   const button = Modal(item);
+//   varStatusAttack.append(button);
+// });
+// menuModalCatch.forEach((item) => {
+//   const button = Modal(item);
+//   catchMenu.append(button, variblуStatusAttack, varibleBallBTN);
+// });
+
+// menuModalVaribleBall.forEach((item) => {
+//   const button = Modal(item);
+//   varBall.append(button);
+// });
+
+// modalStatusAttack.forEach((item) => {
+//   const button = Modal(item);
+//   varStatusAttack.append(button);
+// });
