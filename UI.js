@@ -157,6 +157,7 @@ const mainMenuItems = [
     icon: "fa-light icons-fight",
     text: "Атака",
     onClick: () => {
+      locationSearch();
       controller();
       toggleConfirmInterceptor(true);
     },
@@ -164,7 +165,10 @@ const mainMenuItems = [
   {
     icon: "fa-light icons-heal",
     text: "Хил",
-    onClick: () => moveHeal(),
+    onClick: () => {
+      locationSearch();
+      moveHeal();
+    },
   },
   {
     icon: "fa-light icons-stop",

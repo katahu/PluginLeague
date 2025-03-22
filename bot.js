@@ -85,7 +85,9 @@ function controlleAttack() {
       return;
     }
   }
-  const locationData = routeAttack[currentLocation];
+
+  const locationData = routeAttack[currentRegion]?.[currentLocation] ?? routeAttack[currentLocation];
+
   const { mob, attack } = locationData;
 
   for (const [type, names] of Object.entries(mob)) {
@@ -97,6 +99,7 @@ function controlleAttack() {
       }
     }
   }
+
   playSound();
   stopBot();
 }
@@ -115,7 +118,6 @@ async function handleCraftAndAttackTwo(type, attack) {
 
     await delayAttack();
     clickAtack.click();
-
     await controllerMutationAtack();
 
     if (!(await checkI())) return;

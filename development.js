@@ -16,7 +16,6 @@ async function captureMonstr() {
       playSound();
       return;
     }
-
     const genderClasses = gender.classList;
 
     const isMale = genderClasses.contains("icon-sex-1");
