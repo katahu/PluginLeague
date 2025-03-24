@@ -156,17 +156,10 @@ input:checked + .slider:before {
 input:checked + .slider {
   background-color: #2196f3;
 }
-@media screen and (max-width: 600px) {
-  .btn-menu {
-    inset-block: 15% auto;
-  }
-}
 
 .menuBot {
   position: absolute;
   width: max-content;
-  top: 50%;
-  left: 50%;
   padding: 0.5rem 0.25rem;
   border-radius: 0.5rem;
   background-color: var(--background);
@@ -210,33 +203,6 @@ input:checked + .slider {
   position: relative;
 }
 
-.Radio-main::before {
-  width: 0.8rem;
-  height: 0.8rem;
-  left: -1.25rem;
-  border: 2px solid rgb(112, 117, 121);
-  opacity: 1;
-  transition: border-color 0.1s ease, opacity 0.1s ease;
-}
-
-.Radio-main::after {
-  width: 0.4rem;
-  height: 0.4rem;
-  left: -0.925rem;
-  border-radius: 50%;
-  background: rgb(51, 144, 236);
-  opacity: 0;
-  transition: opacity 0.1s ease;
-}
-
-.Radio > input:checked ~ .Radio-main::after {
-  opacity: 1;
-}
-
-.Radio > input:checked ~ .Radio-main::before {
-  border-color: rgb(51, 144, 236);
-}
-
 .Radio-main {
   &::before,
   &::after {
@@ -247,17 +213,32 @@ input:checked + .slider {
     top: 50%;
     transform: translateY(-50%);
   }
+
+  &::before {
+    width: 0.8rem;
+    height: 0.8rem;
+    left: -1.25rem;
+    border: 2px solid rgb(112, 117, 121);
+    opacity: 1;
+    transition: border-color 0.1s ease, opacity 0.1s ease;
+  }
+
+  &::after {
+    width: 0.6rem;
+    height: 0.6rem;
+    left: -1.02rem;
+    background: rgb(51, 144, 236);
+    opacity: 0;
+    transition: opacity 0.1s ease;
+  }
 }
 
-@media screen and (max-width: 768px) {
-  .menuBot {
-    inset-inline: 0 auto;
-  }
-  .btn-toggle {
-    padding: 1.25rem;
-    inset-inline: 65% auto;
-    right: inherit;
-  }
+.Radio > input:checked ~ .Radio-main::after {
+  opacity: 1;
+}
+
+.Radio > input:checked ~ .Radio-main::before {
+  border-color: rgb(51, 144, 236);
 }
 
 .modal-header {
@@ -282,9 +263,33 @@ input:checked + .slider {
   background: transparent;
 }
 .menuSP {
-  top: inherit;
-  left: inherit;
   inset-block: 55% auto;
   inset-inline: auto 100%;
   margin-right: 5px;
+}
+
+@media screen and (max-width: 768px) {
+  .menuContainer {
+    inset-inline: 0 auto;
+  }
+  .mainMenu {
+    transform-origin: left top;
+  }
+  .menuSP {
+    inset-inline: 100% auto;
+    margin-left: 5px;
+    margin-right: 0;
+  }
+  .dropMenu {
+    inset-inline: 100 auto;
+    transform-origin: left top;
+  }
+  .btn-toggle {
+    padding: 1.25rem;
+    inset-inline: 60% auto;
+    right: inherit;
+  }
+  .Radio-main::after {
+    left: -1.01rem;
+  }
 }

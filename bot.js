@@ -17,6 +17,7 @@ let observerControlller = null;
 
 async function controller() {
   if (isActive) return;
+  await handleDeviceActions(true);
   isActive = true;
   const firstStart = window.getComputedStyle(divVisioFight).display;
   if (firstStart === "block") {
@@ -45,7 +46,8 @@ async function controller() {
     attributeFilter: ["style"],
   });
 }
-function stopBot() {
+async function stopBot() {
+  await handleDeviceActions(false);
   if (observerControlller === null) return;
   observerControlller.disconnect();
   observerControlller = null;
@@ -150,44 +152,53 @@ async function switchMob(type, attack) {
 }
 
 async function handleUpPokemon() {
+  console.log("Вызвана функция");
   const divElements = document.querySelector(".divElements");
   const divFightI = divVisioFight.querySelector("#divFightI");
-  const allAttackClickable = Array.from(divFightI.querySelectorAll("#divFightI .moves .divMoveTitle"));
-  let clickAtack = null;
+  while (true) {
+    console.log("Цикл вызван");
+    const allAttackClickable = Array.from(divFightI.querySelectorAll("#divFightI .moves .divMoveTitle"));
+    let clickAtack = null;
 
-  allAttackClickable.forEach((element) => {
-    if (element.textContent.trim() === attackUp) {
-      clickAtack = element.parentElement;
-    }
-  });
-  if (!(await checkI())) return;
-  await delayFast();
-  clickAtack.click();
-  await observerElements(divElements);
-
-  const divElementList = divElements.querySelectorAll(".divElement");
-  for (const divElement of divElementList) {
-    const name = divElement.querySelector(".name");
-    const nameText = name.textContent.trim();
-    const namealfavit = nameText.replace(/[^a-zA-Zа-яА-Я]/g, "");
-    if (namealfavit === upPockemon) {
-      await delayFast();
-      const barHP = divElement.querySelector(".barHP div");
-      const styleWidth = barHP.style.width;
-      const widthPercent = parseFloat(styleWidth);
-      if (widthPercent <= 30) {
-        const currentDisplayStyle = window.getComputedStyle(divVisioFight).display;
-        if (currentDisplayStyle !== "none") {
-          await surrender();
-        }
-        await delayFast();
-        moveHeal();
-        return;
+    allAttackClickable.forEach((element) => {
+      if (element.textContent.trim() === attackUp) {
+        clickAtack = element.parentElement;
       }
+    });
 
-      divElement.click();
-      break;
+    console.log(clickAtack);
+    if (!clickAtack) return;
+    if (!(await checkI())) return;
+
+    await delayFast();
+    clickAtack.click();
+    await observerElements(divElements);
+
+    const divElementList = divElements.querySelectorAll(".divElement");
+    for (const divElement of divElementList) {
+      const name = divElement.querySelector(".name");
+      const nameText = name.textContent.trim();
+      const namealfavit = nameText.replace(/[^a-zA-Zа-яА-Я]/g, "");
+      if (namealfavit === upPockemon) {
+        await delayFast();
+        const barHP = divElement.querySelector(".barHP div");
+        const styleWidth = barHP.style.width;
+        const widthPercent = parseFloat(styleWidth);
+        if (widthPercent <= 30) {
+          const currentDisplayStyle = window.getComputedStyle(divVisioFight).display;
+          if (currentDisplayStyle !== "none") {
+            await surrender();
+          }
+          await delayFast();
+          moveHeal();
+          return;
+        }
+
+        divElement.click();
+        break;
+      }
     }
+    await controllerMutationAtack();
   }
 }
 

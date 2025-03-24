@@ -1,5 +1,5 @@
 const delaySendPokemon = () => new Promise((resolve) => setTimeout(resolve, Math.floor(Math.random() * 100) + 200));
-let goSendMonst = false;
+let isSendMonstr = false;
 let monsterTeam = null;
 
 const status = {
@@ -10,7 +10,6 @@ const status = {
 
 async function captureMonstr() {
   try {
-    // Определение пола противника
     const gender = divVisioFight.querySelector("#divFightH .gender");
     if (!gender) {
       playSound();
@@ -27,7 +26,6 @@ async function captureMonstr() {
       (variableCatch === "female" && !isFemale) ||
       (variableCatch === "all" && !(isMale || isFemale || isNeutral))
     ) {
-      console.log("Этот противник не подходит по условиям. Пропускаем.");
       surrender();
       return;
     }
@@ -110,7 +108,7 @@ async function captureMonstr() {
     await displayNone();
     await checkMonsterTeam();
     if (monsterTeam.length >= 5) {
-      goSendMonst = true;
+      isSendMonstr = true;
       moveHeal();
     }
   } catch (error) {
@@ -158,7 +156,7 @@ async function sendMonstr() {
       send.click();
     }
   }
-  goSendMonst = false;
+  isSendMonstr = false;
 }
 
 async function observerHint(hint) {

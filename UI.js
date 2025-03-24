@@ -614,25 +614,3 @@ backdrop.addEventListener("click", () => {
   varBall.classList.remove("active");
   catchMenu.classList.remove("active");
 });
-// menuModalUP.forEach((item) => {
-//   const button = Modal(item);
-//   upMenu.append(button, inputUP);
-// });
-// modalStatusAttack.forEach((item) => {
-//   const button = Modal(item);
-//   varStatusAttack.append(button);
-// });
-// menuModalCatch.forEach((item) => {
-//   const button = Modal(item);
-//   catchMenu.append(button, variblуStatusAttack, varibleBallBTN);
-// });
-
-// menuModalVaribleBall.forEach((item) => {
-//   const button = Modal(item);
-//   varBall.append(button);
-// });
-
-// modalStatusAttack.forEach((item) => {
-//   const button = Modal(item);
-//   varStatusAttack.append(button);
-// });

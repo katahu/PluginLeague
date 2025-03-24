@@ -1,7 +1,7 @@
 let currentLocation = null;
 let currentRegion = null;
-
 let isActiveSearch = false;
+
 function toggleConfirmInterceptor(enabled) {
   window.dispatchEvent(new CustomEvent("toggleConfirmInterceptor", { detail: { enabled } }));
 }
@@ -56,6 +56,20 @@ function locationSearch() {
 
   updateLocation();
   updateRegion();
+}
+async function handleDeviceActions(isBtn) {
+  const isMobile =
+    /Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAgent) ||
+    (navigator.maxTouchPoints && navigator.maxTouchPoints > 1);
+
+  const selector = isMobile ? "#divDockUpper .btnSwitchWilds" : "#divInputButtons .btnSwitchWilds";
+  const btnSwitchWilds = document.querySelector(selector);
+
+  const isPressed = btnSwitchWilds.classList.contains("pressed");
+
+  if ((isBtn && !isPressed) || (!isBtn && isPressed)) {
+    btnSwitchWilds.click();
+  }
 }
 
 function playSound() {
