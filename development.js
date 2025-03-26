@@ -165,15 +165,16 @@ const attackHandlers = {
 
 function controlleAttack() {
   console.log("Запуск controlleAttack");
-  const mnsH = divVisioFight.querySelector("#divFightH .name");
-  if (!mnsH) {
+
+  const divFightH = divVisioFight?.querySelector("#divFightH .name");
+  if (!divFightH) {
     console.log("Ошибка: не найден #divFightH .name");
     return;
   }
 
-  const nameH = mnsH.textContent.trim();
+  const nameH = divFightH.textContent.trim();
   console.log("Опознанное имя:", nameH);
-  if (!nameH || mnsH.classList.length > 1) {
+  if (!nameH || divFightH.classList.length > 1) {
     console.log("Ошибка: некорректное имя или у элемента больше одного класса");
     playSound();
     stopBot();
@@ -181,30 +182,30 @@ function controlleAttack() {
   }
 
   if (weather) {
-    const weatherElem = divVisioFight.querySelector(".iconweather");
+    const weatherElem = divVisioFight?.querySelector(".iconweather");
     if (weatherElem && weatherElem.className.split(" ").some((cls) => arrWeather.includes(cls))) {
       playSound();
       return;
     }
   }
 
-  console.log("Проверяем userTest:", userTest);
+  console.log("Проверяем userMonsterList:", userMonsterList);
   for (const [key, handler] of Object.entries(attackHandlers)) {
-    if (new Set(userTest[key] || []).has(nameH)) {
-      console.log(`Имя ${nameH} найдено в '${key}' userTest, вызываем handler()`);
+    if (userMonsterList.has(key) && new Set(userMonsterList.get(key)).has(nameH)) {
+      console.log(`Имя ${nameH} найдено в '${key}' userMonsterList, вызываем handler()`);
       handler();
       return;
     }
   }
 
   console.log("Проверяем monsterList:", monsterList);
-  if (new Set(monsterList["Все"] || []).has(nameH)) {
+  if (monsterList.has("Все") && new Set(monsterList.get("Все")).has(nameH)) {
     console.log(`Имя ${nameH} найдено в 'Все' monsterList, вызываем useAttack()`);
     useAttack(null, false);
     return;
   }
 
-  console.log("Имя не найдено ни в userTest, ни в monsterList. Завершаем с ошибкой.");
+  console.log("Имя не найдено ни в userMonsterList, ни в monsterList. Завершаем с ошибкой.");
   playSound();
   stopBot();
 }

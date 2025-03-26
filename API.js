@@ -16,7 +16,6 @@ async function fetchData() {
     { url: "https://dce6373a41a58485.mokky.dev/monster", name: "monsterList" },
     { url: "https://dce6373a41a58485.mokky.dev/userMonster", name: "userMonsterList" },
     { url: "https://65f9a7ef3909a9a65b190bd2.mockapi.io/heal", name: "routeHeal" },
-    { url: "https://dce6373a41a58485.mokky.dev/vip", name: "userHeal" },
   ];
 
   try {
@@ -32,8 +31,12 @@ async function fetchData() {
     responses.forEach((data, index) => {
       const { name } = endpoints[index];
       if (Array.isArray(data) && data.length > 0) {
-        globalThis[name] = data[0];
-        console.log(`${name} успешно загружен:`, globalThis[name]);
+        if (name === "monsterList") {
+          monsterList = new Map(Object.entries(data[0]));
+        } else if (name === "userMonsterList") {
+          userMonsterList = new Map(Object.entries(data[0]));
+        }
+        console.log(`${name} успешно загружен:`, data[0]);
       } else {
         console.warn(`Данные ${name} пусты или имеют неверный формат`);
       }
