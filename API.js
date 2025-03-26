@@ -2,13 +2,15 @@ let routeAttack = {};
 let routeHeal = {};
 let userHeal = {};
 let nameSwitch = "";
-let upPockemon = getLocalStorageValue("upPockemon", "");
+let nameUpMonster = getLocalStorageValue("nameUpMonster", "");
 let attackUp = getLocalStorageValue("attackUp", "");
 let variableCatch = getLocalStorageValue("varibleCatch", "");
 let varibleBall = getLocalStorageValue("varibleBall", "");
 let statusAttack = getLocalStorageValue("statusAttack", "");
 let weather = getLocalStorageValue("weather", false);
 let imgSemant = [];
+let test = new Map();
+let userTest = new Map();
 
 async function fetchData() {
   try {
@@ -42,8 +44,21 @@ async function fetchData() {
     userHeal = userHealData[0];
     console.log("Пользовательский маршрут загружен", userHeal);
     console.log("Маршрут для лечения успешно загружены", routeHeal);
+    const testResponse = await fetch("https://dce6373a41a58485.mokky.dev/test");
+    if (!testResponse.ok) throw new Error(`HTTP error! status: ${testResponse.status}`);
+
+    const testData = await testResponse.json();
+    test = testData[0];
+    console.log("Тестовые данные успешно загружены:", test);
+
+    const testUserResponse = await fetch("https://dce6373a41a58485.mokky.dev/userTest");
+    if (!testUserResponse.ok) throw new Error(`HTTP error! status: ${testUserResponse.status}`);
+
+    const testUserData = await testUserResponse.json();
+    userTest = testUserData[0];
+    console.log("Пользовательские данные успешно загружены:", userTest);
   } catch (error) {
-    console.error("Ошибка в загрузке:", error);
+    console.error("Ошибка загрузки данных:", error);
   }
 }
 fetchData();
@@ -496,3 +511,108 @@ function setLocalStorageValue(key, value) {
 //       }
 //   }
 // ]
+
+// let testManipulate = { all: [], kill: [] };
+
+// // Создаем элементы интерфейса
+// const menuMonstr = document.createElement("div");
+// menuMonstr.classList.add("menuMonstr");
+
+// const containerAll = document.createElement("div");
+// containerAll.classList.add("containerAll");
+
+// const containerKill = document.createElement("div");
+// containerKill.classList.add("containerKill");
+
+// menuMonstr.append(containerAll, containerKill);
+// document.body.append(menuMonstr);
+
+// // Оптимизированная обработка данных
+// function processTestData(data) {
+//   try {
+//     if (Array.isArray(data) && data.length) data = data[0];
+//     return {
+//       all: Array.isArray(data?.all) ? data.all : [],
+//       kill: Array.isArray(data?.kill) ? data.kill : [],
+//     };
+//   } catch (error) {
+//     console.error("Ошибка обработки данных:", error);
+//     return { all: [], kill: [] };
+//   }
+// }
+// // Добавляем поисковый input
+// const searchInput = document.createElement("input");
+// searchInput.setAttribute("type", "text");
+// searchInput.setAttribute("placeholder", "Поиск...");
+// searchInput.classList.add("searchInput");
+// menuMonstr.prepend(searchInput);
+
+// // Функция поиска
+// searchInput.addEventListener("input", function () {
+//   const searchText = this.value.toLowerCase().trim();
+
+//   // Удаляем предыдущую подсветку
+//   document.querySelectorAll(".highlight").forEach((el) => {
+//     el.classList.remove("highlight");
+//   });
+
+//   if (!searchText) return;
+
+//   // Ищем совпадения во всех элементах
+//   ["all", "kill"].forEach((type) => {
+//     const container = type === "all" ? containerAll : containerKill;
+//     const items = container.querySelectorAll(".item");
+
+//     items.forEach((item) => {
+//       const text = item.textContent.toLowerCase();
+//       if (text.includes(searchText)) {
+//         item.classList.add("highlight");
+
+//         // Прокручиваем контейнер к найденному элементу
+//         item.scrollIntoView({ behavior: "smooth", block: "nearest" });
+//       }
+//     });
+//   });
+// });
+
+// // Оптимизированный рендеринг
+// function renderData() {
+//   try {
+//     [containerAll, containerKill].forEach((container) => (container.innerHTML = ""));
+//     ["all", "kill"].forEach((type) => {
+//       const container = type === "all" ? containerAll : containerKill;
+//       const data = testManipulate[type];
+//       if (data.length) {
+//         const fragment = document.createDocumentFragment();
+//         data.forEach((item, index) => fragment.appendChild(createElement(item, index, type)));
+//         container.appendChild(fragment);
+//       } else {
+//         container.textContent = `Нет элементов в ${type}`;
+//       }
+//     });
+//   } catch (error) {
+//     console.error("Ошибка рендеринга:", error);
+//     [containerAll, containerKill].forEach((c) => (c.textContent = "Ошибка отображения данных"));
+//   }
+// }
+
+// // Улучшенное создание элемента
+// function createElement(item, index, type) {
+//   const element = document.createElement("div");
+//   element.className = "item";
+//   element.textContent = item?.name || item?.title || JSON.stringify(item) || "Пустой элемент";
+//   element.onclick = () => moveItem(index, type);
+//   return element;
+// }
+
+// // Перемещение элемента
+// function moveItem(index, sourceType) {
+//   try {
+//     if (!Array.isArray(testManipulate[sourceType])) throw new Error(`Неверная структура ${sourceType}`);
+//     const targetType = sourceType === "all" ? "kill" : "all";
+//     testManipulate[targetType].push(...testManipulate[sourceType].splice(index, 1));
+//     renderData();
+//   } catch (error) {
+//     console.error("Ошибка перемещения элемента:", error);
+//   }
+// }

@@ -159,6 +159,8 @@ input:checked + .slider {
 
 .menuBot {
   position: absolute;
+  display: flex;
+  flex-direction: column;
   width: max-content;
   padding: 0.5rem 0.25rem;
   border-radius: 0.5rem;
@@ -184,7 +186,8 @@ input:checked + .slider {
     background-color: var(--hover);
   }
 }
-.radioSpecial {
+.menuBot .btnMenuOpen {
+  text-align: center;
   cursor: pointer;
   line-height: 2;
   padding-inline: 1.5rem;
@@ -193,7 +196,6 @@ input:checked + .slider {
     background-color: var(--hover);
   }
 }
-
 .Radio > input {
   position: absolute;
   opacity: 0;
@@ -241,10 +243,20 @@ input:checked + .slider {
   border-color: rgb(51, 144, 236);
 }
 
-.modal-header {
+.menuBot .modal-header {
+  position: relative;
   font-size: 0.9rem;
   text-align: center;
-  margin-bottom: 5px;
+  margin-bottom: 0.5rem;
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -0.3rem;
+    width: 100%;
+    border-radius: 1px;
+    border: 1px solid rgb(204, 204, 204);
+  }
 }
 .menuBall {
   height: 150px;
@@ -281,12 +293,12 @@ input:checked + .slider {
     margin-right: 0;
   }
   .dropMenu {
-    inset-inline: 100 auto;
+    inset-inline: 100% auto;
     transform-origin: left top;
   }
   .btn-toggle {
     padding: 1.25rem;
-    inset-inline: 60% auto;
+    inset-inline: auto 40%;
     right: inherit;
   }
   .Radio-main::after {

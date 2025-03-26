@@ -6,14 +6,24 @@
   "content_scripts": [
     {
       "matches": ["https://game.league17.ru/*"],
-      "js": ["script.js", "API.js", "UI.js", "league.js", "heal.js", "bot.js", "checker.js", "development.js"],
+      "js": [
+        "script.js",
+        "API.js",
+        "UI.js",
+        "league.js",
+        "capture.js",
+        "heal.js",
+        "bot.js",
+        "checker.js",
+        "development.js"
+      ],
       "css": ["fonts.css", "style.css"],
       "type": "module"
     }
   ],
   "web_accessible_resources": [
     {
-      "resources": ["inject.js", "sound.mp3", "fa-light-300.woff2"],
+      "resources": ["inject.js", "fa-light-300.woff2"],
       "matches": ["https://game.league17.ru/*"]
     }
   ]

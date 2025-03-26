@@ -1,208 +1,523 @@
-const delaySendPokemon = () => new Promise((resolve) => setTimeout(resolve, Math.floor(Math.random() * 100) + 200));
-let isSendMonstr = false;
-let monsterTeam = null;
+let attackNumber = getLocalStorageValue("attackNumber", "");
+let attackNumberAfter = getLocalStorageValue("attackNumberAfter", "");
+let switchMonster = getLocalStorageValue("switchMonster", "");
 
-const status = {
-  Насмешка: "-840px 0px",
-  Колыбельная: "-225px 0px",
-  Споры: "-225px 0px",
+const menuModalAttack = [
+  {
+    text: "Атака 1",
+    name: "attack",
+    value: "0",
+    storageKey: "attackNumber",
+    onClick: () => {
+      attackNumber = 0;
+      console.log(attackNumber);
+    },
+  },
+  {
+    text: "Атака 2",
+    name: "attack",
+    value: "1",
+    storageKey: "attackNumber",
+    onClick: () => {
+      attackNumber = 1;
+      console.log(attackNumber);
+    },
+  },
+  {
+    text: "Атака 3",
+    name: "attack",
+    value: "2",
+    storageKey: "attackNumber",
+    onClick: () => {
+      attackNumber = 2;
+      console.log(attackNumber);
+    },
+  },
+  {
+    text: "Атака 4",
+    name: "attack",
+    value: "3",
+    storageKey: "attackNumber",
+    onClick: () => {
+      attackNumber = 3;
+      console.log(attackNumber);
+    },
+  },
+];
+
+const menuModalAfterAttack = [
+  {
+    text: "Атака 1",
+    name: "attackAfter",
+    value: "0",
+    storageKey: "attackNumberAfter",
+    onClick: () => {
+      attackNumberAfter = 0;
+      console.log(attackNumberAfter);
+    },
+  },
+  {
+    text: "Атака 2",
+    name: "attackAfter",
+    value: "1",
+    storageKey: "attackNumberAfter",
+    onClick: () => {
+      attackNumberAfter = 1;
+      console.log(attackNumberAfter);
+    },
+  },
+  {
+    text: "Атака 3",
+    name: "attackAfter",
+    value: "2",
+    storageKey: "attackNumberAfter",
+    onClick: () => {
+      attackNumberAfter = 2;
+      console.log(attackNumberAfter);
+    },
+  },
+  {
+    text: "Атака 4",
+    name: "attackAfter",
+    value: "3",
+    storageKey: "attackNumberAfter",
+    onClick: () => {
+      attackNumberAfter = 3;
+      console.log(attackNumberAfter);
+    },
+  },
+];
+
+const menuFight = ButtonMenu({
+  header: "Настройка боев",
+  classList: "menuBot menuSP",
+});
+const attackMenu = ButtonMenu({
+  header: "Атаки",
+  classList: "menuBot menuStatus",
+  buttonArray: menuModalAttack,
+});
+const monsterMenu = ButtonMenu({
+  header: "Смена монстра",
+  classList: "menuBot menuStatus",
+});
+const afterAttackMenu = ButtonMenu({
+  header: "Атаки",
+  classList: "menuBot menuStatus",
+  buttonArray: menuModalAfterAttack,
+});
+const openAttackMenuButton = document.createElement("div");
+openAttackMenuButton.textContent = "Выбор атаки";
+openAttackMenuButton.classList.add("btnMenuOpen");
+openAttackMenuButton.addEventListener("click", (event) => {
+  event.stopPropagation();
+  attackMenu.classList.toggle("active");
+});
+const afterOpenAttackMenuButton = document.createElement("div");
+afterOpenAttackMenuButton.textContent = "Выбор атаки";
+afterOpenAttackMenuButton.classList.add("btnMenuOpen");
+afterOpenAttackMenuButton.addEventListener("click", (event) => {
+  event.stopPropagation();
+  afterAttackMenu.classList.toggle("active");
+});
+
+const openMonsterMenuButton = document.createElement("div");
+openMonsterMenuButton.textContent = "Сменить монстра";
+openMonsterMenuButton.classList.add("btnMenuOpen");
+openMonsterMenuButton.addEventListener("click", (event) => {
+  event.stopPropagation();
+  monsterMenu.classList.toggle("active");
+});
+
+//
+const monsterNameInput = document.createElement("input");
+monsterNameInput.type = "text";
+monsterNameInput.classList.add("monsterNameInput");
+monsterNameInput.placeholder = "Имя монстра на кого сменить";
+monsterNameInput.value = getLocalStorageValue("switchMonster", "");
+monsterNameInput.addEventListener("input", (event) => {
+  const newValue = event.target.value;
+  setLocalStorageValue("switchMonster", newValue);
+  console.log(newValue);
+});
+//
+//
+monsterMenu.append(monsterNameInput, afterOpenAttackMenuButton, afterAttackMenu);
+menuFight.append(openAttackMenuButton, openMonsterMenuButton, attackMenu, monsterMenu);
+
+mainMenuItems.forEach((item) => {
+  const button = Button(item);
+  mainMenu.append(button, dropMenu, menuFight, upMenu, catchMenu);
+});
+
+const attackHandlers = {
+  Сдаться: () => surrender(),
+  Поймать: () => captureMonster(),
+  Прокачать: () => levelUpMonster(),
+  "Сменить монстра": () => changeMonster(),
+  "Первая атака": () => useAttack(0),
+  "Вторая атака": () => useAttack(1),
+  "Третья атака": () => useAttack(2),
+  "Четвертая атака": () => useAttack(3),
+  Семанты: () => captureSemant(),
+  Все: () => useAttack(null, false),
 };
 
-async function captureMonstr() {
-  try {
-    const gender = divVisioFight.querySelector("#divFightH .gender");
-    if (!gender) {
+function controlleAttack() {
+  console.log("Запуск controlleAttack");
+  const mnsH = divVisioFight.querySelector("#divFightH .name");
+  if (!mnsH) {
+    console.log("Ошибка: не найден #divFightH .name");
+    return;
+  }
+
+  const nameH = mnsH.textContent.trim();
+  console.log("Опознанное имя:", nameH);
+  if (!nameH || mnsH.classList.length > 1) {
+    console.log("Ошибка: некорректное имя или у элемента больше одного класса");
+    playSound();
+    stopBot();
+    return;
+  }
+
+  if (weather) {
+    const weatherElem = divVisioFight.querySelector(".iconweather");
+    if (weatherElem && weatherElem.className.split(" ").some((cls) => arrWeather.includes(cls))) {
       playSound();
       return;
     }
-    const genderClasses = gender.classList;
+  }
 
-    const isMale = genderClasses.contains("icon-sex-1");
-    const isFemale = genderClasses.contains("icon-sex-2");
-    const isNeutral = genderClasses.contains("icon-sex-3");
+  console.log("Проверяем userTest:", userTest);
+  for (const [key, handler] of Object.entries(attackHandlers)) {
+    if (new Set(userTest[key] || []).has(nameH)) {
+      console.log(`Имя ${nameH} найдено в '${key}' userTest, вызываем handler()`);
+      handler();
+      return;
+    }
+  }
 
-    if (
-      (variableCatch === "male" && !isMale) ||
-      (variableCatch === "female" && !isFemale) ||
-      (variableCatch === "all" && !(isMale || isFemale || isNeutral))
-    ) {
-      surrender();
+  console.log("Проверяем test:", test);
+  if (new Set(test["Все"] || []).has(nameH)) {
+    console.log(`Имя ${nameH} найдено в 'Все' test, вызываем useAttack()`);
+    useAttack(null, false);
+    return;
+  }
+
+  console.log("Имя не найдено ни в userTest, ни в test. Завершаем с ошибкой.");
+  playSound();
+  stopBot();
+}
+
+async function useAttack(attackIndex, isSwitch) {
+  while (true) {
+    const attackElements = divVisioFight.querySelectorAll("#divFightI .moves .divMoveTitle");
+    const finalAttackIndex = attackIndex !== null ? attackIndex : isSwitch ? attackNumberAfter : attackNumber;
+
+    if (!attackElements[finalAttackIndex]) {
+      console.error(`Ошибка: Атака с индексом ${finalAttackIndex} не найдена`);
+      playSound();
+      stopBot();
       return;
     }
 
-    while (true) {
-      const allAttackClickable = Array.from(divVisioFight.querySelectorAll("#divFightI .moves .divMoveTitle"));
+    await delayAttack();
+    attackElements[finalAttackIndex].click();
 
-      let clickAttack = allAttackClickable.find((el) => el.textContent.trim() === "Сломанный меч")?.parentElement;
+    await controllerMutationAtack();
 
-      if (!clickAttack) break;
-
-      await delayAttack();
-      clickAttack.click();
-
-      if (!(await checkI())) return;
-      if (!(await checkHcatch())) break;
+    if (!(await checkI()) || !(await checkH())) {
+      return;
     }
+  }
+}
 
-    let statusApplied = false;
+async function changeMonster() {
+  const divElements = document.querySelector(".divElements");
+  const divFightI = divVisioFight.querySelector("#divFightI");
+  const ball = divFightI.querySelector(".ball.clickable");
+  await delayFast();
+  ball.click();
 
-    while (!statusApplied) {
-      const allAttackClickable = Array.from(divVisioFight.querySelectorAll("#divFightI .moves .divMoveTitle"));
-      let clickAttack = allAttackClickable.find((el) => el.textContent.trim() === statusAttack)?.parentElement;
+  await observerElements(divElements);
+  const divElementList = divElements.querySelectorAll(".divElement");
 
-      if (!clickAttack) {
+  for (const divElement of divElementList) {
+    const name = divElement.querySelector(".name");
+    const nameText = name.textContent.trim();
+    const filteredName = nameText.replace(/[^a-zA-Zа-яА-Я]/g, "");
+
+    if (switchMonster.includes(filteredName)) {
+      await delayFast();
+      divElement.click();
+      break;
+    }
+  }
+
+  await controllerMutationAtack();
+  useAttack(null, true);
+}
+
+async function levelUpMonster() {
+  const divElements = document.querySelector(".divElements");
+  const divFightI = divVisioFight.querySelector("#divFightI");
+  while (true) {
+    let clickAtack = null;
+    for (const element of divFightI.querySelectorAll("#divFightI .moves .divMoveTitle")) {
+      if (element.textContent.trim() === attackUp) {
+        clickAtack = element.parentElement;
         break;
       }
-
-      await delayAttack();
-      clickAttack.click();
-
-      if (!(await checkI())) {
-        break;
-      }
-      const statusElements = divVisioFight.querySelectorAll("#divFightH .statusimg");
-
-      if (statusElements.length > 0) {
-        const cleanedStatusAttack = statusAttack.replace(/\s+/g, " ").trim();
-        const expectedPosition = status[cleanedStatusAttack];
-        if (!expectedPosition) {
-          break;
-        }
-
-        for (const statusElement of statusElements) {
-          const bgPosition = window.getComputedStyle(statusElement).backgroundPosition;
-
-          if (bgPosition.includes(expectedPosition)) {
-            statusApplied = true;
-            break;
-          }
-        }
-      }
     }
 
-    // Использование предмета
-    const ball = divVisioFight.querySelector("#divFightI .ball.clickable");
-    if (ball) ball.click();
+    if (!clickAtack) return;
+    if (!(await checkI())) return;
 
-    const divElements = document.querySelector(".divElements");
+    await delayFast();
+    clickAtack.click();
     await observerElements(divElements);
 
-    const targetElement = Array.from(divElements.querySelectorAll(".divElement")).find(
-      (divElement) => divElement.querySelector(".text")?.textContent.trim() === "Использовать предмет..."
-    );
+    const divElementList = divElements.querySelectorAll(".divElement");
 
-    if (targetElement) targetElement.querySelector(".text").click();
+    for (const divElement of divElementList) {
+      const nameText = divElement.querySelector(".name").textContent.trim();
+      if (nameText.replace(/[^a-zA-Zа-яА-Я]/g, "") === nameUpMonster) {
+        await delayFast();
 
-    const hint = document.querySelector(".hint-global");
-    const hintItems = await observerHint(hint);
+        const barHP = divElement.querySelector(".barHP div");
+        if (parseFloat(barHP.style.width) <= 30) {
+          if (window.getComputedStyle(divVisioFight).display !== "none") {
+            await surrender();
+          }
+          await delayFast();
+          moveHeal();
+          return;
+        }
 
-    const targetHint = Array.from(hintItems).find((item) =>
-      item.querySelector("img")?.getAttribute("src").includes(`/${varibleBall}.`)
-    );
-
-    if (!targetHint) {
-      playSound();
-      return;
+        divElement.click();
+        break;
+      }
     }
-    targetHint.click();
-    await displayNone();
-    await checkMonsterTeam();
-    if (monsterTeam.length >= 5) {
-      isSendMonstr = true;
-      moveHeal();
-    }
-  } catch (error) {
-    console.error("Ошибка в capture:", error);
+
+    await controllerMutationAtack();
   }
 }
 
-async function observerTeam(divDockPanels) {
-  return new Promise((resolve) => {
-    const observer = new MutationObserver((mutationsList) => {
-      for (const mutation of mutationsList) {
-        if (mutation.type === "childList") {
-          monsterTeam = divDockPanels.querySelectorAll(".divPokeTeam .pokemonBoxCard");
-          if (monsterTeam.length > 0) {
-            observer.disconnect();
-            resolve(monsterTeam);
-          }
-        }
-      }
-    });
+async function checkI() {
+  const divFightI = document.querySelector("#divFightI");
+  const barHP = divFightI.querySelector(".barHP div");
 
-    observer.observe(divDockPanels, { childList: true, subtree: true });
-  });
-}
-
-async function checkMonsterTeam() {
-  const divDockIn = document.querySelectorAll(".divDockIn img");
-  const divDockPanels = document.querySelector(".divDockPanels");
-  const targetTeam = Array.from(divDockIn).find((el) => {
-    const src = el.getAttribute("src");
-    return src && src.includes("team");
-  });
-  targetTeam.click();
-  monsterTeam = await observerTeam(divDockPanels);
-  targetTeam.click();
-}
-
-async function sendMonstr() {
-  await checkMonsterTeam();
-  for (const el of Array.from(monsterTeam)) {
-    const whoToCapture = el.querySelector(".icon-star-fill.starter").style.display;
-    if (whoToCapture === "none") {
-      const send = el.querySelector(".icon-pc-deactivate");
-      await delaySendPokemon();
-      send.click();
+  if (parseFloat(barHP.style.width) <= 30) {
+    if (window.getComputedStyle(divVisioFight).display !== "none") {
+      await surrender();
     }
-  }
-  isSendMonstr = false;
-}
-
-async function observerHint(hint) {
-  return new Promise((resolve) => {
-    const observer = new MutationObserver((mutationsList) => {
-      for (const mutation of mutationsList) {
-        if (mutation.type === "childList") {
-          const items = hint.querySelectorAll(".divItemFightlist .item.clickable");
-          if (items.length > 0) {
-            observer.disconnect();
-            resolve(items);
-          }
-        }
-      }
-    });
-
-    observer.observe(hint, { childList: true, subtree: true });
-  });
-}
-
-async function checkHcatch() {
-  const divFightH = divVisioFight.querySelector("#divFightH");
-  const barHP = divFightH.querySelector(".barHP div");
-  const styleWidth = barHP.style.width;
-  const widthPercent = parseFloat(styleWidth);
-
-  if (widthPercent <= 10) {
+    await delayFast();
+    moveHeal();
     return false;
+  }
+  // ОТКЛЮЧИТЬ КОГДА ЗАКОНЧУ КАЧ
+  // const barEXP = divFightI.querySelector(".barEXP div");
+  // const styleWidthEXP = barEXP.style.width; // Получаем строку вида "99.5781%"
+  // const widthPercentEXP = parseFloat(styleWidthEXP); // Преобразуем в число 99.5781
+  // console.log(widthPercentEXP);
+  // if (widthPercentEXP >= 90) {
+  //   playSound();
+  //   return false;
+  // }
+
+  const allAttack = divFightI.querySelector(".moves");
+  const divMoveParamsElements = allAttack.querySelectorAll(".divMoveParams");
+
+  for (const element of divMoveParamsElements) {
+    const text = element.textContent.trim();
+    const [current, total] = text.split("/").map(Number);
+    if (current <= 1) {
+      if (window.getComputedStyle(divVisioFight).display !== "none") {
+        await surrender();
+      }
+      await delayFast();
+      moveHeal();
+      return false;
+    }
   }
   return true;
 }
+async function checkH() {
+  const divFightH = divVisioFight.querySelector("#divFightH");
+  const barHP = divFightH.querySelector(".barHP div");
 
-async function displayNone() {
-  return new Promise((resolve) => {
-    const observer = new MutationObserver((mutationsList) => {
-      for (const mutation of mutationsList) {
-        if (mutation.type === "attributes" && mutation.attributeName === "style") {
-          const currentDisplayStyle = window.getComputedStyle(divVisioFight).display;
-          if (currentDisplayStyle === "none") {
-            observer.disconnect();
-            resolve();
-          }
-        }
-      }
-    });
+  if (!barHP || parseFloat(barHP.style.width) <= 0) {
+    return false;
+  } else {
+    return true;
+  }
+}
 
-    observer.observe(divVisioFight, { attributes: true, attributeFilter: ["style"] });
-  });
+// const items = document.querySelectorAll(".mw-redirect");
+
+// for (const item of items) {
+//   // Получаем текст элемента и оставляем только буквы (удаляем всё остальное)
+//   const text = item.textContent;
+//   const lettersOnly = text.replace(/[^a-zA-Zа-яА-Я]/g, "");
+//   console.log(lettersOnly);
+// }
+
+// const items = document.querySelectorAll(".mw-redirect");
+// const names = Array.from(items)
+//   .map((item) => item.textContent.replace(/[^a-zA-Zа-яА-Я]/g, "")) // оставляем только буквы
+//   .filter((name) => name.length > 0); // убираем пустые строки
+
+// // Удаляем дубликаты
+// const uniqueNames = [...new Set(names)];
+
+// // Сортируем по алфавиту (опционально)
+// uniqueNames.sort((a, b) => a.localeCompare(b));
+
+// const jsonOutput = JSON.stringify(uniqueNames, null, 2);
+// copy(jsonOutput); // Копируем в буфер обмена
+// console.log(jsonOutput);
+{
+  "Айлур",
+    "Амбрук",
+    "Астрания",
+    "Бугибум",
+    "Булли",
+    "Волек",
+    "Вольтон",
+    "Вупс",
+    "Вьюнудль",
+    "Голона",
+    "Грандинг",
+    "Грути",
+    "Дендино",
+    "Джорбик",
+    "Джуснель",
+    "Дирбаг",
+    "Дроздор",
+    "Заммлер",
+    "Илполь",
+    "Каллея",
+    "Камолино",
+    "Капель",
+    "Кваяд",
+    "Кислипс",
+    "Клуббиш",
+    "Коккон",
+    "Кокцинус",
+    "Корнис",
+    "Крыскун",
+    "Лайкун",
+    "Лалабир",
+    "Ленси",
+    "Лептибаг",
+    "Либеллт",
+    "Листотел",
+    "Лопыш",
+    "Лутер",
+    "Лутка",
+    "Малор",
+    "Мармаус",
+    "Месьер",
+    "Москилл",
+    "Мотль",
+    "Ненуль",
+    "Ниньо",
+    "Нинья",
+    "Омутоль",
+    "Ополоз",
+    "Орлармор",
+    "Орли",
+    "Орлин",
+    "Пантир",
+    "Пикан",
+    "Пискун",
+    "Покут",
+    "Поркуш",
+    "Прутти",
+    "Птерра",
+    "Пылизар",
+    "Рановак",
+    "Рахнус",
+    "Редлик",
+    "Рокмит",
+    "Рошер",
+    "Световол",
+    "Сенс",
+    "Сивинг",
+    "Сивун",
+    "Скалоб",
+    "Скулфиш",
+    "Спибаг",
+    "Сплешер",
+    "Стинни",
+    "Ферон",
+    "Фокут",
+    "Фоуль",
+    "Шелтер",
+    "Шмелевик",
+    "Шримпер",
+    "Шумышь",
+    "Эфон",
+    "Огнесёл",
+    "Вулкемел",
+    "Грюмышь",
+    "Злобстер",
+    "Клошар",
+    "Кнурр",
+    "Криселла",
+    "Кроттор",
+    "Листвотел",
+    "Лифуду",
+    "Мантедж",
+    "Мукун",
+    "Огнесл",
+    "Остер",
+    "Питонстр",
+    "Потат",
+    "Потатат",
+    "Пынюх",
+    "Ракода",
+    "Рокиб",
+    "Саванна",
+    "Скорпимер",
+    "Сомасин",
+    "Толириб",
+    "Триодонт",
+    "Тусклофиш",
+    "Унгну",
+    "Ураллер",
+    "Флегон",
+    "Фоснейл",
+    "Фрыкон",
+    "Хани",
+    "Хеджайс",
+    "Хорсилт",
+    "Цианея",
+    "Эмброзавр",
+    "Эстерелла",
+    "Абимон",
+    "Анемон",
+    "Арахнус",
+    "Баттинун",
+    "Баттнайти",
+    "Вартфиш",
+    "Волшбан",
+    "Дендилино",
+    "Джипсон",
+    "Ирлин",
+    "Кензи",
+    "Кикип",
+    "Клыкула",
+    "Крак",
+    "Лемурил",
+    "Льдинкус",
+    "Метурнус",
+    "Муваг",
+    "Пальмер",
+    "Пелисир",
+    "Путун",
+    "Ротенот",
+    "Скайт",
+    "Стинни",
+    "Термола";
 }

@@ -22,22 +22,22 @@ document.body.append(btnToggle, menuContainer, backdrop);
 
 const inputUP = document.createElement("input");
 inputUP.type = "text";
-inputUP.value = upPockemon;
+inputUP.value = nameUpMonster;
 inputUP.placeholder = "Введите имя монстра";
 inputUP.addEventListener("input", (event) => {
-  upPockemon = event.target.value;
-  setLocalStorageValue("upPockemon", upPockemon);
+  nameUpMonster = event.target.value;
+  setLocalStorageValue("nameUpMonster", nameUpMonster);
 });
 const varibleBallBTN = document.createElement("div");
 varibleBallBTN.textContent = "Выбор монстроболла";
-varibleBallBTN.classList.add("radioSpecial");
+varibleBallBTN.classList.add("btnMenuOpen");
 varibleBallBTN.addEventListener("click", (event) => {
   event.stopPropagation();
   varBall.classList.toggle("active");
 });
 const variblуStatusAttack = document.createElement("div");
 variblуStatusAttack.textContent = "Статусная атака";
-variblуStatusAttack.classList.add("radioSpecial");
+variblуStatusAttack.classList.add("btnMenuOpen");
 variblуStatusAttack.addEventListener("click", (event) => {
   event.stopPropagation();
   varStatusAttack.classList.toggle("active");
@@ -59,11 +59,12 @@ function ButtonMenu(option) {
     headerEl.textContent = header;
     el.append(headerEl);
   }
-
-  buttonArray.forEach((item) => {
-    const button = Modal(item);
-    el.append(button);
-  });
+  if (buttonArray) {
+    buttonArray.forEach((item) => {
+      const button = Modal(item);
+      el.append(button);
+    });
+  }
 
   return el;
 }
@@ -179,6 +180,14 @@ const mainMenuItems = [
     },
   },
   {
+    icon: "fa-light icons-gear",
+    text: "Настройка",
+    onClick: () => {
+      menuFight.classList.toggle("active");
+    },
+  },
+
+  {
     icon: "fa-light icons-update",
     text: "Обновить",
     onClick: () => fetchData(),
@@ -218,10 +227,12 @@ const mainMenuItems = [
   {
     text: "Тест",
     onClick: () => {
-      sendMonstr();
+      locationSearch();
+      switchMob();
     },
   },
 ];
+
 const menuModalUP = [
   {
     text: "Замедленная бомба",
@@ -600,14 +611,16 @@ const varStatusAttack = ButtonMenu({
 
 upMenu.append(inputUP);
 catchMenu.append(variblуStatusAttack, varibleBallBTN, varBall, varStatusAttack);
-
-mainMenuItems.forEach((item) => {
-  const button = Button(item);
-  mainMenu.append(button, dropMenu, upMenu, catchMenu);
-});
-
+// mainMenuItems.forEach((item) => {
+//   const button = Button(item);
+//   mainMenu.append(button, dropMenu, menuFight, upMenu, catchMenu);
+// });
 backdrop.addEventListener("click", () => {
   mainMenu.classList.remove("active");
+  menuFight.classList.remove("active");
+  attackMenu.classList.remove("active");
+  afterAttackMenu.classList.remove("active");
+  monsterMenu.classList.remove("active");
   backdrop.classList.remove("active");
   upMenu.classList.remove("active");
   varStatusAttack.classList.remove("active");
