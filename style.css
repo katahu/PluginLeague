@@ -293,12 +293,12 @@ input:checked + .slider {
     margin-right: 0;
   }
   .dropMenu {
-    inset-inline: 100% auto;
+    inset-inline: 0 auto;
     transform-origin: left top;
   }
   .btn-toggle {
     padding: 1.25rem;
-    inset-inline: auto 40%;
+    inset-inline: 50% auto;
     right: inherit;
   }
   .Radio-main::after {

@@ -133,7 +133,7 @@ openMonsterMenuButton.addEventListener("click", (event) => {
 const monsterNameInput = document.createElement("input");
 monsterNameInput.type = "text";
 monsterNameInput.classList.add("monsterNameInput");
-monsterNameInput.placeholder = "Имя монстра на кого сменить";
+monsterNameInput.placeholder = "Имя   на кого сменить";
 monsterNameInput.value = getLocalStorageValue("switchMonster", "");
 monsterNameInput.addEventListener("input", (event) => {
   const newValue = event.target.value;
