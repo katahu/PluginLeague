@@ -39,7 +39,10 @@ async function moveHeal() {
     }
 
     await delayFast();
-    await healNPC();
+    while (true) {
+      await healNPC();
+      if (!(await hasActiveInfection())) break;
+    }
     await delayFast();
 
     for (const buttonId of pathBack) {
@@ -73,7 +76,10 @@ async function moveHeal() {
 
     await delayFast();
     if (isSendMonstr) await sendMonstr();
-    await healNPC();
+    while (true) {
+      await healNPC();
+      if (!(await hasActiveInfection())) break;
+    }
     await delayFast();
 
     for (let i = path.length - 2; i >= 0; i--) {
@@ -94,6 +100,7 @@ async function moveHeal() {
   await delayHeal();
   await handleDeviceActions(true);
   isActiveHeal = false;
+  nonePP = false;
 }
 
 async function healNPC() {
@@ -149,4 +156,15 @@ function controllerMutationMove() {
     });
     observer.observe(divLocGo, { childList: true });
   });
+}
+async function hasActiveInfection() {
+  await delayHeal();
+  const element = document.querySelector(
+    '#divAlerten .alerten.warning .divContainer .divContent:not([data-checked="true"])'
+  );
+  if (element?.textContent.includes("Не все монстры были вылечены из-за инфекции.")) {
+    element.setAttribute("data-checked", "true");
+    return true;
+  }
+  return false;
 }

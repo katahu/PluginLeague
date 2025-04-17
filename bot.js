@@ -1,13 +1,19 @@
-// const attackHandlers = {
-//   craft: (attack) => handleCraftAndAttackTwo("craft", attack),
-//   attackTwo: (attack) => handleCraftAndAttackTwo("attackTwo", attack),
-//   attackThree: (attack) => switchMob("attackThree", attack),
-//   upPokemon: () => handleUpPokemon(),
-//   defeat: () => surrender(),
-//   semant: () => semant(),
-//   capture: () => captureMonstr(),
-// };
-const arrWeather = ["w3", "w4"];
+let nonePP = false;
+let countMonster = 0;
+
+const attackHandlers = {
+  Сдаться: () => surrender(),
+  Поймать: () => captureMonster(),
+  Прокачать: () => useAttack(null, false),
+  "Сменить монстра": () => changeMonster(),
+  "Первая атака": () => useAttack(0),
+  "Вторая атака": () => useAttack(1),
+  "Третья атака": () => useAttack(2),
+  "Четвертая атака": () => useAttack(3),
+  Семанты: () => captureSemant(),
+  Все: () => (levelingUP ? levelUpMonster() : useAttack(null, false)),
+};
+
 const delayAttack = () => new Promise((resolve) => setTimeout(resolve, Math.floor(Math.random() * 200) + 200));
 const delayFast = () => new Promise((resolve) => setTimeout(resolve, Math.floor(Math.random() * 1200) + 200));
 
@@ -69,137 +75,200 @@ function controllerMutationAtack() {
   });
 }
 
-// function controlleAttack() {
-//   const mnsH = divVisioFight.querySelector("#divFightH .name");
-//   const nameH = mnsH.textContent.trim();
+function controlleAttack() {
+  if (isMonsterLimit && countMonster >= countMonsterLimit) {
+    stopBot();
+    return;
+  }
 
-//   if (!mnsH || mnsH.classList.length > 1) {
-//     playSound();
-//     stopBot();
-//     return;
-//   }
-//   if (weather) {
-//     const weather = divVisioFight.querySelector(".iconweather");
-//     const weatherClasses = weather.className.split(" ");
-//     const hasWeatherClass = weatherClasses.some((cls) => arrWeather.includes(cls));
-//     if (hasWeatherClass) {
-//       playSound();
-//       return;
-//     }
-//   }
+  const nameElem = divVisioFight?.querySelector("#divFightH .name");
+  if (!nameElem) {
+    playSound();
+    stopBot();
+    return;
+  }
 
-//   const locationData = routeAttack[currentRegion]?.[currentLocation] ?? routeAttack[currentLocation];
+  const monsterName = nameElem.textContent.trim();
 
-//   const { mob, attack } = locationData;
+  if (!monsterName || nameElem.classList.length > 1) {
+    playSound();
+    stopBot();
+    return;
+  }
 
-//   for (const [type, names] of Object.entries(mob)) {
-//     if (names.includes(nameH)) {
-//       const handler = attackHandlers[type];
-//       if (handler) {
-//         handler(attack[type]);
-//         return;
-//       }
-//     }
-//   }
-//   playSound();
-//   stopBot();
-// }
-// async function handleCraftAndAttackTwo(type, attack) {
-//   while (true) {
-//     const allAttackClickable = Array.from(divVisioFight.querySelectorAll("#divFightI .moves .divMoveTitle"));
-//     let clickAtack = null;
+  if (weatherLimit) {
+    const weatherIcon = divVisioFight.querySelector(".iconweather");
+    if (Array.isArray(variableWeather)) {
+      const shouldPlaySound = variableWeather.some((weather) => weatherIcon.classList.contains(weather));
+      if (shouldPlaySound) {
+        playSound();
+        return;
+      }
+    } else if (weatherIcon.classList.contains(variableWeather)) {
+      playSound();
+      return;
+    }
+  }
 
-//     allAttackClickable.forEach((element) => {
-//       if (element.textContent.trim() === attack) {
-//         clickAtack = element.parentElement;
-//       }
-//     });
-//     // ОТКЛЮЧИТЬ КОГДА ЗАКОНЧУ КАЧ
-//     // if (!(await checkI())) return;
+  for (const [action, handler] of Object.entries(attackHandlers)) {
+    if (userMonsterList[action]?.includes(monsterName)) {
+      if (action === "Сдаться" && document.querySelector("#divFightData #divFightOptions .agro")) {
+        continue;
+      }
+      if (action === "Поймать") {
+        const canCaptureMonster = divVisioFight.querySelector("#divFightH .wildinfo .icon-ball");
+        if (!canCaptureMonster?.classList.contains("greennumber")) {
+          continue;
+        }
+      }
+      handler();
+      countMonster++;
+      return;
+    }
+  }
 
-//     await delayAttack();
-//     clickAtack.click();
-//     await controllerMutationAtack();
+  if (monsterList.Все?.includes(monsterName)) {
+    attackHandlers.Все();
+    countMonster++;
+    return;
+  }
 
-//     if (!(await checkI())) return;
-//     if (!(await checkH())) return;
-//   }
-// }
+  console.log("Неизвестный монстр:", monsterName);
+  playSound();
+  stopBot();
+}
 
-// async function switchMob(type, attack) {
-//   const divElements = document.querySelector(".divElements");
-//   const divFightI = divVisioFight.querySelector("#divFightI");
-//   const ball = divFightI.querySelector(".ball.clickable");
-//   await delayFast();
-//   ball.click();
+async function useAttack(attackIndex, isSwitch) {
+  while (true) {
+    const attackElements = divVisioFight.querySelectorAll("#divFightI .moves .divMoveTitle");
+    let finalAttackIndex = attackIndex !== null ? attackIndex : isSwitch ? variableAttackAfter : variableAttack;
 
-//   await observerElements(divElements);
-//   const divElementList = divElements.querySelectorAll(".divElement");
+    await checkI();
 
-//   for (const divElement of divElementList) {
-//     const name = divElement.querySelector(".name");
-//     const nameText = name.textContent.trim();
-//     const namealfavit = nameText.replace(/[^a-zA-Zа-яА-Я]/g, "");
-//     if (namealfavit === nameSwitch) {
-//       await delayFast();
-//       divElement.click();
-//       break;
-//     }
-//   }
-//   await controllerMutationAtack();
-//   handleCraftAndAttackTwo(type, attack);
-// }
+    if (nonePP) {
+      const validAttacks = Array.from(attackElements)
+        .map((el, i) => ({ el, index: i }))
+        .filter(({ el, index }) => !el.classList.contains("category3") && index !== finalAttackIndex);
 
-// async function handleUpPokemon() {
-//   console.log("Вызвана функция");
-//   const divElements = document.querySelector(".divElements");
-//   const divFightI = divVisioFight.querySelector("#divFightI");
-//   while (true) {
-//     console.log("Цикл вызван");
-//     const allAttackClickable = Array.from(divFightI.querySelectorAll("#divFightI .moves .divMoveTitle"));
-//     let clickAtack = null;
+      if (validAttacks.length === 0) {
+        console.error("Нет доступных атак без category3, отличных от текущей!");
+        playSound();
+        return;
+      }
 
-//     allAttackClickable.forEach((element) => {
-//       if (element.textContent.trim() === attackUp) {
-//         clickAtack = element.parentElement;
-//       }
-//     });
+      const selected = validAttacks[Math.floor(Math.random() * validAttacks.length)];
+      finalAttackIndex = selected.index;
+    }
 
-//     console.log(clickAtack);
-//     if (!clickAtack) return;
-//     if (!(await checkI())) return;
+    if (!attackElements[finalAttackIndex]) {
+      console.error(`Ошибка: Атака с индексом ${finalAttackIndex} не найдена`);
+      playSound();
+      return;
+    }
 
-//     await delayFast();
-//     clickAtack.click();
-//     await observerElements(divElements);
+    await delayAttack();
+    attackElements[finalAttackIndex].parentElement.click();
+    await controllerMutationAtack();
 
-//     const divElementList = divElements.querySelectorAll(".divElement");
-//     for (const divElement of divElementList) {
-//       const name = divElement.querySelector(".name");
-//       const nameText = name.textContent.trim();
-//       const namealfavit = nameText.replace(/[^a-zA-Zа-яА-Я]/g, "");
-//       if (namealfavit === upPockemon) {
-//         await delayFast();
-//         const barHP = divElement.querySelector(".barHP div");
-//         const styleWidth = barHP.style.width;
-//         const widthPercent = parseFloat(styleWidth);
-//         if (widthPercent <= 30) {
-//           const currentDisplayStyle = window.getComputedStyle(divVisioFight).display;
-//           if (currentDisplayStyle !== "none") {
-//             await surrender();
-//           }
-//           await delayFast();
-//           moveHeal();
-//           return;
-//         }
+    if (!(await checkI()) || !(await checkH())) {
+      return;
+    }
+  }
+}
 
-//         divElement.click();
-//         break;
-//       }
-//     }
-//     await controllerMutationAtack();
-//   }
-// }
+async function changeMonster() {
+  const divElements = document.querySelector(".divElements");
+  const divFightI = divVisioFight.querySelector("#divFightI");
+  const ball = divFightI.querySelector(".ball.clickable");
+  await delayFast();
+  ball.click();
+
+  await observerElements(divElements);
+  const divElementList = divElements.querySelectorAll(".divElement");
+
+  for (const divElement of divElementList) {
+    const name = divElement.querySelector(".name");
+    const nameText = name.textContent.trim();
+    const filteredName = nameText.replace(/[^a-zA-Zа-яА-Я]/g, "");
+
+    if (nameSwitchMonster.includes(filteredName)) {
+      await delayFast();
+      divElement.click();
+      break;
+    }
+  }
+
+  await controllerMutationAtack();
+  useAttack(null, true);
+}
+
+async function levelUpMonster() {
+  const divElements = document.querySelector(".divElements");
+  const divFightI = divVisioFight.querySelector("#divFightI");
+  while (true) {
+    const attackElements = divVisioFight.querySelectorAll("#divFightI .moves .divMoveTitle");
+    await checkI();
+
+    let finalAttackElement;
+
+    if (nonePP) {
+      const validAttacks = Array.from(attackElements).filter(
+        (el) => !el.classList.contains("category3") && el.textContent.trim() !== variableAttackUP
+      );
+
+      if (validAttacks.length === 0) {
+        console.error("Нет доступных атак без category3 и не равных", variableAttackUP);
+        playSound();
+        return;
+      }
+
+      finalAttackElement = validAttacks[Math.floor(Math.random() * validAttacks.length)];
+    } else {
+      finalAttackElement = Array.from(attackElements).find((el) => el.textContent.trim() === variableAttackUP);
+
+      if (!finalAttackElement) {
+        console.error("Атака не найдена:", variableAttackUP);
+        playSound();
+        return;
+      }
+    }
+
+    await delayFast();
+    finalAttackElement.parentElement.click();
+    if (nonePP) {
+      await controllerMutationAtack();
+      moveHeal();
+      return;
+    }
+
+    await observerElements(divElements);
+
+    const divElementList = divElements.querySelectorAll(".divElement");
+
+    for (const divElement of divElementList) {
+      const nameText = divElement.querySelector(".name").textContent.trim();
+      if (nameText.replace(/[^a-zA-Zа-яА-Я]/g, "") === nameUpMonster) {
+        await delayFast();
+
+        const barHP = divElement.querySelector(".barHP div");
+        if (parseFloat(barHP.style.width) <= 30) {
+          if (window.getComputedStyle(divVisioFight).display !== "none") {
+            await surrender();
+          }
+          await delayFast();
+          moveHeal();
+          return;
+        }
+
+        divElement.click();
+        break;
+      }
+    }
+
+    await controllerMutationAtack();
+    if (window.getComputedStyle(divVisioFight).display === "none") return;
+  }
+}
 
 async function semant() {
   const divVisioFight = document.querySelector("#divVisioFight");
@@ -232,70 +301,61 @@ async function observerElements(divElements) {
   });
 }
 
-// async function checkI() {
-//   const divFightI = document.querySelector("#divFightI");
-//   const barHP = divFightI.querySelector(".barHP div");
+async function checkI() {
+  const divFightI = document.querySelector("#divFightI");
+  const barHP = divFightI.querySelector(".barHP div");
 
-//   const styleWidth = barHP.style.width;
-//   const widthPercent = parseFloat(styleWidth);
-//   if (widthPercent <= 30) {
-//     const currentDisplayStyle = window.getComputedStyle(divVisioFight).display;
-//     if (currentDisplayStyle !== "none") {
-//       await surrender();
-//     }
-//     await delayFast();
-//     moveHeal();
-//     return false;
-//   }
-//   // ОТКЛЮЧИТЬ КОГДА ЗАКОНЧУ КАЧ
-//   // const barEXP = divFightI.querySelector(".barEXP div");
-//   // const styleWidthEXP = barEXP.style.width; // Получаем строку вида "99.5781%"
-//   // const widthPercentEXP = parseFloat(styleWidthEXP); // Преобразуем в число 99.5781
-//   // console.log(widthPercentEXP);
-//   // if (widthPercentEXP >= 90) {
-//   //   playSound();
-//   //   return false;
-//   // }
+  if (parseFloat(barHP.style.width) <= 30) {
+    if (window.getComputedStyle(divVisioFight).display !== "none") {
+      await surrender();
+    }
+    await delayFast();
+    moveHeal();
+    return false;
+  }
+  // ОТКЛЮЧИТЬ КОГДА ЗАКОНЧУ КАЧ
+  // const barEXP = divFightI.querySelector(".barEXP div");
+  // const styleWidthEXP = barEXP.style.width; // Получаем строку вида "99.5781%"
+  // const widthPercentEXP = parseFloat(styleWidthEXP); // Преобразуем в число 99.5781
+  // console.log(widthPercentEXP);
+  // if (widthPercentEXP >= 90) {
+  //   playSound();
+  //   return false;
+  // }
 
-//   const allAttack = divFightI.querySelector(".moves");
-//   const divMoveParamsElements = allAttack.querySelectorAll(".divMoveParams");
+  const allAttack = divFightI.querySelector(".moves");
+  const divMoveParamsElements = allAttack.querySelectorAll(".divMoveParams");
 
-//   for (const element of divMoveParamsElements) {
-//     const text = element.textContent.trim();
+  for (const element of divMoveParamsElements) {
+    const text = element.textContent.trim();
+    const [current, total] = text.split("/").map(Number);
+    if (current <= 0) {
+      if (window.getComputedStyle(divVisioFight).display !== "none") {
+        if (document.querySelector("#divFightData #divFightOptions .agro")) {
+          nonePP = true;
+          return true;
+        }
+        await surrender();
+      }
+      await delayFast();
+      moveHeal();
+      return false;
+    }
+  }
+  return true;
+}
+async function checkH() {
+  const divFightH = divVisioFight.querySelector("#divFightH");
+  const barHP = divFightH.querySelector(".barHP div");
 
-//     const [current, total] = text.split("/").map(Number);
+  if (!barHP || parseFloat(barHP.style.width) <= 0) {
+    return false;
+  } else {
+    return true;
+  }
+}
 
-//     if (current <= 1) {
-//       const currentDisplayStyle = window.getComputedStyle(divVisioFight).display;
-//       if (currentDisplayStyle !== "none") {
-//         await surrender();
-//       }
-//       await delayFast();
-//       moveHeal();
-//       return false;
-//     }
-//   }
-//   return true;
-// }
-
-// async function checkH() {
-//   const divFightH = divVisioFight.querySelector("#divFightH");
-//   const barHP = divFightH.querySelector(".barHP div");
-//   if (!barHP) return false;
-
-//   const styleWidth = barHP.style.width;
-//   const widthPercent = parseFloat(styleWidth);
-//   if (widthPercent <= 0) {
-//     return false;
-//   }
-//   return true;
-// }
 async function surrender() {
-  // ТОЛЬКО В ПОДЗЕМКЕ
-  // playSound();
-  // return;
-  // const divFightButtons = divVisioFight.querySelector("#divFightData #divFightButtons");
-  // MOBILE
   const divFightButtons = divVisioFight.querySelector("#divFightButtons");
   const buttons = divFightButtons.querySelectorAll("div");
   let defeatButton = null;

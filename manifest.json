@@ -9,13 +9,13 @@
       "js": [
         "script.js",
         "API.js",
-        "UI.js",
         "league.js",
         "capture.js",
         "heal.js",
         "bot.js",
         "checker.js",
-        "development.js"
+        "development.js",
+        "data.js"
       ],
       "css": ["fonts.css", "style.css"],
       "type": "module"
@@ -23,7 +23,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["inject.js", "fa-light-300.woff2"],
+      "resources": ["inject.js", "fa-light-300.woff2", "Roboto-Medium.woff2"],
       "matches": ["https://game.league17.ru/*"]
     }
   ]

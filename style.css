@@ -3,7 +3,14 @@
   --background: #e0e7ee;
   --z-backdrop: 100001;
 }
-
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: local("Roboto Medium"), local("Roboto-Medium"),
+    url("chrome-extension://__MSG_@@extension_id__/Roboto-Medium.woff2") format("woff2");
+}
 .dropMenu {
   position: absolute;
   width: max-content;
@@ -32,7 +39,7 @@
   margin: 0.25rem 0;
 }
 /* Меню */
-.backdrop {
+/* .backdrop {
   position: fixed;
   top: -100vh;
   left: -100vw;
@@ -43,12 +50,12 @@
   pointer-events: none;
   z-index: 100000;
   transition: opacity 150ms cubic-bezier(0.2, 0, 0.2, 1), visibility 150ms cubic-bezier(0.2, 0, 0.2, 1);
-}
-.backdrop.active {
+} */
+/* .backdrop.active {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
-}
+} */
 .btn-toggle {
   position: absolute;
   cursor: pointer;
@@ -59,11 +66,14 @@
   padding: 0.75rem;
   z-index: var(--z-backdrop);
 }
-.menuContainer {
+/* .menuContainer {
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
   position: absolute;
   inset-block: 8% auto;
   inset-inline: auto 0;
   visibility: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 .mainMenu {
   position: relative;
@@ -84,8 +94,8 @@
   transform: scale(1);
   pointer-events: auto;
   z-index: var(--z-backdrop);
-}
-.menuItem {
+} */
+/* .menuItem {
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -100,11 +110,11 @@
   &:active {
     transform: scale(0.98);
   }
-}
-.menuItem i {
+} */
+/* .menuItem i {
   margin-inline: 0.25rem 0.5rem;
   color: rgb(112, 117, 121);
-}
+} */
 
 .toggle {
   position: relative;
@@ -157,7 +167,7 @@ input:checked + .slider {
   background-color: #2196f3;
 }
 
-.menuBot {
+/* .menuBot {
   position: absolute;
   display: flex;
   flex-direction: column;
@@ -173,13 +183,13 @@ input:checked + .slider {
   opacity: 1;
   visibility: visible;
   z-index: var(--z-backdrop);
-}
-.Radio {
+} */
+/* .Radio {
   display: flex;
   align-items: center;
   position: relative;
   cursor: pointer;
-  line-height: 2;
+  min-height: 2rem;
   padding-inline: 1.5rem;
   border-radius: 0.25rem;
   &:hover {
@@ -241,9 +251,10 @@ input:checked + .slider {
 
 .Radio > input:checked ~ .Radio-main::before {
   border-color: rgb(51, 144, 236);
-}
+} */
 
-.menuBot .modal-header {
+/* .modal-header {
+  font-weight: bold;
   position: relative;
   font-size: 0.9rem;
   text-align: center;
@@ -257,8 +268,8 @@ input:checked + .slider {
     border-radius: 1px;
     border: 1px solid rgb(204, 204, 204);
   }
-}
-.menuBall {
+} */
+/* .menuBall {
   height: 150px;
   overflow: auto;
 }
@@ -267,9 +278,9 @@ input:checked + .slider {
   inset-block: 100% auto;
   inset-inline: auto;
   margin-top: 5px;
-}
+} */
 
-.menuBall::-webkit-scrollbar {
+/* .menuBall::-webkit-scrollbar {
   width: 0;
   height: 0;
   background: transparent;
@@ -278,13 +289,13 @@ input:checked + .slider {
   inset-block: 55% auto;
   inset-inline: auto 100%;
   margin-right: 5px;
-}
+} */
 
-@media screen and (max-width: 768px) {
+/* @media screen and (max-width: 768px) {
   .menuContainer {
     inset-inline: 0 auto;
   }
-  .mainMenu {
+  .menuMain {
     transform-origin: left top;
   }
   .menuSP {
@@ -304,4 +315,263 @@ input:checked + .slider {
   .Radio-main::after {
     left: -1.01rem;
   }
+} */
+
+/*  */
+/* .modalContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  &.open {
+    opacity: 1;
+  }
+  &.closing {
+    opacity: 0;
+  }
+}
+.modalContainer .backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.25);
+}
+
+.modalContainer .modalWrapper {
+  border-radius: 1rem;
+  overflow: hidden;
+  background-color: var(--background);
+  transform: translate3d(0, -1rem, 0);
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+.modalContainer.open .modalWrapper {
+  transform: translate3d(0, 0, 0);
+}
+.modalContainer.closing .modalWrapper {
+  transform: translate3d(0, 1rem, 0);
+}
+.modalWrapper .modalHeader {
+  padding: 0.5rem 0.5rem 0;
+  font-weight: bold;
+}
+
+.modalContainer .modalWrapper .modalContent {
+  overflow: auto;
+  max-height: 300px;
+  padding: 0.5rem;
+} */
+/* .custom-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
+  -webkit-overflow-scrolling: touch;
+  transition: scrollbar-color 0.3s ease;
+  &::-webkit-scrollbar {
+    width: 2px;
+  }
+  &:hover {
+    scrollbar-color: rgba(90, 90, 90, 0.4) rgba(0, 0, 0, 0);
+  }
+} */
+
+.custom-scroll {
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0);
+    border: 2px solid transparent;
+    background-clip: content-box;
+    border-radius: 100px; /* Скругление */
+  }
+  &:hover::-webkit-scrollbar-thumb {
+    background-color: rgba(90, 90, 90, 0.6);
+  }
+}
+
+/*  */
+
+.mainMenu {
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  position: absolute;
+  border-radius: 0.5rem;
+  inset-block: 8% auto;
+  inset-inline: auto 0;
+  background-color: var(--background);
+  opacity: 0;
+  visibility: hidden;
+  transform-origin: right top;
+  transform: scale(0.85);
+  transition: opacity 150ms cubic-bezier(0.2, 0, 0.2, 1), transform 150ms cubic-bezier(0.2, 0, 0.2, 1),
+    visibility 150ms cubic-bezier(0.2, 0, 0.2, 1);
+}
+.mainMenu.open {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1);
+}
+.mainMenu .menuItem {
+  cursor: pointer;
+  line-height: 1.5;
+  margin: 0.25rem;
+  padding: 0.25rem;
+  border-radius: 0.375rem;
+  transform: scale(1);
+  transition: 0.15s ease-in-out transform;
+
+  &:hover {
+    background-color: var(--hover);
+  }
+  &:active {
+    transform: scale(0.98);
+  }
+}
+.mainMenu .menuItem i {
+  margin-inline: 0.25rem 0.5rem;
+  color: rgb(112, 117, 121);
+}
+
+/*  */
+.modalContainer {
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  &.open {
+    opacity: 1;
+  }
+  &.closing {
+    opacity: 0;
+  }
+}
+.modalContainer .backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.25);
+}
+
+.modalContainer .modalWrapper {
+  border-radius: 1rem;
+  overflow: hidden;
+  background-color: var(--background);
+  transform: translate3d(0, -1rem, 0);
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+.modalContainer.open .modalWrapper {
+  transform: translate3d(0, 0, 0);
+}
+.modalContainer.closing .modalWrapper {
+  transform: translate3d(0, 1rem, 0);
+}
+
+.modalWrapper .modalHeader {
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  padding: 0.5rem 0.5rem 0;
+}
+.modalHr {
+  height: 0.0625rem;
+  margin: 0.25rem 0;
+  background-color: #c2cddb;
+}
+.modalContainer .modalWrapper .modalContent {
+  box-sizing: border-box;
+  overflow: auto;
+  max-height: 300px;
+  padding: 0.25rem;
+}
+
+.modalContainer .modalWrapper .modalContent .menuItem {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2rem;
+  padding: 0 0.75rem;
+  border-radius: 0.375rem;
+  &:hover {
+    background-color: var(--hover);
+  }
+  &.modal-input {
+    cursor: auto;
+    justify-content: left;
+    &:hover {
+      background-color: inherit;
+    }
+  }
+}
+
+/*  */
+
+.Radio {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  margin: 0.5rem 0;
+}
+
+.Radio-input {
+  display: none;
+}
+
+.Radio-main {
+  flex-grow: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  padding-right: 1.5rem;
+  padding-inline-start: 2.5rem;
+  min-height: 2rem;
+  border-radius: 0.25rem;
+  position: relative;
+}
+
+.Radio-main:hover {
+  background-color: var(--hover);
+}
+
+.Radio-main::before {
+  content: "";
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgb(112, 117, 121);
+  border-radius: 50%;
+  display: inline-block;
+  transition: border-color 0.1s ease, background-color 0.1s ease, box-shadow 0.1s ease;
+  position: absolute;
+  left: 0.5rem; /* Отступ слева */
+}
+
+.Radio-input:checked + .Radio-main::before {
+  border-color: rgb(51, 144, 236);
+  background-color: rgb(51, 144, 236);
+  box-shadow: inset 0 0 0 3px var(--background);
 }

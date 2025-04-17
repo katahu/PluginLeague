@@ -1,46 +1,67 @@
-let routeHeal = {};
-let userHeal = {};
+// let imgSemant = [];
+
+// Обычные атаки
+let variableAttack = getLocalStorageValue("variableAttack", "");
+// Смена монстра и атака после смены
+let nameSwitchMonster = getLocalStorageValue("nameSwitchMonster", "");
+let variableAttackAfter = getLocalStorageValue("variableAttackAfter", "");
+// Погода
+let variableWeather = getLocalStorageValue("variableWeather", "");
+let weatherLimit = getLocalStorageValue("weatherLimit", false);
+// Прокачка
+let levelingUP = getLocalStorageValue("levelingUP", false);
 let nameUpMonster = getLocalStorageValue("nameUpMonster", "");
-let attackUp = getLocalStorageValue("attackUp", "");
-let variableCatch = getLocalStorageValue("varibleCatch", "");
-let varibleBall = getLocalStorageValue("varibleBall", "");
-let statusAttack = getLocalStorageValue("statusAttack", "");
-let weather = getLocalStorageValue("weather", false);
-let imgSemant = [];
+let variableAttackUP = getLocalStorageValue("variableAttackUP", "");
+// Поимка
+let variableGender = getLocalStorageValue("variableGender", "");
+let variableStatus = getLocalStorageValue("variableStatus", "");
+let variableMonsterBall = getLocalStorageValue("variableMonsterBall", "");
 
-let monsterList = new Map();
-let userMonsterList = new Map();
+// Дополнительно
+let countMonsterLimit = Number(getLocalStorageValue("countMonsterLimit", ""));
+let isMonsterLimit = getLocalStorageValue("isMonsterLimit", false);
 
+let userHeal = {};
+let routeHeal = {};
+let monsterList = {};
+let userMonsterList = {};
 async function fetchData() {
-  const endpoints = [
-    { url: "https://dce6373a41a58485.mokky.dev/monster", name: "monsterList" },
-    { url: "https://dce6373a41a58485.mokky.dev/userMonster", name: "userMonsterList" },
-    { url: "https://65f9a7ef3909a9a65b190bd2.mockapi.io/heal", name: "routeHeal" },
+  const mainUrls = [
+    "https://dce6373a41a58485.mokky.dev/heal",
+    "https://dce6373a41a58485.mokky.dev/userHeal",
+    "https://dce6373a41a58485.mokky.dev/monster",
+    "https://dce6373a41a58485.mokky.dev/userMonster",
+  ];
+
+  const backupUrls = [
+    "https://65f9a7ef3909a9a65b190bd2.mockapi.io/heal",
+    "https://backup-server.com/userHeal",
+    "https://65f9a7ef3909a9a65b190bd2.mockapi.io/attack",
+    "https://backup-server.com/userMonster",
   ];
 
   try {
-    const responses = await Promise.all(
-      endpoints.map((endpoint) =>
-        fetch(endpoint.url).then(async (res) => {
-          if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-          return res.json();
-        })
-      )
-    );
+    let responses = await Promise.allSettled(mainUrls.map((url) => fetch(url)));
 
-    responses.forEach((data, index) => {
-      const { name } = endpoints[index];
-      if (Array.isArray(data) && data.length > 0) {
-        if (name === "monsterList") {
-          monsterList = new Map(Object.entries(data[0]));
-        } else if (name === "userMonsterList") {
-          userMonsterList = new Map(Object.entries(data[0]));
-        }
-        console.log(`${name} успешно загружен:`, data[0]);
-      } else {
-        console.warn(`Данные ${name} пусты или имеют неверный формат`);
+    for (let i = 0; i < responses.length; i++) {
+      if (responses[i].status !== "fulfilled" || !responses[i].value.ok) {
+        console.warn(`Основной запрос не удался: ${mainUrls[i]}`);
+        const backupResponse = await fetch(backupUrls[i]);
+        responses[i] = { status: "fulfilled", value: backupResponse };
       }
-    });
+    }
+
+    const jsonData = await Promise.all(responses.map((res) => res.value.json()));
+
+    routeHeal = jsonData[0][0];
+    userHeal = jsonData[1][0];
+    monsterList = jsonData[2][0];
+    userMonsterList = jsonData[3][0];
+
+    console.log("monsterList", monsterList);
+    console.log("userMonsterList", userMonsterList);
+    console.log("routeHeal", routeHeal);
+    console.log("userHeal", userHeal);
   } catch (error) {
     console.error("Ошибка загрузки данных:", error);
   }

@@ -8,7 +8,7 @@ const status = {
   Споры: "-225px 0px",
 };
 
-async function captureMonstr() {
+async function captureMonster() {
   try {
     const gender = divVisioFight.querySelector("#divFightH .gender");
     if (!gender) {
@@ -22,9 +22,9 @@ async function captureMonstr() {
     const isNeutral = genderClasses.contains("icon-sex-3");
 
     if (
-      (variableCatch === "male" && !isMale) ||
-      (variableCatch === "female" && !isFemale) ||
-      (variableCatch === "all" && !(isMale || isFemale || isNeutral))
+      (variableGender === "male" && !isMale) ||
+      (variableGender === "female" && !isFemale) ||
+      (variableGender === "all" && !(isMale || isFemale || isNeutral))
     ) {
       surrender();
       return;
@@ -35,7 +35,9 @@ async function captureMonstr() {
 
       let clickAttack = allAttackClickable.find((el) => el.textContent.trim() === "Сломанный меч")?.parentElement;
 
-      if (!clickAttack) break;
+      if (!clickAttack) {
+        return;
+      }
 
       await delayAttack();
       clickAttack.click();
@@ -48,7 +50,7 @@ async function captureMonstr() {
 
     while (!statusApplied) {
       const allAttackClickable = Array.from(divVisioFight.querySelectorAll("#divFightI .moves .divMoveTitle"));
-      let clickAttack = allAttackClickable.find((el) => el.textContent.trim() === statusAttack)?.parentElement;
+      let clickAttack = allAttackClickable.find((el) => el.textContent.trim() === variableStatus)?.parentElement;
 
       if (!clickAttack) {
         break;
@@ -63,8 +65,8 @@ async function captureMonstr() {
       const statusElements = divVisioFight.querySelectorAll("#divFightH .statusimg");
 
       if (statusElements.length > 0) {
-        const cleanedStatusAttack = statusAttack.replace(/\s+/g, " ").trim();
-        const expectedPosition = status[cleanedStatusAttack];
+        const cleanedvariableStatus = variableStatus.replace(/\s+/g, " ").trim();
+        const expectedPosition = status[cleanedvariableStatus];
         if (!expectedPosition) {
           break;
         }
@@ -97,7 +99,7 @@ async function captureMonstr() {
     const hintItems = await observerHint(hint);
 
     const targetHint = Array.from(hintItems).find((item) =>
-      item.querySelector("img")?.getAttribute("src").includes(`/${varibleBall}.`)
+      item.querySelector("img")?.getAttribute("src").includes(`/${variableMonsterBall}.`)
     );
 
     if (!targetHint) {
