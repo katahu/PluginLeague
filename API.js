@@ -1,10 +1,11 @@
-// let imgSemant = [];
-
 // Обычные атаки
-let variableAttack = getLocalStorageValue("variableAttack", "");
+let variableAttack = +getLocalStorageValue("variableAttack", "");
+let ppStop = getLocalStorageValue("ppStop", false);
 // Смена монстра и атака после смены
-let nameSwitchMonster = getLocalStorageValue("nameSwitchMonster", "");
-let variableAttackAfter = getLocalStorageValue("variableAttackAfter", "");
+let nameSwitchMonster = getLocalStorageValue("nameSwitchMonster", "").toLowerCase();
+let variableAttackAfter = +getLocalStorageValue("variableAttackAfter", "");
+// Добивание
+let isLoseMonster = getLocalStorageValue("isLoseMonster", "");
 // Погода
 let variableWeather = getLocalStorageValue("variableWeather", "");
 let weatherLimit = getLocalStorageValue("weatherLimit", false);
@@ -20,55 +21,37 @@ let variableMonsterBall = getLocalStorageValue("variableMonsterBall", "");
 // Дополнительно
 let countMonsterLimit = Number(getLocalStorageValue("countMonsterLimit", ""));
 let isMonsterLimit = getLocalStorageValue("isMonsterLimit", false);
-
-let userHeal = {};
+// День рождение
+// let answers = [];
 let routeHeal = {};
-let monsterList = {};
-let userMonsterList = {};
+
 async function fetchData() {
   const mainUrls = [
     "https://dce6373a41a58485.mokky.dev/heal",
-    "https://dce6373a41a58485.mokky.dev/userHeal",
-    "https://dce6373a41a58485.mokky.dev/monster",
-    "https://dce6373a41a58485.mokky.dev/userMonster",
+    // "https://795c42529e7865a0.mokky.dev/answers",
   ];
 
   const backupUrls = [
     "https://65f9a7ef3909a9a65b190bd2.mockapi.io/heal",
-    "https://backup-server.com/userHeal",
-    "https://65f9a7ef3909a9a65b190bd2.mockapi.io/attack",
-    "https://backup-server.com/userMonster",
   ];
 
-  try {
-    let responses = await Promise.allSettled(mainUrls.map((url) => fetch(url)));
+  chrome.runtime.sendMessage({ type: "FETCH_URLS", mainUrls, backupUrls }, (response) => {
+    if (response.success) {
+      const [routeHealData,  answersData] = response.data;
 
-    for (let i = 0; i < responses.length; i++) {
-      if (responses[i].status !== "fulfilled" || !responses[i].value.ok) {
-        console.warn(`Основной запрос не удался: ${mainUrls[i]}`);
-        const backupResponse = await fetch(backupUrls[i]);
-        responses[i] = { status: "fulfilled", value: backupResponse };
-      }
+      routeHeal = routeHealData[0];
+
+      // answers = answersData;
+    
+      console.log("routeHeal", routeHeal);
+
+      // console.log("answer", answers);
+    } else {
+      console.error("Ошибка при получении данных из background.js:", response.error);
     }
-
-    const jsonData = await Promise.all(responses.map((res) => res.value.json()));
-
-    routeHeal = jsonData[0][0];
-    userHeal = jsonData[1][0];
-    monsterList = jsonData[2][0];
-    userMonsterList = jsonData[3][0];
-
-    console.log("monsterList", monsterList);
-    console.log("userMonsterList", userMonsterList);
-    console.log("routeHeal", routeHeal);
-    console.log("userHeal", userHeal);
-  } catch (error) {
-    console.error("Ошибка загрузки данных:", error);
-  }
+  });
 }
-
 fetchData();
-
 function getLocalStorageValue(key, defaultValue) {
   const value = localStorage.getItem(key);
   if (value === null) return defaultValue;

@@ -1,166 +1,168 @@
-const delaySendPokemon = () => new Promise((resolve) => setTimeout(resolve, Math.floor(Math.random() * 100) + 200));
+let teamMonster = null;
 let isSendMonstr = false;
-let monsterTeam = null;
-
-const status = {
+const statusMonster = {
   Насмешка: "-840px 0px",
   Колыбельная: "-225px 0px",
   Споры: "-225px 0px",
+  "Парализующая пыльца": "-180px 0px",
 };
 
 async function captureMonster() {
-  try {
-    const gender = divVisioFight.querySelector("#divFightH .gender");
-    if (!gender) {
-      playSound();
-      return;
-    }
-    const genderClasses = gender.classList;
+  const genderElement = divVisioFight.querySelector("#divFightH .gender");
+  const genderClasses = genderElement.classList;
 
-    const isMale = genderClasses.contains("icon-sex-1");
-    const isFemale = genderClasses.contains("icon-sex-2");
-    const isNeutral = genderClasses.contains("icon-sex-3");
+  const genderMap = {
+    male: "icon-sex-1",
+    female: "icon-sex-2",
+    neutral: "icon-sex-3",
+  };
 
-    if (
-      (variableGender === "male" && !isMale) ||
-      (variableGender === "female" && !isFemale) ||
-      (variableGender === "all" && !(isMale || isFemale || isNeutral))
-    ) {
+  if (variableGender !== "Все") {
+    const expectedClass = genderMap[variableGender];
+    if (!genderClasses.contains(expectedClass)) {
       surrender();
       return;
     }
+  }
+  while (true) {
+    const allAttack = divVisioFight.querySelectorAll("#divFightI .moves .divMoveTitle");
+    let indexAttack = -1;
 
-    while (true) {
-      const allAttackClickable = Array.from(divVisioFight.querySelectorAll("#divFightI .moves .divMoveTitle"));
-
-      let clickAttack = allAttackClickable.find((el) => el.textContent.trim() === "Сломанный меч")?.parentElement;
-
-      if (!clickAttack) {
-        return;
-      }
-
-      await delayAttack();
-      clickAttack.click();
-
-      if (!(await checkI())) return;
-      if (!(await checkHcatch())) break;
-    }
-
-    let statusApplied = false;
-
-    while (!statusApplied) {
-      const allAttackClickable = Array.from(divVisioFight.querySelectorAll("#divFightI .moves .divMoveTitle"));
-      let clickAttack = allAttackClickable.find((el) => el.textContent.trim() === variableStatus)?.parentElement;
-
-      if (!clickAttack) {
+    for (let i = 0; i < allAttack.length; i++) {
+      if (allAttack[i].textContent.trim() === "Сломанный меч") {
+        indexAttack = i;
         break;
-      }
-
-      await delayAttack();
-      clickAttack.click();
-
-      if (!(await checkI())) {
-        break;
-      }
-      const statusElements = divVisioFight.querySelectorAll("#divFightH .statusimg");
-
-      if (statusElements.length > 0) {
-        const cleanedvariableStatus = variableStatus.replace(/\s+/g, " ").trim();
-        const expectedPosition = status[cleanedvariableStatus];
-        if (!expectedPosition) {
-          break;
-        }
-
-        for (const statusElement of statusElements) {
-          const bgPosition = window.getComputedStyle(statusElement).backgroundPosition;
-
-          if (bgPosition.includes(expectedPosition)) {
-            statusApplied = true;
-            break;
-          }
-        }
       }
     }
 
-    // Использование предмета
-    const ball = divVisioFight.querySelector("#divFightI .ball.clickable");
-    if (ball) ball.click();
-
-    const divElements = document.querySelector(".divElements");
-    await observerElements(divElements);
-
-    const targetElement = Array.from(divElements.querySelectorAll(".divElement")).find(
-      (divElement) => divElement.querySelector(".text")?.textContent.trim() === "Использовать предмет..."
-    );
-
-    if (targetElement) targetElement.querySelector(".text").click();
-
-    const hint = document.querySelector(".hint-global");
-    const hintItems = await observerHint(hint);
-
-    const targetHint = Array.from(hintItems).find((item) =>
-      item.querySelector("img")?.getAttribute("src").includes(`/${variableMonsterBall}.`)
-    );
-
-    if (!targetHint) {
-      playSound();
+    if (indexAttack === -1) {
       return;
     }
-    targetHint.click();
-    await displayNone();
-    await checkMonsterTeam();
-    if (monsterTeam.length >= 5) {
-      isSendMonstr = true;
-      moveHeal();
-    }
-  } catch (error) {
-    console.error("Ошибка в capture:", error);
-  }
-}
 
-async function observerTeam(divDockPanels) {
-  return new Promise((resolve) => {
-    const observer = new MutationObserver((mutationsList) => {
-      for (const mutation of mutationsList) {
-        if (mutation.type === "childList") {
-          monsterTeam = divDockPanels.querySelectorAll(".divPokeTeam .pokemonBoxCard");
-          if (monsterTeam.length > 0) {
-            observer.disconnect();
-            resolve(monsterTeam);
-          }
-        }
+    const attackResult = await findAttackIndex({ indexAttack });
+    if (!attackResult) {
+      console.log("Не удалось найти атаку");
+      return;
+    }
+    const { index, element } = attackResult;
+
+    if (!(await canBattleContinue(attackResult.element))) {
+      console.log("Невозможно продолжить бой");
+      return;
+    }
+
+    await delayAttack();
+    console.log(`Кликаем на атаку с индексом ${index}`);
+    element.click();
+    await isUpdateFight();
+
+    const updatedAttack = await getUpdatedAttackElement(index);
+    if (!(await canBattleContinue(updatedAttack))) {
+      console.log("Невозможно продолжить бой после обновления");
+      return;
+    }
+    if (await hasEnemyHP()) break;
+  }
+
+  while (true) {
+    const allAttack = divVisioFight.querySelectorAll("#divFightI .moves .divMoveTitle");
+    let indexAttack = -1;
+
+    for (let i = 0; i < allAttack.length; i++) {
+      if (allAttack[i].textContent.trim() === variableStatus) {
+        indexAttack = i;
+        break;
       }
-    });
+    }
 
-    observer.observe(divDockPanels, { childList: true, subtree: true });
-  });
-}
+    if (indexAttack === -1) {
+      console.log("Атаки нет");
+      return;
+    }
 
-async function checkMonsterTeam() {
-  const divDockIn = document.querySelectorAll(".divDockIn img");
-  const divDockPanels = document.querySelector(".divDockPanels");
-  const targetTeam = Array.from(divDockIn).find((el) => {
-    const src = el.getAttribute("src");
-    return src && src.includes("team");
-  });
-  targetTeam.click();
-  monsterTeam = await observerTeam(divDockPanels);
-  targetTeam.click();
-}
+    const attackResult = await findAttackIndex({ indexAttack });
+    if (!attackResult) {
+      console.log("Не удалось найти атаку");
+      return;
+    }
+    const { index, element } = attackResult;
 
-async function sendMonstr() {
-  await checkMonsterTeam();
-  for (const el of Array.from(monsterTeam)) {
-    const whoToCapture = el.querySelector(".icon-star-fill.starter").style.display;
-    if (whoToCapture === "none") {
-      const send = el.querySelector(".icon-pc-deactivate");
-      await delaySendPokemon();
-      send.click();
+    if (!(await canBattleContinue(attackResult.element))) {
+      console.log("Невозможно продолжить бой");
+      return;
+    }
+    await delayAttack();
+    console.log(`Кликаем на атаку с индексом ${index}`);
+    element.click();
+
+    await isUpdateFight();
+
+    if (await hasStatus()) break;
+    const updatedAttack = await getUpdatedAttackElement(index);
+    if (!(await canBattleContinue(updatedAttack))) {
+      console.log("Невозможно продолжить бой после обновления");
+      return;
+    }
+    if (await hasEnemyHP()) break;
+  }
+  const ball = divVisioFight.querySelector("#divFightI .ball.clickable").click();
+
+  // Открыли меню
+  const divElements = document.querySelector(".divElements");
+  await observerElements(divElements);
+  const divElementList = divElements.querySelectorAll(".divElement");
+  for (const divElement of divElementList) {
+    if (divElement.querySelector(".text").textContent.trim() === "Использовать предмет...") {
+      await delayFast();
+      divElement.click();
+      break;
     }
   }
-  isSendMonstr = false;
+  // Выбрали предмет
+  const hint = document.querySelector(".hint-global");
+  const hintItems = await observerHint(hint);
+  const regex = new RegExp(`/${variableMonsterBall}.png`);
+  let foundBall = false;
+  for (const hintItem of hintItems) {
+    const img = hintItem.querySelector("img");
+
+    if (regex.test(img.src)) {
+      await delayFast();
+      hintItem.click();
+      foundBall = true;
+      break;
+    }
+  }
+  if (!foundBall) {
+    playSound();
+    return;
+  }
+  await displayNone();
+  triggerHealFullTeam(true);
+}
+async function hasEnemyHP() {
+  const hpElement = divVisioFight.querySelector("#divFightH .progressbar.barHP div");
+  let enemyHP = hpElement?.style.width;
+  enemyHP = parseFloat(enemyHP);
+  if (enemyHP <= 10) {
+    return true;
+  }
+  return false;
 }
 
+async function hasStatus() {
+  const statusAll = divVisioFight.querySelectorAll("#divFightH .statusimg");
+
+  for (const status of statusAll) {
+    const currentPosition = status.style.backgroundPosition;
+    const expectedPosition = statusMonster[variableStatus];
+
+    if (currentPosition === expectedPosition) {
+      return true;
+    }
+  }
+  return false;
+}
 async function observerHint(hint) {
   return new Promise((resolve) => {
     const observer = new MutationObserver((mutationsList) => {
@@ -179,18 +181,6 @@ async function observerHint(hint) {
   });
 }
 
-async function checkHcatch() {
-  const divFightH = divVisioFight.querySelector("#divFightH");
-  const barHP = divFightH.querySelector(".barHP div");
-  const styleWidth = barHP.style.width;
-  const widthPercent = parseFloat(styleWidth);
-
-  if (widthPercent <= 10) {
-    return false;
-  }
-  return true;
-}
-
 async function displayNone() {
   return new Promise((resolve) => {
     const observer = new MutationObserver((mutationsList) => {
@@ -207,4 +197,45 @@ async function displayNone() {
 
     observer.observe(divVisioFight, { attributes: true, attributeFilter: ["style"] });
   });
+}
+async function triggerHealFullTeam(useDefault = true) {
+  const teamButton = document.querySelector('.divDockIn img[src*="team"]');
+  teamButton.click();
+
+  const divDockPanels = document.querySelector(".divDockPanels");
+  divDockPanels.style.display = "none";
+
+  const team = divDockPanels.querySelector(".divPokeTeam");
+
+  await new Promise((resolve) => {
+    const observer = new MutationObserver((mutationsList) => {
+      for (const mutation of mutationsList) {
+        if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
+          observer.disconnect();
+          resolve();
+        }
+      }
+    });
+    observer.observe(team, { childList: true });
+  });
+
+  teamButton.click();
+
+  const teamCountMonster = team.querySelectorAll(".pokemonBoxCard");
+  if (!useDefault) teamMonster = teamCountMonster;
+  if (useDefault && teamCountMonster.length >= 6) {
+    isSendMonstr = true;
+    moveHeal();
+  }
+}
+async function sendMonstersToNursery() {
+  await triggerHealFullTeam(false);
+  for (const item of teamMonster) {
+    // Удалить компьютед лишний гемор
+    const span = item.querySelector(".icon.icomoon.icon-star-fill.starter").style.display;
+    if (span === "none") {
+      item.querySelector(".icon-pc-deactivate").parentElement.click();
+      await new Promise((resolve) => setTimeout(resolve, 300));
+    }
+  }
 }

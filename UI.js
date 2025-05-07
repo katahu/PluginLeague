@@ -1,801 +1,482 @@
-// const btnToggle = document.createElement("div");
-// btnToggle.classList.add("btn-toggle");
+class Button {
+  constructor(options) {
+    if (Array.isArray(options)) {
+      this.buttons = options.map((opt) => new Button(opt));
+      return;
+    }
 
-// const menuContainer = document.createElement("div");
-// menuContainer.classList.add("menuContainer");
+    this.el = document.createElement("div");
+    this.el.classList.add("menuItem");
 
-// const mainMenu = document.createElement("div");
-// mainMenu.classList.add("mainMenu");
-// menuContainer.append(mainMenu);
+    if (options.icon) {
+      const i = document.createElement("i");
+      i.classList.add(...options.icon.split(" "));
+      this.el.prepend(i);
+    }
 
-// const dropMenu = document.createElement("div");
-// dropMenu.classList.add("dropMenu");
+    if (options.text) this.el.append(options.text);
 
-// const noneDrop = document.createElement("span");
-// noneDrop.textContent = "Дроп отсутствует";
-// dropMenu.append(noneDrop);
+    if (options.onClick) {
+      this.el.addEventListener("click", (e) => {
+        e.stopPropagation();
+        options.onClick();
+      });
+    }
+  }
+}
+class Radio {
+  constructor(options, groupOptions = {}) {
+    this.groupWrapper = document.createElement("div");
+    this.groupWrapper.classList.add("radio-group");
 
-// const backdrop = document.createElement("div");
-// backdrop.classList.add("backdrop");
+    const storageKey = groupOptions.storageKey || `radio-group-${options[0].name}`;
+    const savedValue = getLocalStorageValue(storageKey, null);
 
-// document.body.append(btnToggle, menuContainer, backdrop);
+    this.buttons = options.map((opt) => {
+      const el = document.createElement("label");
+      el.classList.add("Radio");
 
-// function CreateMenu(option) {
-//   const { header, classList, buttonArray } = option;
+      const input = document.createElement("input");
+      input.type = "radio";
+      input.name = groupOptions.name;
+      input.value = opt.value;
+      input.checked = opt.value === savedValue;
+      input.classList.add("Radio-input");
 
-//   const el = document.createElement("div");
-//   el.classList.add(...classList.split(" "));
-//   if (header) {
-//     const headerEl = document.createElement("div");
-//     headerEl.classList.add("modal-header");
-//     headerEl.textContent = header;
-//     el.append(headerEl);
-//   }
-//   if (buttonArray) {
-//     buttonArray.forEach((item) => {
-//       const button = Modal(item);
-//       el.append(button);
-//     });
-//   }
+      const radioMain = document.createElement("div");
+      radioMain.classList.add("Radio-main");
 
-//   return el;
-// }
-// function Button(option) {
-//   const { icon, text, regularText, checkbox, localStorageKey, onClick } = option;
+      const text = document.createElement("span");
+      text.classList.add("Radio-label");
+      text.textContent = opt.text || "";
 
-//   const el = document.createElement("div");
-//   el.classList.add("menuItem");
-//   if (text || regularText) {
-//     if (text) {
-//       el.textContent = text;
-//     }
-//     if (regularText) {
-//       el.innerHTML = regularText;
-//     }
-//   }
+      radioMain.append(text);
+      el.append(input, radioMain);
 
-//   if (icon) {
-//     const i = document.createElement("i");
-//     i.classList.add(...icon.split(" "));
-//     el.prepend(i);
-//   }
+      input.addEventListener("change", () => {
+        if (input.checked) {
+          setLocalStorageValue(storageKey, input.value);
+          if (groupOptions.onChange) groupOptions.onChange(input.value);
+        }
+      });
 
-//   if (checkbox) {
-//     const label = document.createElement("label");
-//     label.classList.add("toggle");
-//     const input = document.createElement("input");
-//     input.type = "checkbox";
-//     input.checked = getLocalStorageValue(localStorageKey, option.defaultValue ?? false);
+      this.groupWrapper.appendChild(el);
+      return { el, input };
+    });
 
-//     const slider = document.createElement("span");
-//     slider.classList.add("slider");
-//     label.append(input, slider);
-//     el.append(label);
+    this.el = this.groupWrapper;
+  }
+}
+class Checkbox {
+  constructor(options) {
+    this.el = document.createElement("div");
+    this.el.classList.add("menuItem");
 
-//     input.addEventListener("change", (e) => {
-//       localStorage.setItem(localStorageKey, JSON.stringify(e.target.checked));
-//       if (option.onClick) option.onClick(e);
-//     });
-//   }
+    this.label = document.createElement("label");
+    this.label.classList.add("toggle");
 
-//   if (onClick) {
-//     el.addEventListener("click", (e) => {
-//       e.stopPropagation();
-//       const checkbox = el.querySelector('input[type="checkbox"]');
-//       if (checkbox) {
-//         checkbox.checked = !checkbox.checked;
-//       }
-//       onClick(e);
-//     });
-//   }
+    const savedValue = options.storageKey ? getLocalStorageValue(options.storageKey, null) : null;
 
-//   return el;
-// }
-// function Modal(option) {
-//   const { text, value, name, storageKey, onClick } = option;
+    this.input = document.createElement("input");
+    this.input.type = "checkbox";
+    this.input.checked = savedValue !== null ? savedValue : false;
 
-//   const el = document.createElement("label");
-//   el.classList.add("Radio");
+    this.widget = document.createElement("span");
+    this.widget.classList.add("slider");
 
-//   const input = document.createElement("input");
-//   input.type = "radio";
-//   input.value = value;
-//   input.name = name;
+    this.label.append(this.input, this.widget);
+    this.el.append(this.label);
+    this.el.prepend(options.text);
+    this.el.addEventListener("click", (e) => {
+      e.stopPropagation();
+      this.input.checked = !this.input.checked;
+      this.input.dispatchEvent(new Event("change"));
+    });
 
-//   const storedValue = getLocalStorageValue(storageKey, "");
-//   if (storedValue === value) {
-//     input.checked = true;
-//   }
+    this.input.addEventListener("change", () => {
+      if (options.storageKey) {
+        setLocalStorageValue(options.storageKey, this.input.checked);
+      }
+      if (options.onChange) {
+        options.onChange(this.input.checked);
+      }
+    });
+  }
+}
+class Inpute {
+  constructor(options) {
+    this.el = document.createElement("div");
+    this.el.classList.add("menuItem", "modal-input");
 
-//   input.addEventListener("click", () => {
-//     setLocalStorageValue(storageKey, value);
-//     if (onClick) onClick();
-//   });
+    this.inp = document.createElement("input");
+    this.inp.type = "text";
 
-//   const radio = document.createElement("div");
-//   radio.classList.add("Radio-main");
+    if (options.placeholder) this.inp.placeholder = options.placeholder;
+    this.inp.autocomplete = options.hasOwnProperty("autocomplete") ? "on" : "off";
 
-//   if (text) {
-//     const span = document.createElement("span");
-//     span.classList.add("label");
-//     span.textContent = text;
-//     radio.appendChild(span);
-//   }
-//   el.append(input, radio);
+    this.el.append(this.inp);
+    const savedValue = options.storageKey ? getLocalStorageValue(options.storageKey, null) : null;
+    this.inp.value = savedValue !== null ? savedValue : "";
+    this.inp.addEventListener("input", (e) => {
+      options.onChange(e.target.value);
+      setLocalStorageValue(options.storageKey, e.target.value);
+    });
+  }
+}
+class ModalMenu {
+  static stack = [];
 
-//   return el;
-// }
-// function allButton(options) {
-//   const { classList, text, storage, onClick, input, placeholder, value } = options;
+  constructor(options) {
+    this.el = document.createElement("div");
+    this.el.classList.add("modalContainer");
 
-//   const el = document.createElement("div");
-//   if (classList) {
-//     el.classList.add(...classList.split(" "));
-//   }
+    this.backdrop = document.createElement("div");
+    this.backdrop.classList.add("backdrop");
 
-//   if (text) el.textContent = text;
+    this.modalWrapper = document.createElement("div");
+    this.modalWrapper.classList.add("modalWrapper");
+    this.content = document.createElement("div");
+    this.content.classList.add("modalContent", "custom-scroll");
 
-//   if (input) {
-//     let inputEl = document.createElement("input");
-//     inputEl.type = "text";
-//     inputEl.placeholder = placeholder || "";
-//     inputEl.value = value || "";
-//     el.append(inputEl);
+    if (options.text) {
+      this.header = document.createElement("div");
+      this.header.classList.add("modalHeader");
+      this.header.textContent = options.text;
 
-//     if (storage) {
-//       inputEl.addEventListener("change", (e) => {
-//         setLocalStorageValue(storage, e.target.value);
-//       });
-//     }
-//   }
+      this.hr = document.createElement("div");
+      this.hr.classList.add("modalHr");
+      this.modalWrapper.append(this.header, this.hr);
+    }
 
-//   if (onClick) {
-//     el.addEventListener("click", (e) => {
-//       e.stopPropagation();
-//       onClick(e);
-//     });
-//   } else if (storage && !input) {
-//     el.addEventListener("click", (e) => {
-//       e.stopPropagation();
-//       setLocalStorageValue(storage, true);
-//     });
-//   }
+    this.modalWrapper.append(this.content);
+    this.el.append(this.backdrop, this.modalWrapper);
 
-//   return el;
-// }
-// const mainMenuItems = [
-//   {
-//     icon: "fa-light icons-fight",
-//     text: "Атака",
-//     onClick: () => {
-//       locationSearch();
-//       controller();
-//       toggleConfirmInterceptor(true);
-//     },
-//   },
-//   {
-//     icon: "fa-light icons-heal",
-//     text: "Хил",
-//     onClick: () => {
-//       locationSearch();
-//       moveHeal();
-//     },
-//   },
-//   {
-//     icon: "fa-light icons-stop",
-//     text: "Стоп",
-//     onClick: () => {
-//       stopBot();
-//       toggleConfirmInterceptor(false);
-//     },
-//   },
-//   {
-//     icon: "fa-light icons-gear",
-//     text: "Настройка",
-//     onClick: () => {
-//       menuFight.classList.toggle("active");
-//     },
-//   },
+    if (options.items) {
+      this.addItems(options.items);
+    }
 
-//   {
-//     icon: "fa-light icons-update",
-//     text: "Обновить",
-//     onClick: () => fetchData(),
-//   },
-//   {
-//     icon: "fa-light icons-cloud",
-//     text: "Погода",
-//     checkbox: true,
-//     defaultValue: false,
-//     localStorageKey: "weather",
-//     onClick: () => {
-//       weather = !weather;
-//       localStorage.setItem("weather", JSON.stringify(weather));
-//     },
-//   },
-//   {
-//     icon: "fa-light icons-lvlUP",
-//     text: "Прокачка",
-//     onClick: () => {
-//       upMenu.classList.toggle("active");
-//     },
-//   },
-//   {
-//     icon: "fa-light icons-spider",
-//     text: "Поимка",
-//     onClick: () => {
-//       captureMenu.classList.toggle("active");
-//     },
-//   },
-//   {
-//     icon: "fa-light icons-list-drop",
-//     text: "Дроп",
-//     onClick: () => {
-//       dropMenu.classList.toggle("active");
-//     },
-//   },
-//   {
-//     text: "Тест",
-//     onClick: () => {
-//       locationSearch();
-//       switchMob();
-//     },
-//   },
-// ];
-// const menuModalUP = [
-//   {
-//     text: "Замедленная бомба",
-//     name: "time",
-//     value: "Замедленная бомба",
-//     storageKey: "attackUp",
-//     onClick: () => {
-//       attackUp = "Замедленная бомба";
-//     },
-//   },
-//   {
-//     text: "Крик банши",
-//     name: "time",
-//     value: "Крик банши",
-//     storageKey: "attackUp",
-//     onClick: () => {
-//       attackUp = "Крик банши";
-//     },
-//   },
-// ];
-// const menuModalStatus = [
-//   {
-//     text: "Колыбельная",
-//     name: "statusAttack",
-//     value: "Колыбельная",
-//     storageKey: "statusAttack",
-//     onClick: () => {
-//       variableGender = "Колыбельная";
-//     },
-//   },
-//   {
-//     text: "Споры",
-//     name: "statusAttack",
-//     value: "Споры",
-//     storageKey: "statusAttack",
-//     onClick: () => {
-//       variableGender = "Споры";
-//     },
-//   },
-//   {
-//     text: "Насмешка",
-//     name: "statusAttack",
-//     value: "Насмешка",
-//     storageKey: "statusAttack",
-//     onClick: () => {
-//       variableGender = "Насмешка";
-//     },
-//   },
-// ];
-// const menuModalCapture = [
-//   {
-//     text: "Мальчик",
-//     name: "catch",
-//     value: "male",
-//     storageKey: "variableGender",
-//     onClick: () => {
-//       variableGender = "male";
-//     },
-//   },
-//   {
-//     text: "Девочка",
-//     name: "catch",
-//     value: "female",
-//     storageKey: "variableGender",
-//     onClick: () => {
-//       variableGender = "female";
-//     },
-//   },
-//   {
-//     text: "Все",
-//     name: "catch",
-//     value: "all",
-//     storageKey: "variableGender",
-//     onClick: () => {
-//       variableGender = "all";
-//     },
-//   },
-// ];
-// const menuModalBall = [
-//   {
-//     text: "Монстробол",
-//     name: "ball",
-//     value: "1",
-//     storageKey: "variableBall",
-//     onClick: () => {
-//       variableBall = "1";
-//     },
-//   },
-//   {
-//     text: "Гритбол",
-//     name: "ball",
-//     value: "2",
-//     storageKey: "variableBall",
-//     onClick: () => {
-//       variableBall = "2";
-//     },
-//   },
-//   {
-//     text: "Мастербол",
-//     name: "ball",
-//     value: "3",
-//     storageKey: "variableBall",
-//     onClick: () => {
-//       variableBall = "3";
-//     },
-//   },
-//   {
-//     text: "Ультрабол",
-//     name: "ball",
-//     value: "4",
-//     storageKey: "variableBall",
-//     onClick: () => {
-//       variableBall = "4";
-//     },
-//   },
-//   {
-//     text: "Даркбол",
-//     name: "ball",
-//     value: "13",
-//     storageKey: "variableBall",
-//     onClick: () => {
-//       variableBall = "13";
-//     },
-//   },
-//   {
-//     text: "Супердаркбол",
-//     name: "ball",
-//     value: "18",
-//     storageKey: "variableBall",
-//     onClick: () => {
-//       variableBall = "18";
-//     },
-//   },
-//   {
-//     text: "Браконьера",
-//     name: "ball",
-//     value: "30",
-//     storageKey: "variableBall",
-//     onClick: () => {
-//       variableBall = "30";
-//     },
-//   },
-//   {
-//     text: "Люксбол",
-//     name: "ball",
-//     value: "5",
-//     storageKey: "variableBall",
-//     onClick: () => {
-//       variableBall = "5";
-//     },
-//   },
-//   {
-//     text: "Френдбол",
-//     name: "ball",
-//     value: "7",
-//     storageKey: "variableBall",
-//     onClick: () => {
-//       variableBall = "7";
-//     },
-//   },
-//   {
-//     text: "Лавбол",
-//     name: "ball",
-//     value: "9",
-//     storageKey: "variableBall",
-//     onClick: () => {
-//       variableBall = "9";
-//     },
-//   },
-//   {
-//     text: "Фастбол",
-//     name: "ball",
-//     value: "6",
-//     storageKey: "variableBall",
-//     onClick: () => {
-//       variableBall = "6";
-//     },
-//   },
-//   {
-//     text: "Трансбол",
-//     name: "ball",
-//     value: "16",
-//     storageKey: "variableBall",
-//     onClick: () => {
-//       variableBall = "16";
-//     },
-//   },
-//   {
-//     text: "Нестбол",
-//     name: "ball",
-//     value: "12",
-//     storageKey: "variableBall",
-//     onClick: () => {
-//       variableBall = "12";
-//     },
-//   },
-//   {
-//     text: "Багбол",
-//     name: "ball",
-//     value: "101",
-//     storageKey: "variableBall",
-//     onClick: () => {
-//       variableBall = "101";
-//     },
-//   },
-//   {
-//     text: "Блэкбол",
-//     name: "ball",
-//     value: "102",
-//     storageKey: "variableBall",
-//     onClick: () => {
-//       variableBall = "102";
-//     },
-//   },
-//   {
-//     text: "Электробол",
-//     name: "ball",
-//     value: "104",
-//     storageKey: "variableBall",
-//     onClick: () => {
-//       variableBall = "104";
-//     },
-//   },
-//   {
-//     text: "Файтбол",
-//     name: "ball",
-//     value: "105",
-//     storageKey: "variableBall",
-//     onClick: () => {
-//       variableBall = "105";
-//     },
-//   },
-//   {
-//     text: "Фаербол",
-//     name: "ball",
-//     value: "106",
-//     storageKey: "variableBall",
-//     onClick: () => {
-//       variableBall = "106";
-//     },
-//   },
-//   {
-//     text: "Флайбол",
-//     name: "ball",
-//     value: "107",
-//     storageKey: "variableBall",
-//     onClick: () => {
-//       variableBall = "107";
-//     },
-//   },
-//   {
-//     text: "Гостбол",
-//     name: "ball",
-//     value: "108",
-//     storageKey: "variableBall",
-//     onClick: () => {
-//       variableBall = "108";
-//     },
-//   },
-//   {
-//     text: "Грасбол",
-//     name: "ball",
-//     value: "109",
-//     storageKey: "variableBall",
-//     onClick: () => {
-//       variableBall = "109";
-//     },
-//   },
-//   {
-//     text: "Граундбол",
-//     name: "ball",
-//     value: "110",
-//     storageKey: "variableBall",
-//     onClick: () => {
-//       variableBall = "110";
-//     },
-//   },
-//   {
-//     text: "Айсбол",
-//     name: "ball",
-//     value: "111",
-//     storageKey: "variableBall",
-//     onClick: () => {
-//       variableBall = "111";
-//     },
-//   },
-//   {
-//     text: "Нормобол",
-//     name: "ball",
-//     value: "112",
-//     storageKey: "variableBall",
-//     onClick: () => {
-//       variableBall = "112";
-//     },
-//   },
-//   {
-//     text: "Токсикбол",
-//     name: "ball",
-//     value: "113",
-//     storageKey: "variableBall",
-//     onClick: () => {
-//       variableBall = "113";
-//     },
-//   },
-//   {
-//     text: "Псибол",
-//     name: "ball",
-//     value: "114",
-//     storageKey: "variableBall",
-//     onClick: () => {
-//       variableBall = "114";
-//     },
-//   },
-//   {
-//     text: "Стоунбол",
-//     name: "ball",
-//     value: "115",
-//     storageKey: "variableBall",
-//     onClick: () => {
-//       variableBall = "115";
-//     },
-//   },
-//   {
-//     text: "Стилбол",
-//     name: "ball",
-//     value: "116",
-//     storageKey: "variableBall",
-//     onClick: () => {
-//       variableBall = "116";
-//     },
-//   },
-//   {
-//     text: "Дайвбол",
-//     name: "ball",
-//     value: "117",
-//     storageKey: "variableBall",
-//     onClick: () => {
-//       variableBall = "117";
-//     },
-//   },
-//   {
-//     text: "Фейбол",
-//     name: "ball",
-//     value: "118",
-//     storageKey: "variableBall",
-//     onClick: () => {
-//       variableBall = "118";
-//     },
-//   },
-// ];
-// const menuModalAttack = [
-//   {
-//     text: "Атака 1",
-//     name: "attack",
-//     value: "0",
-//     storageKey: "attackNumber",
-//     onClick: () => {
-//       attackNumber = 0;
-//       console.log(attackNumber);
-//     },
-//   },
-//   {
-//     text: "Атака 2",
-//     name: "attack",
-//     value: "1",
-//     storageKey: "attackNumber",
-//     onClick: () => {
-//       attackNumber = 1;
-//       console.log(attackNumber);
-//     },
-//   },
-//   {
-//     text: "Атака 3",
-//     name: "attack",
-//     value: "2",
-//     storageKey: "attackNumber",
-//     onClick: () => {
-//       attackNumber = 2;
-//       console.log(attackNumber);
-//     },
-//   },
-//   {
-//     text: "Атака 4",
-//     name: "attack",
-//     value: "3",
-//     storageKey: "attackNumber",
-//     onClick: () => {
-//       attackNumber = 3;
-//       console.log(attackNumber);
-//     },
-//   },
-// ];
-// const menuModalAfterAttack = [
-//   {
-//     text: "Атака 1",
-//     name: "attackAfter",
-//     value: "0",
-//     storageKey: "attackNumberAfter",
-//     onClick: () => {
-//       attackNumberAfter = 0;
-//       console.log(attackNumberAfter);
-//     },
-//   },
-//   {
-//     text: "Атака 2",
-//     name: "attackAfter",
-//     value: "1",
-//     storageKey: "attackNumberAfter",
-//     onClick: () => {
-//       attackNumberAfter = 1;
-//       console.log(attackNumberAfter);
-//     },
-//   },
-//   {
-//     text: "Атака 3",
-//     name: "attackAfter",
-//     value: "2",
-//     storageKey: "attackNumberAfter",
-//     onClick: () => {
-//       attackNumberAfter = 2;
-//       console.log(attackNumberAfter);
-//     },
-//   },
-//   {
-//     text: "Атака 4",
-//     name: "attackAfter",
-//     value: "3",
-//     storageKey: "attackNumberAfter",
-//     onClick: () => {
-//       attackNumberAfter = 3;
-//       console.log(attackNumberAfter);
-//     },
-//   },
-// ];
-// //
+    this.backdrop.addEventListener("click", (e) => {
+      if (e.target === this.backdrop) {
+        this.close();
+        controllerTable.closeMenu();
+      }
+    });
+  }
 
-// const statusMenu = CreateMenu({
-//   header: "Статусы",
-//   classList: "menuBot menuStatus",
-//   buttonArray: menuModalStatus,
-// });
-// const menuFight = CreateMenu({
-//   header: "Настройка боев",
-//   classList: "menuBot menuSP",
-// });
-// const attackMenu = CreateMenu({
-//   header: "Атаки",
-//   classList: "menuBot menuStatus",
-//   buttonArray: menuModalAttack,
-// });
-// const monsterMenu = CreateMenu({
-//   header: "Смена монстра",
-//   classList: "menuBot menuStatus",
-// });
-// const afterAttackMenu = CreateMenu({
-//   header: "Атаки",
-//   classList: "menuBot menuStatus",
-//   buttonArray: menuModalAfterAttack,
-// });
-// const captureMenu = CreateMenu({
-//   header: "Настройка поимки",
-//   classList: "menuBot menuSP",
-//   buttonArray: menuModalCapture,
-// });
+  addItems(items) {
+    if (Array.isArray(items)) {
+      items.forEach((item) => this.addItem(item));
+    } else {
+      this.addItem(items);
+    }
+  }
 
-// const upMenu = CreateMenu({
-//   header: "Настройка прокачки",
-//   classList: "menuBot menuSP",
-//   buttonArray: menuModalUP,
-// });
+  addItem(item) {
+    if (item?.el instanceof HTMLElement) {
+      this.content.append(item.el);
+      return;
+    }
 
-// const ballMenu = CreateMenu({
-//   header: "Монстоболлы",
-//   classList: "menuBot menuBall",
-//   buttonArray: menuModalBall,
-// });
-// //
+    let element;
+    switch (item.type) {
+      case "radio":
+        element = new Radio(item.options || [], item.groupOptions || {});
+        break;
+      case "checkbox":
+        element = new Checkbox(item);
+        break;
+      case "input":
+        element = new Inpute(item);
+        break;
+      case "button":
+      default:
+        element = new Button(item);
+        break;
+    }
 
-// const inputUP = allButton({
-//   classLisst: "inputUP",
-//   input: true,
-//   storage: "nameUpMonster",
-//   placeholder: "Введите имя монстра",
-//   value: nameUpMonster,
-// });
-// const openBallMenuButton = allButton({
-//   classList: "btnMenuOpen",
-//   text: "Выбор монстроболла",
-//   onClick: () => {
-//     ballMenu.classList.toggle("active");
-//   },
-// });
-// const openStatusMenuButton = allButton({
-//   classList: "btnMenuOpen",
-//   text: "Выбор статуса",
-//   onClick: () => {
-//     statusMenu.classList.toggle("active");
-//   },
-// });
-// const openAttackMenuButton = allButton({
-//   classList: "btnMenuOpen",
-//   text: "Выбор атаки",
-//   onClick: () => {
-//     attackMenu.classList.toggle("active");
-//   },
-// });
-// const afterOpenAttackMenuButton = allButton({
-//   classList: "btnMenuOpen",
-//   text: "Выбор атаки",
-//   onClick: () => {
-//     afterAttackMenu.classList.toggle("active");
-//   },
-// });
-// const openMonsterMenuButton = allButton({
-//   classList: "btnMenuOpen",
-//   text: "Сменить монстра",
-//   onClick: () => {
-//     monsterMenu.classList.toggle("active");
-//   },
-// });
-// const monsterNameInput = allButton({
-//   classList: "monsterNameInput",
-//   input: true,
-//   storage: "switchMonster",
-//   placeholder: "На кого сменить",
-//   value: getLocalStorageValue("switchMonster", ""),
-// });
+    if (element?.el) {
+      this.content.append(element.el);
+    }
+  }
 
-// //
+  open() {
+    document.body.appendChild(this.el);
+    this.el.style.transition = "none";
+    this.el.classList.remove("open", "closing");
 
-// upMenu.append(inputUP);
-// captureMenu.append(openStatusMenuButton, openBallMenuButton, ballMenu, statusMenu);
-// monsterMenu.append(monsterNameInput, afterOpenAttackMenuButton, afterAttackMenu);
-// menuFight.append(openAttackMenuButton, openMonsterMenuButton, attackMenu, monsterMenu);
+    requestAnimationFrame(() => {
+      this.el.style.transition = "";
+      this.el.classList.add("open");
+    });
 
-// mainMenuItems.forEach((item) => {
-//   const button = Button(item);
-//   mainMenu.append(button, dropMenu, menuFight, upMenu, captureMenu);
-// });
+    ModalMenu.stack.push(this);
+    return this;
+  }
 
-// btnToggle.addEventListener("click", () => {
-//   const isActive = mainMenu.classList.toggle("active");
-//   backdrop.classList.toggle("active", isActive);
-// });
+  close() {
+    if (!this.el.classList.contains("open")) return this;
 
-// backdrop.addEventListener("click", () => {
-//   mainMenu.classList.remove("active");
-//   menuFight.classList.remove("active");
-//   attackMenu.classList.remove("active");
-//   afterAttackMenu.classList.remove("active");
-//   monsterMenu.classList.remove("active");
-//   backdrop.classList.remove("active");
-//   upMenu.classList.remove("active");
-//   statusMenu.classList.remove("active");
-//   ballMenu.classList.remove("active");
-//   captureMenu.classList.remove("active");
-// });
+    this.el.classList.remove("open");
+    this.el.classList.add("closing");
+
+    const onTransitionEnd = () => {
+      this.el.removeEventListener("transitionend", onTransitionEnd);
+      this.el.classList.remove("closing");
+      if (this.el.parentNode) {
+        document.body.removeChild(this.el);
+      }
+    };
+
+    this.el.addEventListener("transitionend", onTransitionEnd);
+    const index = ModalMenu.stack.indexOf(this);
+    if (index > -1) ModalMenu.stack.splice(index, 1);
+
+    return this;
+  }
+}
+class ContorllerTable {
+  constructor() {
+    this.setAll = new Set(getLocalStorageValue("setAll", arrMonstersAll));
+    this.setAutoSetting = new Set(getLocalStorageValue("setAutoSetting", arrFightMonsters));
+    this.setFight = new Set(getLocalStorageValue("setFight", []));
+    this.setCapture = new Set(getLocalStorageValue("setCapture", []));
+    this.setSurrender = new Set(getLocalStorageValue("setSurrender", []));
+    this.setSwitch = new Set(getLocalStorageValue("setSwitch", []));
+    this.setAttackOne = new Set(getLocalStorageValue("setAttackOne", []));
+    this.setAttackTwo = new Set(getLocalStorageValue("setAttackTwo", []));
+    this.setAttackThree = new Set(getLocalStorageValue("setAttackThree", []));
+    this.setAttackFour = new Set(getLocalStorageValue("setAttackFour", []));
+    this.setMap = {
+      Редкие: this.setAll,
+      Частые: this.setFight,
+      Ловить: this.setCapture,
+      Сдаться: this.setSurrender,
+      Сменить: this.setSwitch,
+      "Атака 1": this.setAttackOne,
+      "Атака 2": this.setAttackTwo,
+      "Атака 3": this.setAttackThree,
+      "Атака 4": this.setAttackFour,
+    };
+
+    this.currentOpenMenu = null;
+
+    const categoryArr = Object.keys(this.setMap);
+
+    this.table = document.createElement("div");
+    this.table.classList.add("table-control");
+
+    this.tableHeader = document.createElement("div");
+    this.tableHeader.classList.add("tableHeaderMenu");
+
+    this.category = document.createElement("div");
+    this.category.classList.add("category", "custom-scroll");
+
+    this.categoryBlocks = {};
+
+    categoryArr.forEach((name) => {
+      const block = document.createElement("div");
+      block.classList.add("category-block");
+
+      const header = document.createElement("div");
+      header.classList.add("category-header");
+      header.textContent = name;
+
+      const content = document.createElement("div");
+      content.classList.add("category-content", "custom-scroll");
+
+      block.append(header, content);
+      this.category.appendChild(block);
+
+      this.categoryBlocks[name] = content;
+    });
+
+    this.input = document.createElement("input");
+    this.input.classList.add("input-search");
+    this.input.placeholder = "Поиск монстра...";
+    this.debouncedSearch = this.debounce(this.searchMonster.bind(this), 200);
+    this.input.addEventListener("input", (e) => {
+      this.debouncedSearch(e.target.value);
+    });
+
+    this.autoSetting = document.createElement("div");
+    this.autoSetting.classList.add("auto-settings");
+    this.autoSetting.textContent = "Автонастройка";
+    this.autoSetting.addEventListener("click", () => {
+      for (const item of this.setAutoSetting) {
+        // Если элемент есть в setAll, удаляем его из setAll и добавляем в setFight
+        if (this.setAll.has(item)) {
+          this.setAll.delete(item);
+          this.setFight.add(item);
+        }
+      }
+
+      setLocalStorageValue("setAll", Array.from(this.setAll));
+      setLocalStorageValue("setFight", Array.from(this.setFight));
+
+      // Перерисовываем все данные
+      this.renderInitial();
+    });
+    this.tableHeader.append(this.input, this.autoSetting);
+    this.table.append(this.tableHeader, this.category);
+
+    this.renderInitial();
+    this.setupInternalClickListener();
+  }
+
+  renderInitial() {
+    Object.values(this.categoryBlocks).forEach((block) => (block.innerHTML = ""));
+    for (const [category, set] of Object.entries(this.setMap)) {
+      set.forEach((name) => {
+        const item = this.createItem(name, category);
+        this.categoryBlocks[category].appendChild(item);
+      });
+    }
+  }
+
+  createItem(name, currentCategory) {
+    const item = document.createElement("div");
+    item.textContent = name;
+    item.classList.add("category-item");
+
+    item.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (this.currentOpenMenu === item) {
+        this.closeMenu();
+      } else {
+        this.closeMenu();
+        this.showMoveMenu(name, currentCategory, item);
+      }
+    });
+
+    return item;
+  }
+
+  showMoveMenu(name, fromCategory, itemElement) {
+    this.closeMenu();
+
+    const menu = document.createElement("div");
+    menu.classList.add("moveMenu", "custom-scroll");
+
+    const menuHeader = document.createElement("div");
+    menuHeader.classList.add("moveMenu-header");
+    menuHeader.innerHTML = `Переместить <b>${name}</b> в`;
+
+    const menuHr = document.createElement("div");
+    menuHr.classList.add("modalHr");
+
+    const contentMenu = document.createElement("div");
+    contentMenu.classList.add("moveMenuContent");
+
+    menu.append(menuHeader, menuHr, contentMenu);
+
+    menu.addEventListener("click", (e) => {
+      e.stopPropagation();
+    });
+
+    contentMenu.addEventListener("click", (e) => {
+      if (e.target.classList.contains("moveMenu-btn")) {
+        const toCategory = e.target.textContent;
+        this.moveItem(name, fromCategory, toCategory, itemElement);
+        this.closeMenu();
+      }
+    });
+
+    for (const toCategory in this.setMap) {
+      if (toCategory !== fromCategory) {
+        const btn = document.createElement("div");
+        btn.classList.add("moveMenu-btn");
+        btn.textContent = toCategory;
+        contentMenu.appendChild(btn);
+      }
+    }
+
+    this.category.appendChild(menu);
+    this.currentOpenMenu = menu;
+  }
+
+  closeMenu() {
+    if (this.currentOpenMenu) {
+      this.currentOpenMenu.remove();
+      this.currentOpenMenu = null;
+    }
+  }
+
+  moveItem(name, fromCategory, toCategory, itemElement) {
+    this.setMap[fromCategory].delete(name);
+    this.setMap[toCategory].add(name);
+
+    const newContainer = this.categoryBlocks[toCategory];
+    const newItem = this.createItem(name, toCategory);
+
+    newContainer.appendChild(newItem);
+    itemElement.remove();
+
+    for (const [category, set] of Object.entries(this.setMap)) {
+      setLocalStorageValue(
+        category === "Редкие"
+          ? "setAll"
+          : category === "Частые"
+          ? "setFight"
+          : category === "Ловить"
+          ? "setCapture"
+          : category === "Сдаться"
+          ? "setSurrender"
+          : category === "Сменить"
+          ? "setSwitch"
+          : category === "Атака 1"
+          ? "setAttackOne"
+          : category === "Атака 2"
+          ? "setAttackTwo"
+          : category === "Атака 3"
+          ? "setAttackThree"
+          : "setAttackFour",
+        Array.from(set)
+      );
+    }
+  }
+
+  setupInternalClickListener() {
+    this.table.addEventListener("click", () => {
+      if (this.currentOpenMenu) {
+        this.closeMenu();
+      }
+    });
+  }
+
+  debounce(func, delay) {
+    let timeout;
+    return function (...args) {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func.apply(this, args), delay);
+    };
+  }
+
+  searchMonster(value) {
+    const searchTerm = value.trim().toLowerCase();
+
+    const allItems = this.table.querySelectorAll(".category-item");
+    let exactMatch = null;
+    let partialMatch = null;
+
+    allItems.forEach((item) => {
+      item.classList.remove("found");
+
+      const itemText = item.textContent.toLowerCase();
+
+      if (searchTerm && itemText.includes(searchTerm)) {
+        item.classList.add("found");
+
+        if (itemText === searchTerm) {
+          exactMatch = item;
+        } else if (!partialMatch) {
+          partialMatch = item;
+        }
+      }
+    });
+    const matchToScroll = exactMatch || partialMatch;
+    if (matchToScroll) {
+      matchToScroll.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }
+}
+const controllerTable = new ContorllerTable();

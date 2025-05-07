@@ -9,12 +9,11 @@ async function moveHeal() {
   if (isActiveHeal) return;
   isActiveHeal = true;
 
-  const route =
-    userHeal[currentRegion]?.[currentLocation] ??
-    userHeal[currentLocation] ??
-    routeHeal[currentRegion]?.[currentLocation];
+  const matchingRoutes = Object.entries(routeHeal)
+    .filter(([key]) => key.startsWith(currentLocation))
+    .map(([_, value]) => value);
 
-  if (!route) {
+  if (!matchingRoutes.length) {
     console.error(`Маршрут для локации ${currentLocation} не найден.`);
     isActiveHeal = false;
     return;
@@ -22,79 +21,59 @@ async function moveHeal() {
 
   await handleDeviceActions(false);
 
-  if (currentLocation === "Горный водопад") {
-    const [pathToTarget, pathBack] = route;
+  let successful = false;
+  let path; 
 
-    for (const buttonId of pathToTarget) {
-      const button = document.querySelector(`#${buttonId}`);
-      if (button) {
+  for (const route of matchingRoutes) {
+    path = route[0];
+
+    try {
+      for (let i = 1; i < path.length; i++) {
+        const buttonId = path[i];
+        const button = document.querySelector(`#${buttonId}`);
+        if (!button) throw new Error(`Кнопка ${buttonId} не найдена.`);
         button.click();
         await controllerMutationMove();
         await delayHeal();
-      } else {
-        console.error(`Кнопка ${buttonId} не найдена.`);
-        isActiveHeal = false;
-        return;
       }
-    }
 
-    await delayFast();
-    while (true) {
-      await healNPC();
-      if (!(await hasActiveInfection())) break;
-    }
-    await delayFast();
+      successful = true;
+      break;
 
-    for (const buttonId of pathBack) {
-      const button = document.querySelector(`#${buttonId}`);
-      if (button) {
-        button.click();
-        await controllerMutationMove();
-        await delayHeal();
-      } else {
-        console.error(`Кнопка ${buttonId} не найдена.`);
-        isActiveHeal = false;
-        return;
-      }
+    } catch (e) {
+      console.warn(e.message);
+      continue;
     }
-  } else if (route[0]) {
-    const path = route[0];
+  }
 
-    for (let i = 1; i < path.length; i++) {
-      const buttonId = path[i];
-      const button = document.querySelector(`#${buttonId}`);
-      if (button) {
-        button.click();
-        await controllerMutationMove();
-        await delayHeal();
-      } else {
-        console.error(`Кнопка ${buttonId} не найдена.`);
-        isActiveHeal = false;
-        return;
-      }
-    }
+  if (!successful) {
+    console.error(`Ни один маршрут для ${currentLocation} не сработал.`);
+    await delayHeal();
+    await handleDeviceActions(true);
+    isActiveHeal = false;
+    nonePP = false;
+    return;
+  }
 
-    await delayFast();
-    if (isSendMonstr) await sendMonstr();
-    while (true) {
-      await healNPC();
-      if (!(await hasActiveInfection())) break;
-    }
-    await delayFast();
+  await delayFast();
 
-    for (let i = path.length - 2; i >= 0; i--) {
-      const buttonId = path[i];
-      const button = document.querySelector(`#${buttonId}`);
-      if (button) {
-        button.click();
-        await controllerMutationMove();
-        await delayHeal();
-      } else {
-        console.error(`Кнопка ${buttonId} не найдена.`);
-        isActiveHeal = false;
-        return;
-      }
-    }
+  if (isSendMonstr) await sendMonstersToNursery();
+
+  while (true) {
+    await healNPC();
+    if (!(await hasActiveInfection())) break;
+  }
+
+  await delayFast();
+
+
+  for (let i = path.length - 2; i >= 0; i--) { 
+    const buttonId = path[i];
+    const button = document.querySelector(`#${buttonId}`);
+    if (!button) throw new Error(`Кнопка ${buttonId} не найдена.`);
+    button.click();
+    await controllerMutationMove();
+    await delayHeal();
   }
 
   await delayHeal();

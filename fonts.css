@@ -57,3 +57,16 @@
 .icons-bars {
   --fa: "\f0c9";
 }
+.icons-ball {
+  --fa: "\e033";
+}
+.icons-tent {
+  --fa: "\e57d";
+}
+
+.icons-questionTens {
+  --fa: "\e3dd";
+}
+.icons-coins {
+  --fa: "\f85c";
+}

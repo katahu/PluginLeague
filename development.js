@@ -1,235 +1,171 @@
-class Button {
-  constructor(options) {
-    if (Array.isArray(options)) {
-      this.buttons = options.map((opt) => new Button(opt));
-      return;
-    }
+// const attackHandlers = {
+//   "Не бить": () => playSound(),
+//   Сдаться: () => surrender(),
+//   Поймать: () => captureMonster(),
+//   "Сменить монстра": () => changeMonster(),
+//   "Первая атака": () => useAttack(0),
+//   "Вторая атака": () => useAttack(1),
+//   "Третья атака": () => useAttack(2),
+//   "Четвертая атака": () => useAttack(3),
+//   // Семанты: () => captureSemant(),
+//   Редкие: () => (isToHardLevel() ? levelUpMonster() : useAttack(null, false)),
+// };
 
-    this.el = document.createElement("div");
-    this.el.classList.add("menuItem");
+// Напал выше n уровня
+// let maxLevel = Number(getLocalStorageValue("maxLevel", ""));
+// function isToHardLevel() {
+//   if (!levelingUP) return false;
 
-    if (options.icon) {
-      const i = document.createElement("i");
-      i.classList.add(...options.icon.split(" "));
-      this.el.prepend(i);
-    }
+//   const opponentLevel = +document.querySelector("#divFightH .lvl")?.textContent;
+//   return opponentLevel <= maxLevel;
+// }
+// {
+//     type: "input",
+//     placeholder: "Если напал выше уровня то бить",
+//     storageKey: "maxLevel",
+//     onChange: (value) => {
+//       console.log("Введено имя:", value);
+//       nameUpMonster = value;
+//       setLocalStorageValue("maxLevel", value);
+//     },
+//   },
 
-    if (options.text) this.el.append(options.text);
+// Автореклама
 
-    if (options.onClick) {
-      this.el.addEventListener("click", (e) => {
-        e.stopPropagation();
-        options.onClick();
-      });
-    }
-  }
-}
-class Radio {
-  constructor(options, groupOptions = {}) {
-    this.groupWrapper = document.createElement("div");
-    this.groupWrapper.classList.add("radio-group");
+// let adText = getLocalStorageValue("adText", "Привет");
+// let isAdActive = getLocalStorageValue("isAdActive", false);
+// const adTimer = () => new Promise((resolve) => setTimeout(resolve, 600000 + Math.random() * 120000));
+// async function showAd() {
+//   while (isAdActive) {
+//     if (adText === "") {
+//       console.log("adText пустой");
+//       return;
+//     }
+//     if (!isAdActive) return;
+//     const textPush = document.querySelector("#divInputFields .txtInput");
+//     textPush.value = "";
+//     textPush.value = `${adText}`;
 
-    const storageKey = groupOptions.storageKey || `radio-group-${options[0].name}`;
-    const savedValue = getLocalStorageValue(storageKey, null);
+//     const send = divInputFields.querySelector(".button.color-active.btnSend.justicon");
+//     console.log("Нажали на кнопку", send);
+//     send.click();
+//     await new Promise((resolve) => {
+//       const observer = new MutationObserver((mutationsList) => {
+//         for (let mutation of mutationsList) {
+//           if (mutation.type === "attributes" && mutation.attributeName === "style") {
+//             const currentStyle = send.getAttribute("style");
+//             console.log("Новые стили:", currentStyle);
+//             observer.disconnect();
+//             resolve();
+//           }
+//         }
+//       });
 
-    this.buttons = options.map((opt) => {
-      const el = document.createElement("label");
-      el.classList.add("Radio");
+//       observer.observe(send, {
+//         attributes: true,
+//         attributeFilter: ["style"],
+//       });
+//     });
+//     console.log("Запущен таймер");
+//     await adTimer();
+//   }
+// }
 
-      const input = document.createElement("input");
-      input.type = "radio";
-      input.name = groupOptions.name;
-      input.value = opt.value;
-      input.checked = opt.value === savedValue;
-      input.classList.add("Radio-input");
+// {
+//   type: "checkbox",
+//   text: "Автореклама",
+//   storageKey: "isAdActive",
+//   onChange: (value) => {
+//     isAdActive = value;
+//     if (isAdActive) {
+//       showAd();
+//       console.log("Вызвали рекламу");
+//     }
+//   },
+// },
+// const btn = document.createElement("div");
+// btn.textContent = "🎉";
+// btn.addEventListener("click", showAd);
+// document.body.appendChild(btn);
 
-      const radioMain = document.createElement("div");
-      radioMain.classList.add("Radio-main");
+// const labels = document.querySelectorAll(".divCardsContainer .pokemonBoxLabel");
 
-      const text = document.createElement("span");
-      text.classList.add("Radio-label");
-      text.textContent = opt.text || "";
+// const names = Array.from(labels)
+//   .map((label) => {
+//     const text = Array.from(label.childNodes)
+//       .filter((node) => node.nodeType === Node.TEXT_NODE)
+//       .map((node) => node.textContent.trim())
+//       .filter((text) => text.length > 0)
+//       .join(" ");
+//     return `"${text}",`;
+//   })
+//   .join("\n");
 
-      radioMain.append(text);
-      el.append(input, radioMain);
+// // Копируем в буфер обмена
+// const textarea = document.createElement("textarea");
+// textarea.value = names;
+// document.body.appendChild(textarea);
+// textarea.select();
+// document.execCommand("copy");
+// document.body.removeChild(textarea);
 
-      input.addEventListener("change", () => {
-        if (input.checked) {
-          setLocalStorageValue(storageKey, input.value);
-          if (groupOptions.onChange) groupOptions.onChange(input.value);
+// console.log("Скопировано:\n" + names);
+// Находим все элементы
+// const elements = document.querySelectorAll(".wikitable.sortable.jquery-tablesorter .mw-redirect");
+
+// const names = Array.from(elements)
+//   .map((el) => {
+//     const text = el.textContent.trim().replace(/[^a-zA-Zа-яА-Я]/g, "");
+//     return `"${text}",`;
+//   })
+//   .join("\n");
+
+// // Копируем в буфер обмена
+// const textarea = document.createElement("textarea");
+// textarea.value = names;
+// document.body.appendChild(textarea);
+// textarea.select();
+// document.execCommand("copy");
+// document.body.removeChild(textarea);
+
+// console.log("Скопировано:\n" + names);
+
+// Автоспарка
+
+// Возврат монстров после спарки
+async function backMonsterAll() {
+  const teamButton = document.querySelector('.divDockIn img[src*="team"]');
+  teamButton.click();
+  const teamMonster = document.querySelector(".divDockPanels .divPokeTeam");
+
+  await new Promise((resolve) => {
+    const observer = new MutationObserver((mutationsList) => {
+      for (const mutation of mutationsList) {
+        if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
+          observer.disconnect();
+          resolve();
         }
-      });
-
-      this.groupWrapper.appendChild(el);
-      return { el, input };
-    });
-
-    this.el = this.groupWrapper;
-  }
-}
-class Checkbox {
-  constructor(options) {
-    this.el = document.createElement("div");
-    this.el.classList.add("menuItem");
-
-    this.label = document.createElement("label");
-    this.label.classList.add("toggle");
-
-    const savedValue = options.storageKey ? getLocalStorageValue(options.storageKey, null) : null;
-
-    this.input = document.createElement("input");
-    this.input.type = "checkbox";
-    this.input.checked = savedValue !== null ? savedValue : false;
-
-    this.widget = document.createElement("span");
-    this.widget.classList.add("slider");
-
-    this.label.append(this.input, this.widget);
-    this.el.append(this.label);
-    this.el.prepend(options.text);
-    this.el.addEventListener("click", (e) => {
-      e.stopPropagation();
-      this.input.checked = !this.input.checked;
-      this.input.dispatchEvent(new Event("change"));
-    });
-
-    this.input.addEventListener("change", () => {
-      if (options.storageKey) {
-        setLocalStorageValue(options.storageKey, this.input.checked);
-      }
-      if (options.onChange) {
-        options.onChange(this.input.checked);
       }
     });
-  }
-}
-class Inpute {
-  constructor(options) {
-    this.el = document.createElement("div");
-    this.el.classList.add("menuItem", "modal-input");
+    observer.observe(teamMonster, { childList: true });
+  });
 
-    this.inp = document.createElement("input");
-    this.inp.type = "text";
+  const teamCountMonster = teamMonster.querySelectorAll(".pokemonBoxCard");
 
-    if (options.placeholder) this.inp.placeholder = options.placeholder;
-    this.inp.autocomplete = options.hasOwnProperty("autocomplete") ? "on" : "off";
-
-    this.el.append(this.inp);
-    const savedValue = options.storageKey ? getLocalStorageValue(options.storageKey, null) : null;
-    this.inp.value = savedValue !== null ? savedValue : "";
-    this.inp.addEventListener("input", (e) => {
-      options.onChange(e.target.value);
-      setLocalStorageValue(options.storageKey, e.target.value);
-    });
-  }
-}
-class ModalMenu {
-  static stack = [];
-
-  constructor(options) {
-    this.el = document.createElement("div");
-    this.el.classList.add("modalContainer");
-
-    this.backdrop = document.createElement("div");
-    this.backdrop.classList.add("backdrop");
-
-    this.modalWrapper = document.createElement("div");
-    this.modalWrapper.classList.add("modalWrapper");
-    this.content = document.createElement("div");
-    this.content.classList.add("modalContent", "custom-scroll");
-
-    if (options.text) {
-      this.header = document.createElement("div");
-      this.header.classList.add("modalHeader");
-      this.header.textContent = options.text;
-
-      this.hr = document.createElement("div");
-      this.hr.classList.add("modalHr");
-      this.modalWrapper.append(this.header, this.hr);
-    }
-
-    this.modalWrapper.append(this.content);
-    this.el.append(this.backdrop, this.modalWrapper);
-
-    if (options.items) {
-      this.addItems(options.items);
-    }
-
-    this.backdrop.addEventListener("click", (e) => {
-      if (e.target === this.backdrop) {
-        this.close();
+  for (const monster of teamCountMonster) {
+    if (monster.querySelector(".icon.icomoon.icon-star-fill.starter").style.display == "none") {
+      const ball = monster.querySelector(".ball.clickable").click();
+      const divElements = document.querySelector(".divElements");
+      if (!divElements) {
+        await observerElements(divElements);
       }
-    });
-  }
-
-  addItems(items) {
-    if (Array.isArray(items)) {
-      items.forEach((item) => this.addItem(item));
-    } else {
-      this.addItem(items);
-    }
-  }
-
-  addItem(item) {
-    if (item?.el instanceof HTMLElement) {
-      this.content.append(item.el);
-      return;
-    }
-
-    let element;
-    switch (item.type) {
-      case "radio":
-        element = new Radio(item.options || [], item.groupOptions || {});
-        break;
-      case "checkbox":
-        element = new Checkbox(item);
-        break;
-      case "input":
-        element = new Inpute(item);
-        break;
-      case "button":
-      default:
-        element = new Button(item);
-        break;
-    }
-
-    if (element?.el) {
-      this.content.append(element.el);
-    }
-  }
-
-  open() {
-    document.body.appendChild(this.el);
-    this.el.style.transition = "none";
-    this.el.classList.remove("open", "closing");
-
-    requestAnimationFrame(() => {
-      this.el.style.transition = "";
-      this.el.classList.add("open");
-    });
-
-    ModalMenu.stack.push(this);
-    return this;
-  }
-
-  close() {
-    if (!this.el.classList.contains("open")) return this;
-
-    this.el.classList.remove("open");
-    this.el.classList.add("closing");
-
-    const onTransitionEnd = () => {
-      this.el.removeEventListener("transitionend", onTransitionEnd);
-      this.el.classList.remove("closing");
-      if (this.el.parentNode) {
-        document.body.removeChild(this.el);
+      const divElementList = divElements.querySelectorAll(".divElement");
+      for (const divElement of divElementList) {
+        if (divElement.querySelector(".text").textContent.trim() === "В обмен (с передачей прав хозяина)") {
+          divElement.click();
+          break;
+        }
       }
-    };
-
-    this.el.addEventListener("transitionend", onTransitionEnd);
-    const index = ModalMenu.stack.indexOf(this);
-    if (index > -1) ModalMenu.stack.splice(index, 1);
-
-    return this;
+    }
   }
 }

@@ -16,7 +16,7 @@ const menuButtons = [
     text: "Атака",
     onClick: () => {
       locationSearch();
-      controller();
+      startBot();
       toggleConfirmInterceptor(true);
     },
   },
@@ -44,6 +44,17 @@ const menuButtons = [
     },
   },
   {
+    icon: "fa-light icons-ball",
+    text: "Монстры",
+    onClick: () => {
+      const controllerTableModal = new ModalMenu({
+        text: "Монстры",
+      });
+      controllerTableModal.content.appendChild(controllerTable.table);
+      controllerTableModal.open();
+    },
+  },
+  {
     icon: "fa-light icons-update",
     text: "Обновить",
     onClick: () => fetchData(),
@@ -62,7 +73,7 @@ const menuButtons = [
   },
   {
     icon: "fa-light icons-spider",
-    text: "Поимка",
+    text: "Ловля",
     onClick: () => menuCatch.open(),
   },
   {
@@ -70,11 +81,41 @@ const menuButtons = [
     text: "Остальное",
     onClick: () => menuAdditionally.open(),
   },
+
+  // {
+  //   icon: "fa-light icons-questionTens",
+  //   text: "Угадайка",
+  //   onClick: () => HappyBirthday(),
+  // },
+  // {
+  //   icon: "fa-light icons-coins",
+  //   text: "Спекулянт",
+  //   onClick: () => speculator(),
+  // },
   {
     icon: "fa-light icons-list-drop",
     text: "Дроп",
     onClick: () => dropMenu.classList.toggle("active"),
   },
+  // {
+  //   text: "Возврат монстров(тест)",
+  //   onClick: () => {
+  //     backMonsterAll();
+  //   },
+  // },
+
+  {
+    text: "Манеж",
+    onClick: () => {
+      deleteManech();
+    },
+  },
+  // {
+  //   text: "Тест",
+  //   onClick: () => {
+  //     locationSearch();
+  //   },
+  // },
 ];
 
 const menuFightTest = new ModalMenu({
@@ -87,9 +128,26 @@ const menuFightTest = new ModalMenu({
       },
     },
     {
-      text: "Сменить монстра",
+      text: "Сменить/Добить монстра",
       onClick: () => {
         menuSwitchMonster.open();
+      },
+    },
+
+    {
+      type: "checkbox",
+      text: "Включить добивание",
+      storageKey: "isLoseMonster",
+      onChange: (value) => {
+        isLoseMonster = value;
+      },
+    },
+    {
+      type: "checkbox",
+      text: "Если PP 0 стоп",
+      storageKey: "ppStop",
+      onChange: (value) => {
+        ppStop = value;
       },
     },
   ],
@@ -165,13 +223,12 @@ const menuWeather = new ModalMenu({
       options: [
         { text: "Град", value: "w3" },
         { text: "Песчаная буря", value: "w4" },
-        { text: "Град/Песчаная буря", value: ["w3", "w4"] },
+        { text: "Град/Песчаная буря", value: "w3,w4" },
       ],
       groupOptions: {
         name: "variableWeather",
         storageKey: "variableWeather",
         onChange: (value) => {
-          console.log("Погода", value);
           variableWeather = value;
         },
       },
@@ -181,7 +238,6 @@ const menuWeather = new ModalMenu({
       text: "Включить ограничение погоды",
       storageKey: "weatherLimit",
       onChange: (value) => {
-        console.log("Ограничение погоды", value);
         weatherLimit = value;
       },
     },
@@ -202,7 +258,6 @@ const menuCatch = new ModalMenu({
         name: "variableGender",
         storageKey: "variableGender",
         onChange: (value) => {
-          console.log("Пол для ловли", value);
           variableGender = value;
         },
       },
@@ -222,6 +277,7 @@ const menuStatus = new ModalMenu({
       options: [
         { text: "Колыбельная", value: "Колыбельная" },
         { text: "Споры", value: "Споры" },
+        { text: "Парализующая пыльца", value: "Парализующая пыльца" },
         { text: "Насмешка", value: "Насмешка" },
       ],
       groupOptions: {
@@ -229,7 +285,6 @@ const menuStatus = new ModalMenu({
         storageKey: "variableStatus",
         onChange: (value) => {
           variableStatus = value;
-          console.log("variableStatus для ловли", variableStatus);
         },
       },
     },
@@ -277,7 +332,6 @@ const menuMonsterBall = new ModalMenu({
         storageKey: "variableMonsterBall",
         onChange: (value) => {
           variableMonsterBall = value;
-          console.log("variableMonsterBall для ловли", variableMonsterBall);
         },
       },
     },
@@ -292,7 +346,6 @@ const menuUp = new ModalMenu({
       placeholder: "Введите имя",
       storageKey: "nameUpMonster",
       onChange: (value) => {
-        console.log("Введено имя:", value);
         nameUpMonster = value;
         setLocalStorageValue("nameUpMonster", value);
       },
@@ -307,7 +360,6 @@ const menuUp = new ModalMenu({
         name: "variableAttackUP",
         storageKey: "variableAttackUP",
         onChange: (value) => {
-          console.log("Выбрана атака для уровня:", value);
           variableAttackUP = value;
         },
       },
@@ -322,9 +374,9 @@ const menuUp = new ModalMenu({
     },
   ],
 });
-//  Дополнительно
-const menuAdditionally = new ModalMenu({
-  text: "Дополнительно",
+//  Ограничение монстров
+const menuLimitMonster = new ModalMenu({
+  text: "Ограничение монстров",
   items: [
     {
       type: "input",
@@ -345,6 +397,19 @@ const menuAdditionally = new ModalMenu({
     },
   ],
 });
+//  Дополнительно
+const menuAdditionally = new ModalMenu({
+  text: "Дополнительно",
+  items: [
+    {
+      text: "Ограничение монстров",
+      onClick: () => {
+        menuLimitMonster.open();
+      },
+    },
+  ],
+});
+
 const menuButton = new Button(menuButtons);
 menuButton.buttons.forEach((btn) => {
   mainMenu.append(btn.el);
@@ -357,8 +422,11 @@ window.addEventListener("keydown", (e) => {
   if (e.key === "Escape" && ModalMenu.stack.length > 0) {
     const lastModal = ModalMenu.stack[ModalMenu.stack.length - 1];
     lastModal.close();
+    controllerTable.closeMenu();
   }
 });
 
 document.body.append(btnToggle, mainMenu);
 // menuButton.buttons.forEach((btn) => document.body.append(btn.el));
+
+
