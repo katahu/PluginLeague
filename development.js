@@ -88,48 +88,6 @@
 // btn.addEventListener("click", showAd);
 // document.body.appendChild(btn);
 
-// const labels = document.querySelectorAll(".divCardsContainer .pokemonBoxLabel");
-
-// const names = Array.from(labels)
-//   .map((label) => {
-//     const text = Array.from(label.childNodes)
-//       .filter((node) => node.nodeType === Node.TEXT_NODE)
-//       .map((node) => node.textContent.trim())
-//       .filter((text) => text.length > 0)
-//       .join(" ");
-//     return `"${text}",`;
-//   })
-//   .join("\n");
-
-// // Копируем в буфер обмена
-// const textarea = document.createElement("textarea");
-// textarea.value = names;
-// document.body.appendChild(textarea);
-// textarea.select();
-// document.execCommand("copy");
-// document.body.removeChild(textarea);
-
-// console.log("Скопировано:\n" + names);
-// Находим все элементы
-// const elements = document.querySelectorAll(".wikitable.sortable.jquery-tablesorter .mw-redirect");
-
-// const names = Array.from(elements)
-//   .map((el) => {
-//     const text = el.textContent.trim().replace(/[^a-zA-Zа-яА-Я]/g, "");
-//     return `"${text}",`;
-//   })
-//   .join("\n");
-
-// // Копируем в буфер обмена
-// const textarea = document.createElement("textarea");
-// textarea.value = names;
-// document.body.appendChild(textarea);
-// textarea.select();
-// document.execCommand("copy");
-// document.body.removeChild(textarea);
-
-// console.log("Скопировано:\n" + names);
-
 // Автоспарка
 
 // Возврат монстров после спарки

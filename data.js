@@ -10,113 +10,113 @@ const noneDrop = document.createElement("span");
 noneDrop.textContent = "Дроп отсутствует";
 dropMenu.append(noneDrop);
 
-const menuButtons = [
-  {
-    icon: "fa-light icons-fight",
-    text: "Атака",
-    onClick: () => {
-      locationSearch();
-      startBot();
-      toggleConfirmInterceptor(true);
+const menuButtons = new Button(
+  [
+    {
+      icon: "fa-light icons-fight",
+      text: "Атака",
+      onClick: () => {
+        locationSearch();
+        startBot();
+        toggleConfirmInterceptor(true);
+      },
     },
-  },
-  {
-    icon: "fa-light icons-heal",
-    text: "Хил",
-    onClick: () => {
-      locationSearch();
-      moveHeal();
+    {
+      icon: "fa-light icons-heal",
+      text: "Хил",
+      onClick: () => {
+        locationSearch();
+        moveHeal();
+      },
     },
-  },
-  {
-    icon: "fa-light icons-stop",
-    text: "Стоп",
-    onClick: () => {
-      stopBot();
-      toggleConfirmInterceptor(false);
+    {
+      icon: "fa-light icons-stop",
+      text: "Стоп",
+      onClick: () => {
+        stopBot();
+        toggleConfirmInterceptor(false);
+      },
     },
-  },
-  {
-    icon: "fa-light icons-gear",
-    text: "Бои",
-    onClick: () => {
-      menuFightTest.open();
+    {
+      icon: "fa-light icons-gear",
+      text: "Бои",
+      onClick: () => {
+        menuFightTest.open();
+      },
     },
-  },
-  {
-    icon: "fa-light icons-ball",
-    text: "Монстры",
-    onClick: () => {
-      const controllerTableModal = new ModalMenu({
-        text: "Монстры",
-      });
-      controllerTableModal.content.appendChild(controllerTable.table);
-      controllerTableModal.open();
+    {
+      icon: "fa-light icons-ball",
+      text: "Монстры",
+      onClick: () => {
+        const controllerTableModal = new ModalMenu({
+          text: "Монстры",
+        });
+        controllerTableModal.content.appendChild(controllerTable.table);
+        controllerTableModal.open();
+      },
     },
-  },
-  {
-    icon: "fa-light icons-update",
-    text: "Обновить",
-    onClick: () => fetchData(),
-  },
-  {
-    icon: "fa-light icons-cloud",
-    text: "Погода",
-    onClick: () => menuWeather.open(),
-  },
-  {
-    icon: "fa-light icons-lvlUP",
-    text: "Прокачка",
-    onClick: () => {
-      menuUp.open();
-    },
-  },
-  {
-    icon: "fa-light icons-spider",
-    text: "Ловля",
-    onClick: () => menuCatch.open(),
-  },
-  {
-    icon: "fa-light icons-bars",
-    text: "Остальное",
-    onClick: () => menuAdditionally.open(),
-  },
 
-  // {
-  //   icon: "fa-light icons-questionTens",
-  //   text: "Угадайка",
-  //   onClick: () => HappyBirthday(),
-  // },
-  // {
-  //   icon: "fa-light icons-coins",
-  //   text: "Спекулянт",
-  //   onClick: () => speculator(),
-  // },
-  {
-    icon: "fa-light icons-list-drop",
-    text: "Дроп",
-    onClick: () => dropMenu.classList.toggle("active"),
-  },
-  // {
-  //   text: "Возврат монстров(тест)",
-  //   onClick: () => {
-  //     backMonsterAll();
-  //   },
-  // },
-
-  {
-    text: "Манеж",
-    onClick: () => {
-      deleteManech();
+    {
+      icon: "fa-light icons-lvlUP",
+      text: "Прокачка",
+      onClick: () => {
+        menuUp.open();
+      },
     },
-  },
-  // {
-  //   text: "Тест",
-  //   onClick: () => {
-  //     locationSearch();
-  //   },
-  // },
-];
+    {
+      icon: "fa-light icons-spider",
+      text: "Ловля",
+      onClick: () => menuCatch.open(),
+    },
+    {
+      icon: "fa-light icons-bars",
+      text: "Остальное",
+      separatorAfter: true,
+      onClick: () => menuAdditionally.open(),
+    },
+
+    // {
+    //   icon: "fa-light icons-questionTens",
+    //   text: "Угадайка",
+    //   onClick: () => HappyBirthday(),
+    // },
+    // {
+    //   icon: "fa-light icons-coins",
+    //   text: "Спекулянт",
+    //   onClick: () => speculator(),
+    // },
+    {
+      icon: "fa-light icons-list-drop",
+      text: "Дроп",
+      onClick: () => dropMenu.classList.toggle("active"),
+    },
+    // {
+    //   text: "Возврат монстров(тест)",
+    //   onClick: () => {
+    //     backMonsterAll();
+    //   },
+    // },
+
+    // {
+    //   text: "Манеж",
+    //   onClick: () => {
+    //     deleteManech();
+    //   },
+    // },
+    // {
+    //   icon: "fa-light icons-update",
+    //   text: "Обновить",
+    //   onClick: () => fetchData(),
+    // },
+    // {
+    //   text: "Тест",
+    //   onClick: () => {
+    //     test();
+    //   },
+    // },
+  ],
+  mainMenu
+);
 
 const menuFightTest = new ModalMenu({
   text: "Настройка боя",
@@ -128,12 +128,21 @@ const menuFightTest = new ModalMenu({
       },
     },
     {
-      text: "Сменить/Добить монстра",
+      text: "Сменить/Добить",
       onClick: () => {
         menuSwitchMonster.open();
       },
     },
-
+    {
+      type: "input",
+      classList: "input-number",
+      text: "Лечится при HP% :",
+      storageKey: "CRITICAL_HP_PERCENT",
+      number: true,
+      onChange: (value) => {
+        CRITICAL_HP_PERCENT = value;
+      },
+    },
     {
       type: "checkbox",
       text: "Включить добивание",
@@ -144,14 +153,15 @@ const menuFightTest = new ModalMenu({
     },
     {
       type: "checkbox",
-      text: "Если PP 0 стоп",
-      storageKey: "ppStop",
+      text: "Убивать shine",
+      storageKey: "isFightShine",
       onChange: (value) => {
-        ppStop = value;
+        isFightShine = value;
       },
     },
   ],
 });
+
 const menuVariableAttack = new ModalMenu({
   text: "Выбор атаки",
   items: [
@@ -174,10 +184,12 @@ const menuVariableAttack = new ModalMenu({
   ],
 });
 const menuSwitchMonster = new ModalMenu({
-  text: "Сменить монстра",
+  text: "Сменить/Добить монстра",
   items: [
     {
       type: "input",
+      classList: "input-text",
+      text: "Сменить на:",
       placeholder: "Введите имя",
       storageKey: "nameSwitchMonster",
       onChange: (value) => {
@@ -342,15 +354,6 @@ const menuUp = new ModalMenu({
   text: "Настройка прокачки",
   items: [
     {
-      type: "input",
-      placeholder: "Введите имя",
-      storageKey: "nameUpMonster",
-      onChange: (value) => {
-        nameUpMonster = value;
-        setLocalStorageValue("nameUpMonster", value);
-      },
-    },
-    {
       type: "radio",
       options: [
         { text: "Замедленная бомба", value: "Замедленная бомба" },
@@ -362,6 +365,16 @@ const menuUp = new ModalMenu({
         onChange: (value) => {
           variableAttackUP = value;
         },
+      },
+    },
+    {
+      type: "input",
+      classList: "input-text",
+      text: "Качать:",
+      placeholder: "Введите имя",
+      storageKey: "nameUpMonster",
+      onChange: (value) => {
+        nameUpMonster = value;
       },
     },
     {
@@ -382,9 +395,9 @@ const menuLimitMonster = new ModalMenu({
       type: "input",
       placeholder: "Количество монстров",
       storageKey: "countMonsterLimit",
+      number: true,
       onChange: (value) => {
         countMonsterLimit = value;
-        setLocalStorageValue("countMonsterLimit", value);
       },
     },
     {
@@ -402,6 +415,10 @@ const menuAdditionally = new ModalMenu({
   text: "Дополнительно",
   items: [
     {
+      text: "Погода",
+      onClick: () => menuWeather.open(),
+    },
+    {
       text: "Ограничение монстров",
       onClick: () => {
         menuLimitMonster.open();
@@ -410,10 +427,6 @@ const menuAdditionally = new ModalMenu({
   ],
 });
 
-const menuButton = new Button(menuButtons);
-menuButton.buttons.forEach((btn) => {
-  mainMenu.append(btn.el);
-});
 mainMenu.append(dropMenu);
 btnToggle.addEventListener("click", () => {
   mainMenu.classList.toggle("open");
@@ -427,6 +440,3 @@ window.addEventListener("keydown", (e) => {
 });
 
 document.body.append(btnToggle, mainMenu);
-// menuButton.buttons.forEach((btn) => document.body.append(btn.el));
-
-

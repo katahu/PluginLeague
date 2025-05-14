@@ -9,7 +9,7 @@
   font-style: normal;
   font-weight: 300;
   font-display: block;
-  src: url("chrome-extension://__MSG_@@extension_id__/fa-light-300.woff2") format("woff2");
+  src: url("chrome-extension://__MSG_@@extension_id__/style/fa-light-300.woff2") format("woff2");
 }
 .fa-light,
 .fal {

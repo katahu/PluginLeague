@@ -11,26 +11,23 @@
       "matches": ["https://game.league17.ru/*"],
       "js": [
         "script.js",
-        "arr.js",
+        "utils.js",
+        "checker.js",
         "API.js",
         "UI.js",
-        "league.js",
         "capture.js",
         "heal.js",
-        "bot.js",
-        "checker.js",
         "development.js",
         "data.js",
-        "birthdayLeague.js",
         "newBot.js"
       ],
-      "css": ["fonts.css", "style.css"],
+      "css": ["style/fonts.css", "style/style.css"],
       "type": "module"
     }
   ],
   "web_accessible_resources": [
     {
-      "resources": ["inject.js", "fa-light-300.woff2", "Roboto-Medium.woff2"],
+      "resources": ["inject.js", "style/fa-light-300.woff2", "style/Roboto-Medium.woff2"],
       "matches": ["https://game.league17.ru/*"]
     }
   ]

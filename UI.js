@@ -1,7 +1,7 @@
 class Button {
-  constructor(options) {
+  constructor(options, parent = null) {
     if (Array.isArray(options)) {
-      this.buttons = options.map((opt) => new Button(opt));
+      this.buttons = options.map((opt) => new Button(opt, parent));
       return;
     }
 
@@ -9,18 +9,30 @@ class Button {
     this.el.classList.add("menuItem");
 
     if (options.icon) {
-      const i = document.createElement("i");
-      i.classList.add(...options.icon.split(" "));
-      this.el.prepend(i);
+      const icon = document.createElement("i");
+      icon.classList.add(...options.icon.split(" "));
+      this.el.prepend(icon);
     }
 
-    if (options.text) this.el.append(options.text);
+    if (options.text) {
+      this.el.append(options.text);
+    }
 
     if (options.onClick) {
       this.el.addEventListener("click", (e) => {
         e.stopPropagation();
         options.onClick();
       });
+    }
+
+    if (parent) {
+      parent.appendChild(this.el);
+
+      if (options.separatorAfter) {
+        const separator = document.createElement("div");
+        separator.classList.add("hrMenu");
+        parent.append(separator);
+      }
     }
   }
 }
@@ -30,7 +42,7 @@ class Radio {
     this.groupWrapper.classList.add("radio-group");
 
     const storageKey = groupOptions.storageKey || `radio-group-${options[0].name}`;
-    const savedValue = getLocalStorageValue(storageKey, null);
+    const savedValue = storageKey in config ? config[storageKey] : getLocalStorageValue(storageKey, null);
 
     this.buttons = options.map((opt) => {
       const el = document.createElement("label");
@@ -109,8 +121,11 @@ class Inpute {
     this.el.classList.add("menuItem", "modal-input");
 
     this.inp = document.createElement("input");
+    if (options.classList) this.inp.classList.add(...options.classList.split(" "));
     this.inp.type = "text";
-
+    if (options.text) {
+      this.el.textContent = options.text;
+    }
     if (options.placeholder) this.inp.placeholder = options.placeholder;
     this.inp.autocomplete = options.hasOwnProperty("autocomplete") ? "on" : "off";
 
@@ -118,6 +133,9 @@ class Inpute {
     const savedValue = options.storageKey ? getLocalStorageValue(options.storageKey, null) : null;
     this.inp.value = savedValue !== null ? savedValue : "";
     this.inp.addEventListener("input", (e) => {
+      if (options.number) {
+        e.target.value = e.target.value.replace(/[^0-9]/g, "");
+      }
       options.onChange(e.target.value);
       setLocalStorageValue(options.storageKey, e.target.value);
     });

@@ -1,72 +1,70 @@
-const drops = new Map();
+let observerDrop = null;
+const arrDrops = [];
+function observerDrops() {
+  if (observerDrop) return;
 
-function checker() {
-  const alertElement = document.querySelector("#divAlerten .alerten.poke");
-  if (!alertElement || alertElement.dataset.checked === "true") return;
-  alertElement.dataset.checked = "true";
-
-  const content = alertElement.querySelector(".divContent");
-  if (!content) return;
-
-  const pokeElement = content.querySelector(".wild .intextpoke");
-  if (!pokeElement) return;
-
-  const poke = pokeElement.textContent.trim();
-  const pokeCount = 1;
-
-  updateDropCount(poke, pokeCount);
-
-  const dropElements = content.querySelectorAll(".drop");
-  dropElements.forEach((drop) => {
-    const titleElement = drop.querySelector(".title");
-    if (!titleElement) return;
-
-    const cleanTitle = getCleanTitle(titleElement);
-
-    let itemCount = 1;
-    const countElement = drop.querySelector("b");
-    if (countElement) {
-      itemCount = parseInt(countElement.textContent.trim().replace(/\D/g, "")) || 1;
-    }
-
-    updateDropCount(cleanTitle, itemCount);
+  observerDrop = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.addedNodes.length > 0) {
+        const addedNode = mutation.addedNodes[0];
+        controllerDrops(addedNode);
+      }
+    });
   });
 
-  updateDropMenu();
+  observerDrop.observe(document.querySelector("#divAlerten"), {
+    childList: true,
+    subtree: false,
+  });
 }
 
-function getCleanTitle(titleElement) {
-  const title = titleElement.cloneNode(true);
-  const bElement = title.querySelector("b");
-  if (bElement) {
-    bElement.remove();
+function controllerDrops(addedNode) {
+  const divContent = addedNode.querySelector(".divContainer");
+  if (!divContent.parentElement.matches(".alerten.poke, .alerten.getting.plus")) return;
+
+  const intextpoke = divContent.querySelector(".intextpoke")?.textContent.trim();
+  const amount = +divContent.querySelector(".amount")?.textContent.trim();
+  if (amount === 0) {
+    amount = 1;
   }
-  return title.textContent.trim();
-}
+  const name = divContent.querySelector(".title");
+  const nameDrop = divContent
+    .querySelector(".title")
+    .innerHTML.replace(/<b[^>]*>.*?<\/b>/gi, "")
+    .trim();
 
-function updateDropCount(key, count) {
-  if (!drops.has(key)) {
-    drops.set(key, count);
+  if (intextpoke) {
+    const existingMonster = arrDrops.find((item) => item.name === intextpoke);
+    if (existingMonster) {
+      existingMonster.count += 1;
+      updateDropList(intextpoke, existingMonster.count);
+    } else {
+      arrDrops.push({ name: intextpoke, count: 1 });
+      updateDropList(intextpoke, 1);
+    }
+  }
+
+  const existingItem = arrDrops.find((item) => item.name === nameDrop);
+  if (existingItem) {
+    existingItem.count += amount;
+    updateDropList(nameDrop, existingItem.count);
   } else {
-    drops.set(key, drops.get(key) + count);
+    arrDrops.push({ name: nameDrop, count: amount });
+    updateDropList(nameDrop, amount);
   }
 }
-
-function updateDropMenu() {
-  if (!dropMenu) return;
-
-  const fragment = document.createDocumentFragment();
-
-  for (const [key, value] of drops.entries()) {
-    const dropItemDiv = document.createElement("div");
-    dropItemDiv.classList.add("drop-item");
-    dropItemDiv.textContent = `${key} x${value}`;
-    fragment.append(dropItemDiv);
+function updateDropList(itemName, itemCount) {
+  const itemId = `item-${itemName.replace(/[^\p{L}\d]/gu, "-")}`;
+  let itemDiv = dropMenu.querySelector(`#${itemId}`);
+  if (itemDiv) {
+    itemDiv.textContent = `${itemName} x${itemCount}`;
+  } else {
+    if (noneDrop) {
+      noneDrop.remove();
+    }
+    itemDiv = document.createElement("div");
+    itemDiv.id = itemId;
+    itemDiv.textContent = `${itemName} x${itemCount}`;
+    dropMenu.append(itemDiv);
   }
-  if (noneDrop) {
-    noneDrop.remove();
-  }
-
-  dropMenu.innerHTML = "";
-  dropMenu.append(fragment);
 }
