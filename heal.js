@@ -22,10 +22,11 @@ async function moveHeal() {
   await handleDeviceActions(false);
 
   let successful = false;
-  let path; 
+  let route;
 
-  for (const route of matchingRoutes) {
-    path = route[0];
+  for (const r of matchingRoutes) {
+    route = r;
+    const path = route[0];
 
     try {
       for (let i = 1; i < path.length; i++) {
@@ -39,7 +40,6 @@ async function moveHeal() {
 
       successful = true;
       break;
-
     } catch (e) {
       console.warn(e.message);
       continue;
@@ -66,14 +66,26 @@ async function moveHeal() {
 
   await delayFast();
 
-
-  for (let i = path.length - 2; i >= 0; i--) { 
-    const buttonId = path[i];
-    const button = document.querySelector(`#${buttonId}`);
-    if (!button) throw new Error(`Кнопка ${buttonId} не найдена.`);
-    button.click();
-    await controllerMutationMove();
-    await delayHeal();
+  if (route.length > 1) {
+    const returnPath = route[1];
+    for (let i = 0; i < returnPath.length; i++) {
+      const buttonId = returnPath[i];
+      const button = document.querySelector(`#${buttonId}`);
+      if (!button) throw new Error(`Кнопка ${buttonId} не найдена.`);
+      button.click();
+      await controllerMutationMove();
+      await delayHeal();
+    }
+  } else {
+    const path = route[0];
+    for (let i = path.length - 2; i >= 0; i--) {
+      const buttonId = path[i];
+      const button = document.querySelector(`#${buttonId}`);
+      if (!button) throw new Error(`Кнопка ${buttonId} не найдена.`);
+      button.click();
+      await controllerMutationMove();
+      await delayHeal();
+    }
   }
 
   await delayHeal();

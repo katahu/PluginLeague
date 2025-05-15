@@ -23,15 +23,6 @@ function controllerDrops(addedNode) {
   if (!divContent.parentElement.matches(".alerten.poke, .alerten.getting.plus")) return;
 
   const intextpoke = divContent.querySelector(".intextpoke")?.textContent.trim();
-  const amount = +divContent.querySelector(".amount")?.textContent.trim();
-  if (amount === 0) {
-    amount = 1;
-  }
-  const name = divContent.querySelector(".title");
-  const nameDrop = divContent
-    .querySelector(".title")
-    .innerHTML.replace(/<b[^>]*>.*?<\/b>/gi, "")
-    .trim();
 
   if (intextpoke) {
     const existingMonster = arrDrops.find((item) => item.name === intextpoke);
@@ -44,13 +35,25 @@ function controllerDrops(addedNode) {
     }
   }
 
-  const existingItem = arrDrops.find((item) => item.name === nameDrop);
-  if (existingItem) {
-    existingItem.count += amount;
-    updateDropList(nameDrop, existingItem.count);
-  } else {
-    arrDrops.push({ name: nameDrop, count: amount });
-    updateDropList(nameDrop, amount);
+  const dropList = divContent.querySelectorAll(".drop");
+
+  for (const nameDrop of dropList) {
+    const dropName = nameDrop
+      .querySelector(".title")
+      .innerHTML.replace(/<b[^>]*>.*?<\/b>/gi, "")
+      .trim();
+    let amount = +nameDrop.querySelector(".amount")?.textContent.trim();
+    if (amount === 0) {
+      amount = 1;
+    }
+    const existingItem = arrDrops.find((item) => item.name === dropName);
+    if (existingItem) {
+      existingItem.count += amount;
+      updateDropList(dropName, existingItem.count);
+    } else {
+      arrDrops.push({ name: dropName, count: amount });
+      updateDropList(dropName, amount);
+    }
   }
 }
 function updateDropList(itemName, itemCount) {

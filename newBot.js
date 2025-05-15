@@ -124,7 +124,7 @@ function processBattleRules() {
 
       if (action === "Сдаться") {
         const isAggressiveMonster = document.querySelector("#divFightData #divFightOptions .agro");
-        if (levelingUP || isAggressiveMonster) {
+        if (isAggressiveMonster) {
           continue;
         }
       }
