@@ -1,35 +1,3 @@
-// const attackHandlers = {
-//   "Не бить": () => playSound(),
-//   Сдаться: () => surrender(),
-//   Поймать: () => captureMonster(),
-//   "Сменить монстра": () => changeMonster(),
-//   "Первая атака": () => useAttack(0),
-//   "Вторая атака": () => useAttack(1),
-//   "Третья атака": () => useAttack(2),
-//   "Четвертая атака": () => useAttack(3),
-//   // Семанты: () => captureSemant(),
-//   Редкие: () => (isToHardLevel() ? levelUpMonster() : useAttack(null, false)),
-// };
-
-// Напал выше n уровня
-// let maxLevel = Number(getLocalStorageValue("maxLevel", ""));
-// function isToHardLevel() {
-//   if (!levelingUP) return false;
-
-//   const opponentLevel = +document.querySelector("#divFightH .lvl")?.textContent;
-//   return opponentLevel <= maxLevel;
-// }
-// {
-//     type: "input",
-//     placeholder: "Если напал выше уровня то бить",
-//     storageKey: "maxLevel",
-//     onChange: (value) => {
-//       console.log("Введено имя:", value);
-//       nameUpMonster = value;
-//       setLocalStorageValue("maxLevel", value);
-//     },
-//   },
-
 // Автореклама
 
 // let adText = getLocalStorageValue("adText", "Привет");
@@ -127,3 +95,34 @@ async function backMonsterAll() {
     }
   }
 }
+
+// let count = null;
+// const monsters = document.querySelectorAll(".divFarm #divFarmList .pokemonBoxTiny");
+// for (const monster of monsters) {
+//   if (count >= 5) {
+//     break;
+//   }
+//   if (!monster.querySelector(".name").classList.contains("shine")) {
+//     if (!(+monster.querySelector(".lvl").textContent.trim() <= 1)) {
+//       count++;
+//       monster.querySelector(".button.btnBack.justicon").click();
+//       await new Promise((resolve) => setTimeout(resolve, Math.floor(Math.random() * (600 - 400 + 1)) + 400));
+//     }
+//   }
+// }
+
+// function setFightArea() {
+//   const fight = document.querySelector("#divVisioFight");
+//   const observer = new MutationObserver((mutationsList) => {
+//     for (const mutation of mutationsList) {
+//       if (
+//         mutation.type === "attributes" &&
+//         mutation.attributeName === "class" &&
+//         !mutation.target.classList.contains("none")
+//       ) {
+//         play.sound(sounds.alert);
+//       }
+//     }
+//   });
+//   observer.observe(fight, { attributes: true, attributeFilter: ["class"] });
+// }

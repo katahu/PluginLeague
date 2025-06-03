@@ -1,14 +1,9 @@
 let nonePP = false;
 let countMonster = 0;
-let isActiveBot = false;
-let observerVisibleEnemy = null;
-let mainObserver = null;
-let isProcessingMainObserver = false;
-
 const CRITICAL_PP = 0;
 
 const attackHandlers = {
-  Редкие: () => playSound(),
+  Редкие: () => playSound(sounds.shine),
   Сдаться: () => surrender(),
   Ловить: () => captureMonster(),
   Сменить: () => changeMonster(),
@@ -21,63 +16,67 @@ const attackHandlers = {
 
 const fightContainer = document.querySelector("#divVisioFight");
 
-async function startBot() {
-  if (isActiveBot) {
-    return;
-  }
-  isActiveBot = true;
-  observerDrops();
-  handleDeviceActions(true);
-  const hasEnemy = () => Boolean(fightContainer.querySelector("#divFightH .pokemonBoxDummy"));
-  if (isActiveFight()) {
-    processBattleRules();
-  }
-  mainObserver = new MutationObserver(async (mutations) => {
-    if (isProcessingMainObserver) return;
-    isProcessingMainObserver = true;
+const botManager = (() => {
+  let isActive = false;
+  let isProcessing = false;
+  let mainObserver = null;
+  let observerVisibleEnemy = null;
 
-    try {
-      for (const mutation of mutations) {
-        if (mutation.type === "attributes" && mutation.attributeName === "style") {
-          if (isActiveFight() && !hasEnemy()) {
-            processBattleRules();
-            break;
-          }
+  async function start() {
+    if (isActive) return;
+    isActive = true;
 
-          if (!isActiveFight() && hasEnemy()) {
-            if (observerVisibleEnemy) observerVisibleEnemy.disconnect();
+    await screenLockManager.set(true);
+    observerDrops();
+    handleDeviceActions(true);
 
-            if (await isVisubleEnemy()) {
+    const hasEnemy = () => Boolean(fightContainer.querySelector("#divFightH .pokemonBoxDummy"));
+
+    if (isActiveFight()) processBattleRules();
+
+    mainObserver = new MutationObserver(async (mutations) => {
+      if (isProcessing) return;
+      isProcessing = true;
+
+      try {
+        for (const mutation of mutations) {
+          if (mutation.type === "attributes" && mutation.attributeName === "style") {
+            if (isActiveFight() && !hasEnemy()) {
               processBattleRules();
               break;
             }
+
+            if (!isActiveFight() && hasEnemy()) {
+              if (observerVisibleEnemy) observerVisibleEnemy.disconnect();
+
+              if (await isVisubleEnemy()) {
+                processBattleRules();
+                break;
+              }
+            }
           }
         }
+      } finally {
+        isProcessing = false;
       }
-    } finally {
-      isProcessingMainObserver = false;
-    }
-  });
+    });
 
-  mainObserver.observe(fightContainer, {
-    attributes: true,
-    attributeFilter: ["style"],
-  });
+    mainObserver.observe(fightContainer, {
+      attributes: true,
+      attributeFilter: ["style"],
+    });
+  }
 
-  async function isVisubleEnemy() {
+  function isVisubleEnemy() {
     return new Promise((resolve) => {
       const divFightH = fightContainer.querySelector("#divFightH");
 
-      if (observerVisibleEnemy) {
-        observerVisibleEnemy.disconnect();
-        observerVisibleEnemy = null;
-      }
+      if (observerVisibleEnemy) observerVisibleEnemy.disconnect();
 
-      observerVisibleEnemy = new MutationObserver(function (mutations) {
+      observerVisibleEnemy = new MutationObserver((mutations) => {
         for (const mutation of mutations) {
           if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
             observerVisibleEnemy.disconnect();
-            observerVisibleEnemy = null;
             resolve(true);
             break;
           }
@@ -90,10 +89,28 @@ async function startBot() {
       });
     });
   }
-}
+
+  async function stop() {
+    isActive = false;
+    isProcessing = false;
+    await screenLockManager.set(false);
+
+    mainObserver?.disconnect();
+    mainObserver = null;
+
+    observerVisibleEnemy?.disconnect();
+    observerVisibleEnemy = null;
+
+    observerDrop?.disconnect();
+    observerDrop = null;
+  }
+
+  return { start, stop };
+})();
 
 function processBattleRules() {
   if (isMonsterLimit && countMonster >= countMonsterLimit) {
+    botManager.stop();
     return;
   }
 
@@ -101,7 +118,7 @@ function processBattleRules() {
 
   if (!isFightShine) {
     if (monster.classList.length > 1) {
-      playSound();
+      playSound(sounds.shine);
       return;
     }
   }
@@ -109,7 +126,7 @@ function processBattleRules() {
   if (weatherLimit) {
     const weatherIcon = divVisioFight.querySelector("#divFightData #divFightWeather .iconweather");
     if (weatherIcon && variableWeather.split(",").some((w) => weatherIcon.classList.contains(w.trim()))) {
-      playSound();
+      playSound(sounds.shine);
       return;
     }
   }
@@ -153,7 +170,7 @@ function processBattleRules() {
   }
 
   if (!actionFound) {
-    playSound();
+    playSound(sounds.shine);
     return;
   }
 }
@@ -179,6 +196,8 @@ async function useAttack(indexAttack, isFightLose) {
     }
 
     const { index, element } = attackResult;
+    console.log("index", index);
+    console.log("element", element);
 
     if (!(await canBattleContinue(attackResult.element))) {
       return;
@@ -346,7 +365,7 @@ async function changeMonster(isFightLose = false) {
   let monsterFound = false;
   for (const monster of monsterElement) {
     const monsterName = monster.querySelector(".name")?.textContent.trim().toLowerCase();
-    if (monsterName === nameSwitchMonster.toLowerCase()) {
+    if (monsterName === nameSwitchMonster.toLowerCase().toLowerCase()) {
       await delayAttack();
       monster.click();
       monsterFound = true;
@@ -398,7 +417,7 @@ async function canBattleContinue(elementAttack) {
         changeMonster(true);
         return false;
       }
-      playSound();
+      playSound(sounds.shine);
       return false;
     }
 
@@ -490,22 +509,6 @@ async function isUpdateFight() {
     });
     observer.observe(divFightI, { childList: true });
   });
-}
-function stopBot() {
-  isActiveBot = false;
-  isProcessingMainObserver = false;
-  if (mainObserver) {
-    mainObserver.disconnect();
-    mainObserver = null;
-  }
-  if (observerVisibleEnemy) {
-    observerVisibleEnemy.disconnect();
-    observerVisibleEnemy = null;
-  }
-  if (observerDrop) {
-    observerDrop.disconnect();
-    observerDrop = null;
-  }
 }
 
 async function observerElements(divElements) {

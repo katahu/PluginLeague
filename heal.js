@@ -57,7 +57,8 @@ async function moveHeal() {
 
   await delayFast();
 
-  if (isSendMonstr) await sendMonstersToNursery();
+  if (isSendMonstr) await captureManager.sendMonstersToNursery();
+  // if (isSendMonstr) await sendMonstersToNursery();
 
   while (true) {
     await healNPC();

@@ -17,7 +17,6 @@ function observerDrops() {
     subtree: false,
   });
 }
-
 function controllerDrops(addedNode) {
   const divContent = addedNode.querySelector(".divContainer");
   if (!divContent.parentElement.matches(".alerten.poke, .alerten.getting.plus")) return;

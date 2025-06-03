@@ -1,6 +1,4 @@
 :root {
-  --hover: #bdd7e9;
-  --background: #e0e7ee;
   --z-backdrop: 100001;
 
   --spacing-xs: 0.25rem;
@@ -18,6 +16,40 @@
   --font-size-lg: 1.25rem;
 }
 
+:root {
+  --color-text: #1e3955;
+  --color-header: var(--color-text);
+  --color-icon: rgb(112, 117, 121);
+  --color-bg-menu: rgb(224, 231, 238, 0.733);
+  --color-bg-modal: #e0e7ee;
+  --color-hover: #bdd7e9;
+  --color-table-hover: #f0f0f0;
+  --color-radio: rgb(51, 144, 236);
+  --color-separator: #c2cddb;
+  --color-slider: white;
+  --color-bg-slider: #ccc;
+  --color-bg-table: #cdd7e2;
+  --color-bg-table-header: #ddd;
+  --color-bg-move: rgb(229 225 225);
+  --color-placeholder: #888;
+}
+body.bt-dark {
+  --color-text: #e5e5e5;
+  --color-header: white;
+  --color-icon: rgb(170, 170, 170);
+  --color-bg-menu: rgb(39, 39, 39, 0.867);
+  --color-bg-modal: #272727;
+  --color-hover: rgb(0, 0, 0, 0.4);
+  --color-radio: rgb(135, 116, 225);
+  --color-separator: rgb(255, 255, 255, 0.102);
+  --color-slider: rgb(39, 39, 39);
+  --color-bg-slider: rgb(113, 117, 121);
+  --color-bg-table: rgb(55, 49, 49);
+  --color-bg-table-header: rgb(45 45 45);
+  --color-table-hover: var(--color-hover);
+  --color-bg-move: #252525;
+  --color-placeholder: var(--color-bg-slider);
+}
 @font-face {
   font-family: "Roboto";
   font-style: normal;
@@ -88,7 +120,7 @@
   cursor: pointer;
   width: 2.125rem;
   height: 0.875rem;
-  background-color: #ccc;
+  background-color: var(--color-bg-slider);
   transition: 150ms cubic-bezier(0.2, 0, 0.2, 1);
   border-radius: var(--radius-md);
 }
@@ -100,29 +132,30 @@
   width: 0.875rem;
   left: 0;
   top: -0.125rem;
-  background-color: white;
+  background-color: var(--color-slider);
   transition: 0.4s;
-  border: 2px solid #ccc;
+  border: 2px solid var(--color-bg-slider);
   border-radius: 0.75rem;
 }
 
 input:checked + .slider:before {
   transform: translateX(100%);
-  border: 2px solid #2196f3;
+  border: 2px solid var(--color-radio);
 }
 
 input:checked + .slider {
-  background-color: #2196f3;
+  background-color: var(--color-radio);
 }
 
-/* Выпадающее меню */
+/* Дроп меню */
 .dropMenu {
   position: absolute;
   width: max-content;
   text-align: center;
   border-radius: var(--radius-md);
   padding: var(--spacing-xs);
-  background: rgba(224, 231, 238, 0.733);
+  color: var(--color-text);
+  background: var(--color-bg-menu);
   backdrop-filter: blur(5px);
   opacity: 0;
   visibility: hidden;
@@ -140,7 +173,6 @@ input:checked + .slider {
   visibility: visible;
   transform: scale(1);
   pointer-events: auto;
-  z-index: var(--z-backdrop);
 }
 
 .drop-item {
@@ -150,13 +182,13 @@ input:checked + .slider {
 /* Главное меню */
 .mainMenu {
   font-family: "Roboto", sans-serif;
+  color: var(--color-text);
   font-weight: 500;
   position: absolute;
   border-radius: var(--radius-md);
   inset-block: 8% auto;
   inset-inline: auto 0;
-
-  background: rgba(224, 231, 238, 0.733);
+  background: var(--color-bg-menu);
   backdrop-filter: blur(5px);
   opacity: 0;
   visibility: hidden;
@@ -164,7 +196,7 @@ input:checked + .slider {
   transform: scale(0.85);
   transition: opacity 150ms cubic-bezier(0.2, 0, 0.2, 1), transform 150ms cubic-bezier(0.2, 0, 0.2, 1),
     visibility 150ms cubic-bezier(0.2, 0, 0.2, 1);
-  z-index: var(--z-backdrop);
+  z-index: 1;
 }
 
 .mainMenu.open {
@@ -184,21 +216,23 @@ input:checked + .slider {
 }
 
 .mainMenu .menuItem:hover {
-  background-color: var(--hover);
+  background-color: var(--color-hover);
 }
 
 .mainMenu .menuItem:active {
   transform: scale(0.98);
 }
 
-.mainMenu .menuItem i {
-  margin-inline: var(--spacing-xs) var(--spacing-sm);
+.mainMenu .menuItem i,
+.modalContent .menuItem i {
+  margin-inline: 0 var(--spacing-sm);
   color: rgb(112, 117, 121);
 }
+
 .hrMenu {
   margin: var(--spacing-xs) 0;
   height: 0.0625rem;
-  background-color: rgb(0, 0, 0, 0.102);
+  background-color: var(--color-separator);
 }
 /* Модальное окно */
 .modalContainer {
@@ -235,9 +269,10 @@ input:checked + .slider {
 }
 
 .modalContainer .modalWrapper {
+  color: var(--color-text);
   border-radius: var(--radius-lg);
   overflow: hidden;
-  background-color: var(--background);
+  background-color: var(--color-bg-modal);
   transform: translate3d(0, -1rem, 0);
   transition: transform 0.2s ease, opacity 0.2s ease;
 }
@@ -251,6 +286,7 @@ input:checked + .slider {
 }
 
 .modalWrapper .modalHeader {
+  color: var(--color-header);
   font-size: var(--font-size-md);
   font-weight: bold;
   text-align: center;
@@ -260,7 +296,7 @@ input:checked + .slider {
 .modalHr {
   height: 1px;
   margin-top: var(--spacing-xs);
-  background-color: #c2cddb;
+  background-color: var(--color-separator);
 }
 
 .modalContainer .modalWrapper .modalContent {
@@ -274,14 +310,14 @@ input:checked + .slider {
   cursor: pointer;
   display: flex;
   align-items: center;
-  justify-content: center;
+  /* justify-content: center; */
   min-height: 2rem;
   padding: 0 var(--spacing-md);
   border-radius: var(--radius-sm);
 }
 
 .modalContainer .modalWrapper .modalContent .menuItem:hover {
-  background-color: var(--hover);
+  background-color: var(--color-hover);
 }
 
 .modalContainer .modalWrapper .modalContent .menuItem.modal-input {
@@ -297,7 +333,9 @@ input:checked + .slider {
 .tableHeaderMenu input {
   font-family: "Roboto", sans-serif;
   margin: 0;
-  background-color: transparent;
+  color: var(--color-text);
+  border-color: var(--color-separator);
+  background: var(--color-bg-modal);
   border-radius: 5px;
   transition: border-color 0.15s ease;
   &.input-number {
@@ -309,11 +347,14 @@ input:checked + .slider {
     width: 100px;
     margin-left: 0.25rem;
   }
+  &::placeholder {
+    color: var(--color-placeholder);
+  }
 }
 
 .modal-input input:focus,
 .tableHeaderMenu input:focus {
-  border-color: rgb(51, 144, 236);
+  border-color: var(--color-radio);
 }
 
 /* Радио кнопки */
@@ -342,7 +383,7 @@ input:checked + .slider {
 }
 
 .Radio-main:hover {
-  background-color: var(--hover);
+  background-color: var(--color-hover);
 }
 
 .Radio-main::before {
@@ -358,9 +399,9 @@ input:checked + .slider {
 }
 
 .Radio-input:checked + .Radio-main::before {
-  border-color: rgb(51, 144, 236);
-  background-color: rgb(51, 144, 236);
-  box-shadow: inset 0 0 0 3px var(--background);
+  border-color: var(--color-radio);
+  background-color: var(--color-radio);
+  box-shadow: inset 0 0 0 3px var(--color-bg-modal);
 }
 
 /* Категории */
@@ -374,25 +415,26 @@ input:checked + .slider {
 
 .category {
   display: grid;
+  color: var(--color-text);
   position: relative;
   grid-template-columns: repeat(9, 1fr);
   gap: 10px;
 }
 
 .category-block {
-  border: 1px solid #aaa;
+  border: 1px solid var(--color-separator);
   border-radius: var(--radius-md);
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  background-color: #cdd7e2;
+  background-color: var(--color-bg-table);
 }
 
 .category-header {
-  background-color: #ddd;
+  background-color: var(--color-bg-table-header);
   padding: 8px 12px;
   font-weight: bold;
-  border-bottom: 1px solid #bbb;
+  border-bottom: 1px solid var(--color-separator);
   text-align: center;
 }
 
@@ -415,20 +457,21 @@ input:checked + .slider {
 
 .category-item:hover,
 .auto-settings:hover {
-  background-color: #f0f0f0;
+  background-color: var(--color-table-hover);
 }
 
 .category-item.found {
-  background-color: #f0f0f0;
+  background-color: var(--color-table-hover);
 }
 
 /* Меню перемещения */
+
 .moveMenu {
   position: absolute;
   text-align: center;
   max-width: max-content;
   border-radius: var(--radius-md);
-  background-color: rgb(229 225 225);
+  background-color: var(--color-bg-move);
   box-shadow: 0 0.25rem 0.5rem 0.125rem rgba(0, 0, 0, 0.2);
 
   inset-block: 50% auto;
@@ -437,6 +480,7 @@ input:checked + .slider {
   z-index: 10000;
 }
 .moveMenu-header {
+  color: var(--color-header);
   padding: var(--spacing-sm) var(--spacing-sm) 0;
 }
 .moveMenuContent {
@@ -452,7 +496,7 @@ input:checked + .slider {
 }
 
 .moveMenu-btn:hover {
-  background-color: var(--hover);
+  background-color: var(--color-table-hover);
 }
 
 .moveMenu-btn:active {
@@ -466,11 +510,68 @@ input:checked + .slider {
   }
   .mainMenu,
   .dropMenu {
-    background-color: var(--background);
+    background-color: var(--color-bg-menu);
   }
 }
 @media screen and (max-width: 480px) {
   .category {
     grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.BnotificationWrap {
+  font-family: "Roboto", sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  color: var(--color-text);
+  position: absolute;
+  top: 100px;
+  left: 0;
+  z-index: 1;
+}
+
+.item-notification {
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  background-color: var(--color-bg-menu);
+  padding: var(--spacing-md);
+  border-left: 3px solid var(--color-separator);
+  backdrop-filter: blur(3px);
+  opacity: 0;
+  &.opening {
+    animation: notificationIn 300ms ease-in forwards;
+  }
+  &.closing {
+    animation: notificationOut 300ms ease-in forwards;
+  }
+}
+.item-notification i {
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 2px;
+  color: var(--color-text);
+  &:hover {
+    color: var(--color-hover);
+  }
+}
+@keyframes notificationIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@keyframes notificationOut {
+  0% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-100%);
   }
 }

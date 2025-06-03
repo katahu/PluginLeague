@@ -21,18 +21,26 @@ const DEFAULT_CONFIG = {
   isFightShine: false,
   nameSwitchMonster: "",
   variableAttackAfter: "0",
-  isLoseMonster: false,
+  isFinishingOff: false,
   variableWeather: "w3,w4",
   weatherLimit: false,
   levelingUP: false,
   nameUpMonster: "",
+  levelUpMaxMonster: 100,
+  enemyHardlvl: "",
+  isActiveHardLvl: false,
   variableAttackUP: "Замедленная бомба",
   variableGender: "Все",
+  variableCatchAttack: "Сломанный меч",
   variableStatus: "Колыбельная",
   variableMonsterBall: "1",
   countMonsterLimit: null,
   isMonsterLimit: false,
-  CRITICAL_HP_PERCENT: 20,
+  criticalHP: 20,
+  isAntiBot: false,
+  themeBot: false,
+  variableAntiBot: "stop",
+  notification: false,
 };
 
 const config = {};
@@ -40,22 +48,30 @@ Object.entries(DEFAULT_CONFIG).forEach(([key, defaultValue]) => {
   config[key] = getConfigValue(key, defaultValue);
 });
 
-let variableAttack = config.variableAttack;
+let variableAttack = +config.variableAttack;
 let isFightShine = config.isFightShine;
-let nameSwitchMonster = config.nameSwitchMonster.toLowerCase();
-let variableAttackAfter = config.variableAttackAfter;
-let isLoseMonster = config.isLoseMonster;
+let nameSwitchMonster = config.nameSwitchMonster;
+let variableAttackAfter = +config.variableAttackAfter;
 let variableWeather = config.variableWeather;
 let weatherLimit = config.weatherLimit;
 let levelingUP = config.levelingUP;
+let isFinishingOff = config.isFinishingOff;
 let nameUpMonster = config.nameUpMonster;
+let levelUpMaxMonster = +config.levelUpMaxMonster;
+let enemyHardlvl = +config.enemyHardlvl;
+let isActiveHardLvl = config.isActiveHardLvl;
 let variableAttackUP = config.variableAttackUP;
 let variableGender = config.variableGender;
+let variableCatchAttack = config.variableCatchAttack;
 let variableStatus = config.variableStatus;
 let variableMonsterBall = config.variableMonsterBall;
 let countMonsterLimit = config.countMonsterLimit;
 let isMonsterLimit = config.isMonsterLimit;
-let CRITICAL_HP_PERCENT = config.CRITICAL_HP_PERCENT;
+let criticalHP = config.criticalHP;
+let isAntiBot = config.isAntiBot;
+let themeBot = config.themeBot;
+let variableAntiBot = config.variableAntiBot;
+let notification = config.notification;
 
 function getConfigValue(key, defaultValue) {
   const value = localStorage.getItem(key);
@@ -102,4 +118,7 @@ function setLocalStorageValue(key, value) {
   }
 
   localStorage.setItem(key, JSON.stringify(value));
+}
+if (themeBot) {
+  document.body.classList.toggle("bt-dark");
 }

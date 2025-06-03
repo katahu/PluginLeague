@@ -12,14 +12,15 @@
       "js": [
         "script.js",
         "utils.js",
-        "checker.js",
         "API.js",
         "UI.js",
+        "data.js",
+        "checker.js",
+        "message.js",
+        "bot.js",
         "capture.js",
         "heal.js",
-        "development.js",
-        "data.js",
-        "newBot.js"
+        "development.js"
       ],
       "css": ["style/fonts.css", "style/style.css"],
       "type": "module"
@@ -27,7 +28,13 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["inject.js", "style/fa-light-300.woff2", "style/Roboto-Medium.woff2"],
+      "resources": [
+        "inject.js",
+        "style/fa-light-300.woff2",
+        "style/Roboto-Medium.woff2",
+        "audio/message.mp3",
+        "audio/shine.mp3"
+      ],
       "matches": ["https://game.league17.ru/*"]
     }
   ]

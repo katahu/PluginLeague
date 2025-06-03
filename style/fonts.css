@@ -36,9 +36,6 @@
 .icons-stop {
   --fa: "\f256";
 }
-.icons-update {
-  --fa: "\f2f1";
-}
 .icons-list-drop {
   --fa: "\e1cf";
 }
@@ -69,4 +66,24 @@
 }
 .icons-coins {
   --fa: "\f85c";
+}
+.icons-theme {
+  --fa: "\f755";
+}
+.icons-lock {
+  --fa: "\f30d";
+}
+
+.icons-status {
+  --fa: "\f0ae";
+}
+.icons-swap {
+  --fa: "\f364";
+}
+
+.icons-siren {
+  --fa: "\e02d";
+}
+.icons-xMark {
+  --fa: "\f00d";
 }
